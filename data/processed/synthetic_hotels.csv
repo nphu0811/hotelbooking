@@ -1,0 +1,6 @@
+hotel_name,city,province,address,room_name,room_type,capacity,area_sqm,price_per_night,amenities,image_url,source
+Aurora Hanoi Hotel,Hà Nội,Hà Nội,"12 Tràng Thi, Hoàn Kiếm",Deluxe Phố Cổ,Deluxe,2,32,1250000,"Wi-Fi;Bữa sáng",/css/room-hanoi.svg,synthetic
+Aurora Hanoi Hotel,Hà Nội,Hà Nội,"12 Tràng Thi, Hoàn Kiếm",Family Suite Hồ Gươm,Suite,4,48,2450000,"Wi-Fi;Bữa sáng;Đưa đón sân bay",/css/room-suite.svg,synthetic
+Sapphire Danang Bay,Đà Nẵng,Đà Nẵng,"88 Võ Nguyên Giáp, Sơn Trà",Ocean View King,King,2,38,1850000,"Wi-Fi;Hồ bơi;Bữa sáng",/css/room-danang.svg,synthetic
+Sapphire Danang Bay,Đà Nẵng,Đà Nẵng,"88 Võ Nguyên Giáp, Sơn Trà",Twin City Comfort,Twin,2,30,980000,Wi-Fi,/css/room-twin.svg,synthetic
+Pine Garden Dalat,Đà Lạt,Lâm Đồng,"5 Hồ Tùng Mậu, Phường 3",Garden Attic,Studio,2,28,890000,"Wi-Fi;Bữa sáng",/css/room-dalat.svg,synthetic

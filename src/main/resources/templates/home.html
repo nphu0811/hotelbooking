@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HotelBooking</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main>
+    <section class="hero">
+        <div class="hero-copy">
+            <p class="eyebrow">Đặt phòng khách sạn Việt Nam</p>
+            <h1>HotelBooking</h1>
+            <p>Tìm phòng trống, giữ chỗ an toàn 15 phút, thanh toán mock sandbox và quản lý lịch sử đặt phòng.</p>
+        </div>
+        <form class="search-panel" th:action="@{/rooms/search}" method="get">
+            <label>Địa điểm hoặc khách sạn
+                <input name="q" placeholder="Hà Nội, Đà Nẵng, Đà Lạt">
+            </label>
+            <div class="form-grid">
+                <label>Nhận phòng
+                    <input type="date" name="checkIn" th:value="${checkIn}" required>
+                </label>
+                <label>Trả phòng
+                    <input type="date" name="checkOut" th:value="${checkOut}" required>
+                </label>
+                <label>Số khách
+                    <input type="number" name="guests" min="1" max="10" th:value="${guests}" required>
+                </label>
+            </div>
+            <button class="button" type="submit">Tìm phòng</button>
+        </form>
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <h2>Phòng nổi bật</h2>
+            <a th:href="@{/rooms/search(checkIn=${checkIn},checkOut=${checkOut},guests=${guests})}">Xem tất cả</a>
+        </div>
+        <div class="room-grid" th:if="${rooms != null and !rooms.isEmpty()}">
+            <article class="room-card" th:each="room : ${rooms.content}">
+                <img th:src="@{${room.primaryImageUrl}}" th:alt="${room.name}">
+                <div class="room-card-body">
+                    <h3 th:text="${room.name}">Room</h3>
+                    <p th:text="${room.hotel.name + ' - ' + room.hotel.city}">Hotel</p>
+                    <p class="price" th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</p>
+                    <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}">Chi tiết</a>
+                </div>
+            </article>
+        </div>
+        <p class="empty" th:if="${rooms == null or rooms.isEmpty()}">Chưa có phòng phù hợp.</p>
+    </section>
+</main>
+</body>
+</html>

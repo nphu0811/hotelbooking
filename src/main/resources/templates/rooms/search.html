@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kết quả tìm kiếm</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="page">
+    <h1>Kết quả tìm kiếm</h1>
+    <form class="toolbar" th:action="@{/rooms/search}" method="get">
+        <input name="q" th:value="${q}" placeholder="Địa điểm / khách sạn">
+        <input type="date" name="checkIn" th:value="${checkIn}" required>
+        <input type="date" name="checkOut" th:value="${checkOut}" required>
+        <input type="number" name="guests" min="1" max="10" th:value="${guests}" required>
+        <input type="number" name="minPrice" th:value="${minPrice}" placeholder="Giá từ">
+        <input type="number" name="maxPrice" th:value="${maxPrice}" placeholder="Giá đến">
+        <select name="sort">
+            <option value="rating" th:selected="${sort == 'rating'}">Đánh giá</option>
+            <option value="price_asc" th:selected="${sort == 'price_asc'}">Giá tăng</option>
+            <option value="price_desc" th:selected="${sort == 'price_desc'}">Giá giảm</option>
+            <option value="newest" th:selected="${sort == 'newest'}">Mới nhất</option>
+        </select>
+        <button class="button" type="submit">Lọc</button>
+    </form>
+    <p class="alert" th:if="${error}" th:text="${error}"></p>
+    <p class="muted" th:if="${rooms != null}" th:text="${rooms.totalElements + ' phòng phù hợp'}"></p>
+    <div class="room-list" th:if="${rooms != null and !rooms.isEmpty()}">
+        <article class="room-row" th:each="room : ${rooms.content}">
+            <img th:src="@{${room.primaryImageUrl}}" th:alt="${room.name}">
+            <div>
+                <h2 th:text="${room.name}">Room</h2>
+                <p th:text="${room.hotel.name + ' - ' + room.hotel.address}">Address</p>
+                <p class="muted" th:text="${'Sức chứa ' + room.capacity + ' khách - ' + room.roomType}">Type</p>
+                <div class="chips">
+                    <span th:each="amenity : ${room.amenities}" th:text="${amenity.name}">Amenity</span>
+                </div>
+            </div>
+            <div class="row-side">
+                <strong th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND'}">0</strong>
+                <span th:text="${'★ ' + room.averageRating + ' (' + room.reviewCount + ')'}">Rating</span>
+                <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}">Chi tiết</a>
+            </div>
+        </article>
+    </div>
+    <p class="empty" th:if="${rooms == null or rooms.isEmpty()}">Không có phòng trống trong khoảng thời gian này.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lỗi</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="page">
+    <h1>Không thể thực hiện thao tác</h1>
+    <p class="alert" th:text="${error ?: 'Đã có lỗi xảy ra'}">Error</p>
+    <a class="button button-muted" th:href="@{/}">Về trang chủ</a>
+</main>
+</body>
+</html>

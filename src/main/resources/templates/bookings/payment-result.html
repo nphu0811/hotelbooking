@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kết quả thanh toán</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="page narrow">
+    <h1>Kết quả thanh toán</h1>
+    <p class="alert" th:if="${error}" th:text="${error}"></p>
+    <div class="summary" th:if="${payment}">
+        <p><strong>Order ID:</strong> <span th:text="${payment.orderId}">order</span></p>
+        <p><strong>Trạng thái payment:</strong> <span th:text="${payment.status}">status</span></p>
+        <p><strong>Trạng thái booking:</strong> <span th:text="${booking.status}">status</span></p>
+        <p><strong>Mã booking:</strong> <span th:text="${booking.bookingCode}">code</span></p>
+    </div>
+    <a class="button" th:href="@{/account/bookings}">Xem lịch sử đặt phòng</a>
+</main>
+</body>
+</html>

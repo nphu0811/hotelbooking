@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý booking</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="page">
+    <h1>Quản lý booking</h1>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Mã</th><th>Khách</th><th>Phòng</th><th>Ngày</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+            <tbody>
+            <tr th:each="booking : ${bookings.content}">
+                <td th:text="${booking.bookingCode}">HB</td>
+                <td th:text="${booking.user.fullName}">User</td>
+                <td th:text="${booking.room.name}">Room</td>
+                <td th:text="${booking.checkIn + ' -> ' + booking.checkOut}">Dates</td>
+                <td><span class="badge" th:text="${booking.status}">Status</span></td>
+                <td class="actions">
+                    <form th:if="${booking.status.name() == 'CONFIRMED'}" th:action="@{/admin/bookings/{id}/check-in(id=${booking.id})}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button class="button button-small" type="submit">Check-in</button>
+                    </form>
+                    <form th:if="${booking.status.name() == 'CHECKED_IN'}" th:action="@{/admin/bookings/{id}/check-out(id=${booking.id})}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button class="button button-small" type="submit">Check-out</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

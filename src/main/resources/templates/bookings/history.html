@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lịch sử đặt phòng</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="page">
+    <h1>Lịch sử đặt phòng</h1>
+    <p class="empty" th:if="${bookings.isEmpty()}">Bạn chưa có booking nào.</p>
+    <div class="table-wrap" th:if="${!bookings.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>Mã</th>
+                <th>Phòng</th>
+                <th>Ngày</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="booking : ${bookings.content}">
+                <td th:text="${booking.bookingCode}">HB</td>
+                <td th:text="${booking.room.name}">Room</td>
+                <td th:text="${booking.checkIn + ' -> ' + booking.checkOut}">Dates</td>
+                <td th:text="${#numbers.formatDecimal(booking.totalAmount,0,'COMMA',0,'POINT')}">0</td>
+                <td><span class="badge" th:text="${booking.status}">Status</span></td>
+                <td><a th:href="@{/account/bookings/{id}(id=${booking.id})}">Chi tiết</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

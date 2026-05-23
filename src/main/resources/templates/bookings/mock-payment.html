@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mock payment</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="page narrow">
+    <h1>Cổng thanh toán mock</h1>
+    <p class="muted">Sandbox nội bộ cho dev/test, không giao dịch tiền thật.</p>
+    <p><strong>Order ID:</strong> <span th:text="${orderId}">order</span></p>
+    <div class="actions">
+        <a class="button" th:href="@{/payments/mock/callback(orderId=${orderId},success=true,signature='mock-secret')}">Thanh toán thành công</a>
+        <a class="button button-danger" th:href="@{/payments/mock/callback(orderId=${orderId},success=false,signature='mock-secret')}">Thanh toán thất bại</a>
+        <a class="button button-muted" th:href="@{/payments/mock/callback(orderId=${orderId},success=true,signature='bad')}">Callback sai HMAC</a>
+    </div>
+</main>
+</body>
+</html>

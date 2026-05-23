@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng ký</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="auth-page">
+    <form class="auth-panel" th:action="@{/register}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <h1>Đăng ký</h1>
+        <p class="alert" th:if="${error}" th:text="${error}"></p>
+        <label>Họ tên
+            <input name="fullName" th:value="${fullName}" minlength="2" maxlength="100" required>
+        </label>
+        <label>Email
+            <input name="email" type="email" th:value="${email}" required>
+        </label>
+        <label>Số điện thoại
+            <input name="phone" th:value="${phone}" placeholder="0912345678" required>
+        </label>
+        <label>Mật khẩu
+            <input name="password" type="password" required>
+        </label>
+        <label>Xác nhận mật khẩu
+            <input name="confirmPassword" type="password" required>
+        </label>
+        <button class="button" type="submit">Tạo tài khoản</button>
+    </form>
+</main>
+</body>
+</html>

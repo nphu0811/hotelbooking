@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chi tiết booking</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="page detail-layout">
+    <section>
+        <h1 th:text="${booking.bookingCode}">Booking</h1>
+        <p class="alert" th:if="${error}" th:text="${error}"></p>
+        <p class="success" th:if="${param.cancelled}">Đã hủy đơn đặt phòng.</p>
+        <p class="success" th:if="${param.reviewed}">Cảm ơn đánh giá của bạn.</p>
+        <div class="summary">
+            <p><strong>Phòng:</strong> <span th:text="${booking.room.name}">Room</span></p>
+            <p><strong>Khách sạn:</strong> <span th:text="${booking.room.hotel.name}">Hotel</span></p>
+            <p><strong>Ngày:</strong> <span th:text="${booking.checkIn + ' -> ' + booking.checkOut}">Dates</span></p>
+            <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(booking.totalAmount,0,'COMMA',0,'POINT') + ' VND'}">0</span></p>
+            <p><strong>Trạng thái:</strong> <span class="badge" th:text="${booking.status}">Status</span></p>
+        </div>
+        <form th:if="${booking.status.name() == 'CONFIRMED'}" th:action="@{/bookings/{id}/cancel(id=${booking.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button class="button button-danger" type="submit">Hủy đặt phòng</button>
+        </form>
+    </section>
+    <aside class="booking-box" th:if="${booking.status.name() == 'CHECKED_OUT' and !booking.reviewed}">
+        <h2>Đánh giá lưu trú</h2>
+        <form th:action="@{/bookings/{id}/review(id=${booking.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <label>Điểm tổng thể <input type="number" name="rating" min="1" max="5" value="5"></label>
+            <label>Vệ sinh <input type="number" name="cleanlinessRating" min="1" max="5" value="5"></label>
+            <label>Phục vụ <input type="number" name="serviceRating" min="1" max="5" value="5"></label>
+            <label>Vị trí <input type="number" name="locationRating" min="1" max="5" value="5"></label>
+            <label>Giá trị <input type="number" name="valueRating" min="1" max="5" value="5"></label>
+            <label>Nội dung
+                <textarea name="content" minlength="50" maxlength="2000" rows="6">Phòng sạch sẽ, vị trí thuận tiện, nhân viên hỗ trợ nhanh và trải nghiệm lưu trú đúng như thông tin trên website.</textarea>
+            </label>
+            <button class="button" type="submit">Gửi đánh giá</button>
+        </form>
+    </aside>
+</main>
+</body>
+</html>

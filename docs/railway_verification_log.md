@@ -1,0 +1,314 @@
+# Railway Verification Log
+
+## 2026-05-23
+
+- Status: VERIFIED
+- Evidence: Connected successfully to Railway PostgreSQL, executed Flyway migrations, and ran check queries.
+
+### Tables in Public Schema
+- amenities
+- audit_logs
+- bookings
+- email_jobs
+- email_logs
+- flyway_schema_history
+- hotels
+- jwt_token_blacklist
+- login_logs
+- payments
+- refund_requests
+- review_images
+- reviews
+- roles
+- room_amenities
+- room_images
+- rooms
+- user_roles
+- users
+
+### Indexes in Public Schema
+- amenities_name_key
+- amenities_pkey
+- audit_logs_pkey
+- bookings_booking_code_key
+- bookings_pkey
+- email_jobs_pkey
+- email_logs_pkey
+- ex_bookings_no_overlap
+- flyway_schema_history_pk
+- flyway_schema_history_s_idx
+- hotels_pkey
+- idx_audit_logs_actor_created
+- idx_audit_logs_entity
+- idx_bookings_check_in
+- idx_bookings_check_out
+- idx_bookings_pending_expiry
+- idx_bookings_room_dates
+- idx_bookings_status
+- idx_bookings_user_created
+- idx_email_jobs_status_next_attempt
+- idx_email_logs_booking_created
+- idx_hotels_address_trgm
+- idx_hotels_city_province
+- idx_hotels_name_trgm
+- idx_jwt_blacklist_expiry
+- idx_jwt_blacklist_user
+- idx_login_logs_email_created
+- idx_login_logs_user_created
+- idx_payments_booking
+- idx_payments_order_id
+- idx_payments_status_created
+- idx_refund_requests_booking
+- idx_refund_requests_status
+- idx_reviews_room_created
+- idx_reviews_user
+- idx_rooms_capacity
+- idx_rooms_hotel_status
+- idx_rooms_name_trgm
+- idx_rooms_price
+- idx_rooms_type_trgm
+- jwt_token_blacklist_pkey
+- jwt_token_blacklist_token_hash_key
+- login_logs_pkey
+- payments_idempotency_key_key
+- payments_order_id_key
+- payments_pkey
+- refund_requests_idempotency_key_key
+- refund_requests_pkey
+- review_images_pkey
+- reviews_booking_id_key
+- reviews_pkey
+- roles_code_key
+- roles_pkey
+- room_amenities_pkey
+- room_images_pkey
+- rooms_pkey
+- uq_room_images_primary
+- uq_rooms_hotel_name_active
+- user_roles_pkey
+- users_email_key
+- users_pkey
+
+### Constraints in Public Schema
+- amenities_amenity_id_not_null (type: n)
+- amenities_created_at_not_null (type: n)
+- amenities_name_key (type: u)
+- amenities_name_not_null (type: n)
+- amenities_pkey (type: p)
+- audit_logs_action_not_null (type: n)
+- audit_logs_actor_user_id_fkey (type: f)
+- audit_logs_audit_id_not_null (type: n)
+- audit_logs_created_at_not_null (type: n)
+- audit_logs_entity_type_not_null (type: n)
+- audit_logs_pkey (type: p)
+- bookings_booking_code_key (type: u)
+- bookings_booking_code_not_null (type: n)
+- bookings_booking_id_not_null (type: n)
+- bookings_check_in_not_null (type: n)
+- bookings_check_out_not_null (type: n)
+- bookings_created_at_not_null (type: n)
+- bookings_guest_count_not_null (type: n)
+- bookings_nights_not_null (type: n)
+- bookings_pkey (type: p)
+- bookings_price_per_night_snapshot_not_null (type: n)
+- bookings_reviewed_not_null (type: n)
+- bookings_room_id_fkey (type: f)
+- bookings_room_id_not_null (type: n)
+- bookings_status_not_null (type: n)
+- bookings_total_amount_not_null (type: n)
+- bookings_updated_at_not_null (type: n)
+- bookings_user_id_fkey (type: f)
+- bookings_user_id_not_null (type: n)
+- chk_bookings_dates (type: c)
+- chk_bookings_guest_count (type: c)
+- chk_bookings_nights (type: c)
+- chk_bookings_snapshot_price (type: c)
+- chk_bookings_status (type: c)
+- chk_bookings_total_amount (type: c)
+- chk_email_jobs_attempts (type: c)
+- chk_email_jobs_status (type: c)
+- chk_email_logs_status (type: c)
+- chk_payments_amount (type: c)
+- chk_payments_status (type: c)
+- chk_refund_requests_amount (type: c)
+- chk_refund_requests_percentage (type: c)
+- chk_refund_requests_status (type: c)
+- chk_reviews_cleanliness (type: c)
+- chk_reviews_content_length (type: c)
+- chk_reviews_location (type: c)
+- chk_reviews_rating (type: c)
+- chk_reviews_service (type: c)
+- chk_reviews_value (type: c)
+- chk_rooms_capacity (type: c)
+- chk_rooms_price (type: c)
+- chk_rooms_rating (type: c)
+- chk_rooms_review_count (type: c)
+- chk_rooms_status (type: c)
+- chk_users_failed_login_count (type: c)
+- chk_users_status (type: c)
+- email_jobs_attempts_not_null (type: n)
+- email_jobs_booking_id_fkey (type: f)
+- email_jobs_created_at_not_null (type: n)
+- email_jobs_event_type_not_null (type: n)
+- email_jobs_job_id_not_null (type: n)
+- email_jobs_next_attempt_at_not_null (type: n)
+- email_jobs_pkey (type: p)
+- email_jobs_recipient_not_null (type: n)
+- email_jobs_status_not_null (type: n)
+- email_jobs_subject_not_null (type: n)
+- email_jobs_template_name_not_null (type: n)
+- email_jobs_updated_at_not_null (type: n)
+- email_jobs_user_id_fkey (type: f)
+- email_logs_booking_id_fkey (type: f)
+- email_logs_created_at_not_null (type: n)
+- email_logs_event_type_not_null (type: n)
+- email_logs_job_id_fkey (type: f)
+- email_logs_log_id_not_null (type: n)
+- email_logs_pkey (type: p)
+- email_logs_recipient_not_null (type: n)
+- email_logs_status_not_null (type: n)
+- ex_bookings_no_overlap (type: x)
+- flyway_schema_history_description_not_null (type: n)
+- flyway_schema_history_execution_time_not_null (type: n)
+- flyway_schema_history_installed_by_not_null (type: n)
+- flyway_schema_history_installed_on_not_null (type: n)
+- flyway_schema_history_installed_rank_not_null (type: n)
+- flyway_schema_history_pk (type: p)
+- flyway_schema_history_script_not_null (type: n)
+- flyway_schema_history_success_not_null (type: n)
+- flyway_schema_history_type_not_null (type: n)
+- hotels_address_not_null (type: n)
+- hotels_city_not_null (type: n)
+- hotels_created_at_not_null (type: n)
+- hotels_hotel_id_not_null (type: n)
+- hotels_is_deleted_not_null (type: n)
+- hotels_name_not_null (type: n)
+- hotels_pkey (type: p)
+- hotels_province_not_null (type: n)
+- hotels_updated_at_not_null (type: n)
+- jwt_token_blacklist_created_at_not_null (type: n)
+- jwt_token_blacklist_expires_at_not_null (type: n)
+- jwt_token_blacklist_pkey (type: p)
+- jwt_token_blacklist_token_hash_key (type: u)
+- jwt_token_blacklist_token_hash_not_null (type: n)
+- jwt_token_blacklist_token_id_not_null (type: n)
+- jwt_token_blacklist_user_id_fkey (type: f)
+- login_logs_created_at_not_null (type: n)
+- login_logs_email_not_null (type: n)
+- login_logs_login_log_id_not_null (type: n)
+- login_logs_pkey (type: p)
+- login_logs_success_not_null (type: n)
+- login_logs_user_id_fkey (type: f)
+- payments_amount_not_null (type: n)
+- payments_booking_id_fkey (type: f)
+- payments_booking_id_not_null (type: n)
+- payments_created_at_not_null (type: n)
+- payments_currency_not_null (type: n)
+- payments_idempotency_key_key (type: u)
+- payments_idempotency_key_not_null (type: n)
+- payments_order_id_key (type: u)
+- payments_order_id_not_null (type: n)
+- payments_payment_id_not_null (type: n)
+- payments_pkey (type: p)
+- payments_provider_not_null (type: n)
+- payments_status_not_null (type: n)
+- payments_updated_at_not_null (type: n)
+- refund_requests_amount_not_null (type: n)
+- refund_requests_booking_id_fkey (type: f)
+- refund_requests_booking_id_not_null (type: n)
+- refund_requests_created_at_not_null (type: n)
+- refund_requests_idempotency_key_key (type: u)
+- refund_requests_idempotency_key_not_null (type: n)
+- refund_requests_payment_id_fkey (type: f)
+- refund_requests_percentage_not_null (type: n)
+- refund_requests_pkey (type: p)
+- refund_requests_refund_id_not_null (type: n)
+- refund_requests_status_not_null (type: n)
+- refund_requests_updated_at_not_null (type: n)
+- review_images_created_at_not_null (type: n)
+- review_images_image_url_not_null (type: n)
+- review_images_pkey (type: p)
+- review_images_review_id_fkey (type: f)
+- review_images_review_id_not_null (type: n)
+- review_images_review_image_id_not_null (type: n)
+- review_images_sort_order_not_null (type: n)
+- reviews_booking_id_fkey (type: f)
+- reviews_booking_id_key (type: u)
+- reviews_booking_id_not_null (type: n)
+- reviews_cleanliness_rating_not_null (type: n)
+- reviews_content_not_null (type: n)
+- reviews_created_at_not_null (type: n)
+- reviews_location_rating_not_null (type: n)
+- reviews_pkey (type: p)
+- reviews_rating_not_null (type: n)
+- reviews_review_id_not_null (type: n)
+- reviews_room_id_fkey (type: f)
+- reviews_room_id_not_null (type: n)
+- reviews_service_rating_not_null (type: n)
+- reviews_status_not_null (type: n)
+- reviews_updated_at_not_null (type: n)
+- reviews_user_id_fkey (type: f)
+- reviews_user_id_not_null (type: n)
+- reviews_value_rating_not_null (type: n)
+- roles_code_key (type: u)
+- roles_code_not_null (type: n)
+- roles_created_at_not_null (type: n)
+- roles_pkey (type: p)
+- roles_role_id_not_null (type: n)
+- room_amenities_amenity_id_fkey (type: f)
+- room_amenities_amenity_id_not_null (type: n)
+- room_amenities_pkey (type: p)
+- room_amenities_room_id_fkey (type: f)
+- room_amenities_room_id_not_null (type: n)
+- room_images_created_at_not_null (type: n)
+- room_images_image_id_not_null (type: n)
+- room_images_image_url_not_null (type: n)
+- room_images_is_primary_not_null (type: n)
+- room_images_pkey (type: p)
+- room_images_room_id_fkey (type: f)
+- room_images_room_id_not_null (type: n)
+- room_images_sort_order_not_null (type: n)
+- rooms_average_rating_not_null (type: n)
+- rooms_capacity_not_null (type: n)
+- rooms_created_at_not_null (type: n)
+- rooms_description_not_null (type: n)
+- rooms_hotel_id_fkey (type: f)
+- rooms_hotel_id_not_null (type: n)
+- rooms_is_deleted_not_null (type: n)
+- rooms_name_not_null (type: n)
+- rooms_pkey (type: p)
+- rooms_price_per_night_not_null (type: n)
+- rooms_review_count_not_null (type: n)
+- rooms_room_id_not_null (type: n)
+- rooms_room_type_not_null (type: n)
+- rooms_status_not_null (type: n)
+- rooms_updated_at_not_null (type: n)
+- user_roles_created_at_not_null (type: n)
+- user_roles_pkey (type: p)
+- user_roles_role_id_fkey (type: f)
+- user_roles_role_id_not_null (type: n)
+- user_roles_user_id_fkey (type: f)
+- user_roles_user_id_not_null (type: n)
+- users_created_at_not_null (type: n)
+- users_email_invalid_not_null (type: n)
+- users_email_key (type: u)
+- users_email_not_null (type: n)
+- users_email_verified_not_null (type: n)
+- users_failed_login_count_not_null (type: n)
+- users_full_name_not_null (type: n)
+- users_password_hash_not_null (type: n)
+- users_pkey (type: p)
+- users_status_not_null (type: n)
+- users_updated_at_not_null (type: n)
+- users_user_id_not_null (type: n)
+
+### Table Counts
+- Hotels: 3
+- Rooms: 5
+- Bookings: 0
+- Payments: 0
+- Reviews: 0
+
+## Conclusion
+
+Railway database verification passed. All Flyway migrations successfully applied and checked programmatically.
