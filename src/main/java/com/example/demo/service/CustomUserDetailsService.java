@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -22,9 +23,20 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmailIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Email hoặc mật khẩu không chính xác"));
+        if (user.getStatus() == UserStatus.LOCKED
+                && user.getLockedUntil() != null
+                && user.getLockedUntil().isBefore(Instant.now())) {
+            user.setStatus(UserStatus.ACTIVE);
+            user.setFailedLoginCount(0);
+            user.setLastFailedLoginAt(null);
+            user.setLockedUntil(null);
+            user.setLockReason(null);
+            userRepository.save(user);
+        }
         boolean active = user.getStatus() == UserStatus.ACTIVE;
         boolean notLocked = user.getLockedUntil() == null || user.getLockedUntil().isBefore(Instant.now());
         List<GrantedAuthority> authorities = user.getRoles().stream()

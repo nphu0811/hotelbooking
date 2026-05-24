@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý phòng</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
-<main class="page">
-    <h1>Quản lý phòng</h1>
+<main class="page admin-page">
+    <header class="page-header">
+        <div>
+            <p class="page-kicker">Inventory</p>
+            <h1>Quản lý phòng</h1>
+        </div>
+    </header>
     <p class="alert" th:if="${error}" th:text="${error}"></p>
     <div class="table-wrap">
         <table>

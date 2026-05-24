@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Thanh toán</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
-<main class="page narrow">
-    <h1>Xác nhận đặt phòng</h1>
+<main class="page narrow checkout-panel">
+    <header class="page-header">
+        <p class="page-kicker">Checkout</p>
+        <h1>Xác nhận đặt phòng</h1>
+        <p>Kiểm tra thông tin giữ chỗ trước khi chuyển sang cổng thanh toán sandbox.</p>
+    </header>
     <div class="summary">
         <p><strong>Mã giữ chỗ:</strong> <span th:text="${booking.bookingCode}">HB</span></p>
         <p><strong>Phòng:</strong> <span th:text="${booking.room.name}">Room</span></p>

@@ -4,6 +4,7 @@ import com.example.demo.entity.Booking;
 import com.example.demo.entity.BookingStatus;
 import com.example.demo.entity.PaymentStatus;
 import com.example.demo.entity.RoomStatus;
+import com.example.demo.entity.UserStatus;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.RoomRepository;
@@ -16,8 +17,11 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.ObjectMapper;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -25,6 +29,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -49,8 +55,18 @@ class HotelBookingApplicationTests {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Test
     void contextLoads() {
+    }
+
+    @Test
+    void jacksonSerializesInstantAsUtcText() throws Exception {
+        String json = objectMapper.writeValueAsString(Map.of("timestamp", Instant.parse("2026-05-23T18:00:00Z")));
+
+        assertThat(json).contains("2026-05-23T18:00:00Z");
     }
 
     @Test
@@ -166,5 +182,38 @@ class HotelBookingApplicationTests {
         mockMvc.perform(post("/logout").with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    void repeatedLoginFailuresShowCaptchaAndLockAccount() throws Exception {
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            mockMvc.perform(post("/login")
+                            .with(csrf())
+                            .param("username", "customer@example.test")
+                            .param("password", "wrong"))
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(redirectedUrlPattern(attempt >= 3 ? "/login?error&captcha" : "/login?error"));
+        }
+
+        mockMvc.perform(get("/login").param("error", "").param("captcha", ""))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("captchaRequired", true));
+
+        for (int attempt = 4; attempt <= 5; attempt++) {
+            mockMvc.perform(post("/login")
+                            .with(csrf())
+                            .param("username", "customer@example.test")
+                            .param("password", "wrong"))
+                    .andExpect(status().is3xxRedirection());
+        }
+
+        var user = userRepository.findByEmailIgnoreCase("customer@example.test").orElseThrow();
+        assertThat(user.getStatus()).isEqualTo(UserStatus.LOCKED);
+        assertThat(user.getFailedLoginCount()).isEqualTo(5);
+        assertThat(user.getLockedUntil()).isNotNull();
+
+        mockMvc.perform(get("/login").param("error", "").param("locked", ""))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("locked", true));
     }
 }

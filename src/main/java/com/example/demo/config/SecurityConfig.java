@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.service.CustomUserDetailsService;
+import com.example.demo.service.LoginAttemptService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,7 +10,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 @Configuration
 public class SecurityConfig {
@@ -33,17 +39,45 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    AuthenticationSuccessHandler authenticationSuccessHandler(LoginAttemptService loginAttemptService) {
+        SavedRequestAwareAuthenticationSuccessHandler delegate = new SavedRequestAwareAuthenticationSuccessHandler();
+        delegate.setDefaultTargetUrl("/");
+        return (request, response, authentication) -> {
+            loginAttemptService.recordSuccess(authentication, request);
+            delegate.onAuthenticationSuccess(request, response, authentication);
+        };
+    }
+
+    @Bean
+    AuthenticationFailureHandler authenticationFailureHandler(LoginAttemptService loginAttemptService) {
+        RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+        return (request, response, exception) -> {
+            var result = loginAttemptService.recordFailure(request.getParameter("username"), exception, request);
+            String targetUrl = "/login?error";
+            if (result.locked()) {
+                targetUrl += "&locked";
+            } else if (result.showCaptcha()) {
+                targetUrl += "&captcha";
+            }
+            redirectStrategy.sendRedirect(request, response, targetUrl);
+        };
+    }
+
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                            AuthenticationSuccessHandler authenticationSuccessHandler,
+                                            AuthenticationFailureHandler authenticationFailureHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/rooms/**", "/login", "/register", "/verify/**", "/css/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/", "/rooms/**", "/login", "/register", "/verify/**", "/css/**", "/favicon.svg", "/h2-console/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(login -> login
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/", false)
-                        .failureUrl("/login?error")
+                        .successHandler(authenticationSuccessHandler)
+                        .failureHandler(authenticationFailureHandler)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")

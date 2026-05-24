@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lịch sử đặt phòng</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page">
-    <h1>Lịch sử đặt phòng</h1>
+    <header class="page-header">
+        <p class="page-kicker">Account</p>
+        <h1>Lịch sử đặt phòng</h1>
+        <p>Theo dõi toàn bộ hành trình đặt phòng, thanh toán và trạng thái lưu trú.</p>
+    </header>
     <p class="empty" th:if="${bookings.isEmpty()}">Bạn chưa có booking nào.</p>
     <div class="table-wrap" th:if="${!bookings.isEmpty()}">
         <table>
@@ -30,7 +35,7 @@
                 <td th:text="${booking.checkIn + ' -> ' + booking.checkOut}">Dates</td>
                 <td th:text="${#numbers.formatDecimal(booking.totalAmount,0,'COMMA',0,'POINT')}">0</td>
                 <td><span class="badge" th:text="${booking.status}">Status</span></td>
-                <td><a th:href="@{/account/bookings/{id}(id=${booking.id})}">Chi tiết</a></td>
+                <td><a class="button button-small button-muted" th:href="@{/account/bookings/{id}(id=${booking.id})}">Chi tiết</a></td>
             </tr>
             </tbody>
         </table>

@@ -13,7 +13,7 @@
 - Files involved: `hotel_booking_ai_build_prompt.md`
 - Fix plan: Redact the prompt to a placeholder and require real values to come from environment variables only. Rotate the exposed Railway credential outside the repository.
 - Fix applied: Replaced the real URL with `${DATABASE_PUBLIC_URL:YOUR_RAILWAY_POSTGRES_URL}`.
-- Retest command: `rg -n "DATABASE_PUBLIC_URL|kodama\.proxy\.rlwy\.net" .\hotel_booking_ai_build_prompt.md`
+- Retest command: `rg -n "DATABASE_PUBLIC_URL|<former Railway host>" .\hotel_booking_ai_build_prompt.md` (literal host omitted to avoid re-exposing it)
 - Retest result: PASS - prompt now shows only `${DATABASE_PUBLIC_URL:YOUR_RAILWAY_POSTGRES_URL}` and no real Railway host/password match.
 - Status: DEFERRED - local redaction applied; Railway credential rotation requires external action.
 
@@ -114,9 +114,9 @@
 - Suspected root cause: The tool expects a more constrained design system string format or shorter payload than supplied.
 - Files involved: none
 - Fix plan: Retry with concise design-system text. If still rejected, document Stitch blocker and continue with local design docs/templates.
-- Fix applied: Retried with concise payload and with a global payload; both failed with the same MCP validation error.
-- Retest command: `create_design_system` with concise payload.
-- Retest result: FAIL - Stitch MCP still reports `Request contains an invalid argument.`
+- Fix applied: Retried with concise payload and with a global payload; both failed with the same MCP validation error. Retried again by uploading `docs/design_system.md` as a Stitch screen instance.
+- Retest command: `create_design_system` with concise payload; later `upload_design_md` then `create_design_system_from_design_md`.
+- Retest result: FAIL - Stitch MCP still reports `Request contains an invalid argument.` Latest uploaded screen instance: `8194892506987800513`.
 - Status: DEFERRED - local design docs/templates continue; Stitch project was created but design-system asset could not be created through the exposed tool.
 
 ## ERROR-008: Spring Boot 4 MockMvc test import failed
@@ -199,9 +199,9 @@
 - Suspected root cause: The current Codex session does not have an attached in-app browser instance.
 - Files involved: `docs/browser_qa_report.md`
 - Fix plan: Do not fabricate browser results. Run HTTP-level local QA with real requests and keep browser QA marked blocked/pending.
-- Fix applied: Pending.
-- Retest command: Browser plugin initialization.
-- Retest result: FAIL.
+- Fix applied: Browser backend is still unavailable; HTTP-level QA fallback was rerun against the latest local app and documented without fabricating screenshot/DOM results.
+- Retest command: Browser plugin initialization after following the Browser plugin workflow.
+- Retest result: FAIL - `iab` is still unavailable.
 - Status: DEFERRED
 
 ## ERROR-013: HTTP QA script used read-only PowerShell HOME variable
@@ -236,4 +236,123 @@
 - Fix applied: Removed `-SkipHttpErrorCheck`, allowed redirects, and parsed the final HTML forms/links.
 - Retest command: HTTP QA script without `-SkipHttpErrorCheck`.
 - Retest result: PASS - home/search/detail/login/booking/mock payment/history all returned 200, and payment result contained `CONFIRMED`.
+- Status: FIXED
+
+## ERROR-015: Logout form omitted CSRF token and nav showed unscoped links
+
+- Time UTC: 2026-05-23T17:00:46Z
+- Environment: local / UI / security
+- Feature: navigation and logout
+- Steps to reproduce: Inspect `src/main/resources/templates/fragments/nav.html` and exercise logout from the rendered navigation.
+- Expected: Authenticated logout form includes Spring Security CSRF token; anonymous users do not see account/admin links; customers do not see admin links.
+- Actual: Logout form had no `_csrf` hidden input, and nav links were not role/anonymous scoped.
+- Error stack/log: No stack trace; root issue was visible in the template.
+- Suspected root cause: The nav fragment was created before final Spring Security form/role scoping was added.
+- Files involved: `src/main/resources/templates/fragments/nav.html`, `src/test/java/com/example/demo/HotelBookingApplicationTests.java`
+- Fix plan: Add Thymeleaf Spring Security `sec:authorize` rules and hidden CSRF input to logout; add tests and local HTTP QA.
+- Fix applied: Updated nav fragment, added MockMvc tests for logout/admin access, and reran HTTP QA.
+- Retest command: `.\gradlew.bat test`; local HTTP QA against `http://localhost:8080`.
+- Retest result: PASS - 9 tests passed; HTTP QA confirmed scoped nav, logout with CSRF, booking, mock payment, history, and admin dashboard.
+- Status: FIXED
+
+## ERROR-016: Windows PowerShell Invoke-WebRequest default parser failed during HTTP QA
+
+- Time UTC: 2026-05-23T17:00:46Z
+- Environment: local / terminal
+- Feature: HTTP QA
+- Steps to reproduce: Run HTTP QA with `Invoke-WebRequest` without `-UseBasicParsing` in Windows PowerShell.
+- Expected: Request to `http://localhost:8080/` returns status 200 and response HTML.
+- Actual: PowerShell threw `Object reference not set to an instance of an object`.
+- Error stack/log: `NullReferenceException` from `Microsoft.PowerShell.Commands.InvokeWebRequestCommand`.
+- Suspected root cause: Windows PowerShell's legacy HTML parser path is unstable in this environment.
+- Files involved: none
+- Fix plan: Use `Invoke-WebRequest -UseBasicParsing` for local HTTP QA.
+- Fix applied: Reran the QA script with `-UseBasicParsing`.
+- Retest command: `Invoke-WebRequest -UseBasicParsing -Uri "http://localhost:8080/"`
+- Retest result: PASS - returned HTTP 200.
+- Status: FIXED
+
+## ERROR-017: HTTP QA script used unavailable System.Web.HttpUtility
+
+- Time UTC: 2026-05-23T17:00:46Z
+- Environment: local / terminal
+- Feature: HTTP QA
+- Steps to reproduce: Decode the mock payment callback URL with `[System.Web.HttpUtility]::HtmlDecode(...)`.
+- Expected: HTML entity decoding succeeds.
+- Actual: Windows PowerShell reported `Unable to find type [System.Web.HttpUtility]`.
+- Error stack/log: `TypeNotFound`.
+- Suspected root cause: `System.Web` is not loaded/available in this PowerShell runtime.
+- Files involved: none
+- Fix plan: Use `[System.Net.WebUtility]::HtmlDecode(...)`, which is available.
+- Fix applied: Updated the one-off QA script and reran the flow.
+- Retest command: Local HTTP QA with `[System.Net.WebUtility]::HtmlDecode(...)`.
+- Retest result: PASS - mock payment success callback returned 200 and the result contained `CONFIRMED`.
+- Status: FIXED
+
+## ERROR-018: Secret scan found former Railway host in an old retest command
+
+- Time UTC: 2026-05-23T17:05:39Z
+- Environment: local / terminal
+- Feature: secrets management
+- Steps to reproduce: Run a repository scan for the former Railway host substring and password-bearing URL patterns.
+- Expected: No literal former Railway host appears in project docs/logs.
+- Actual: `ERROR_LOG.md` still contained the former Railway host inside an old retest command example.
+- Error stack/log: Search output pointed to `ERROR_LOG.md`.
+- Suspected root cause: Earlier redaction removed explanatory host text but missed the retest command string.
+- Files involved: `ERROR_LOG.md`
+- Fix plan: Replace the literal host in the command example with `<former Railway host>`.
+- Fix applied: Redacted the retest command and added a note that the literal host is omitted.
+- Retest command: repository scan for the former Railway host substring and password-bearing URL patterns; literal values omitted to avoid re-exposure.
+- Retest result: PASS - only placeholders, localhost, masked examples, and generic `DATABASE_PUBLIC_URL` references remain.
+- Status: FIXED
+
+## ERROR-019: Temporary Java verifier source was written with BOM
+
+- Time UTC: 2026-05-23T17:55:12Z
+- Environment: local / terminal
+- Feature: Railway database verification
+- Steps to reproduce: Generate `RailwayVerifier.java` in `%TEMP%` with PowerShell `Set-Content -Encoding UTF8`, then compile with `javac`.
+- Expected: Temporary Java verifier compiles.
+- Actual: `javac` failed on illegal character `\ufeff`.
+- Error stack/log: `illegal character: '\ufeff'`
+- Suspected root cause: Windows PowerShell wrote UTF-8 with BOM.
+- Files involved: temporary `%TEMP%\RailwayVerifier.java`
+- Fix plan: Write the temporary verifier with `System.Text.UTF8Encoding($false)`.
+- Fix applied: Rewrote the verifier source with UTF-8 without BOM.
+- Retest command: JDBC verifier compile/run with UTF-8 no BOM.
+- Retest result: PASS after the JDBC jar selection issue was also fixed.
+- Status: FIXED
+
+## ERROR-020: Railway JDBC verifier selected PostgreSQL sources jar
+
+- Time UTC: 2026-05-23T17:55:12Z
+- Environment: local / terminal
+- Feature: Railway database verification
+- Steps to reproduce: Pick the newest `postgresql-*.jar` from Gradle cache and run the verifier.
+- Expected: PostgreSQL JDBC driver is on the Java classpath.
+- Actual: The selected file was `postgresql-42.7.4-sources.jar`, so `DriverManager` found no suitable driver.
+- Error stack/log: `No suitable driver found for jdbc:postgresql://<masked>`
+- Suspected root cause: Cache search did not exclude `sources`/`javadoc` jars.
+- Files involved: temporary verifier only.
+- Fix plan: Select a PostgreSQL jar whose filename does not contain `sources` or `javadoc`, and explicitly load `org.postgresql.Driver`.
+- Fix applied: Updated the verifier command accordingly.
+- Retest command: JDBC verifier with binary PostgreSQL driver jar.
+- Retest result: PASS - Railway timezone, Flyway, schema objects, and counts were queried.
+- Status: FIXED
+
+## ERROR-021: Railway demo users existed but did not match advertised demo passwords
+
+- Time UTC: 2026-05-23T17:55:12Z
+- Environment: local app backed by Railway PostgreSQL
+- Feature: login / seed data
+- Steps to reproduce: Start the app with Railway `.env` variables and POST login for `customer@example.test` using the password shown on the login page.
+- Expected: Demo customer login succeeds and nav shows logout/history.
+- Actual: Login returned the login page with the generic invalid-credentials/ inactive-account alert.
+- Error stack/log: HTTP QA stopped at `customer nav did not show logout`.
+- Suspected root cause: Railway already had active demo users, so `DataSeeder` skipped creation and did not repair passwords that drifted from the UI-advertised demo credentials.
+- Files involved: `src/main/java/com/example/demo/config/DataSeeder.java`
+- Fix plan: Change seeding to upsert demo users and repair active status, email verification, roles, and password hash when needed.
+- Fix applied: Added `upsertDemoUser` for `customer@example.test` and `admin@example.test`.
+- Retest command: `.\gradlew.bat test`; restart app with Railway `.env`; HTTP QA login/booking/payment flow; direct JDBC write verification.
+- Retest result: PASS - customer/admin login works, booking `28eeb724-a5c7-4ee6-add2-3b2f59874780` was confirmed in Railway with payment `SUCCESS`.
 - Status: FIXED

@@ -1,0 +1,50 @@
+@keyframes page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float-panel {
+    from {
+        transform: rotate(8deg) perspective(700px) rotateY(-14deg) translate3d(0, 0, 0);
+    }
+    to {
+        transform: rotate(5deg) perspective(700px) rotateY(-8deg) translate3d(10px, -12px, 0);
+    }
+}
+
+@keyframes badge-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
+    }
+    45% {
+        box-shadow: 0 0 0 5px rgba(6, 182, 212, 0.09);
+    }
+}
+
+.room-card,
+.room-row,
+.table-wrap,
+.auth-panel,
+.booking-box,
+.summary,
+.admin-tile {
+    animation: page-enter var(--duration-slow) var(--ease-spring) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+    }
+}

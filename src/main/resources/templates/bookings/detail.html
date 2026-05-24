@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chi tiết booking</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page detail-layout">
-    <section>
-        <h1 th:text="${booking.bookingCode}">Booking</h1>
+    <section class="detail-main">
+        <header class="page-header">
+            <p class="page-kicker">Booking</p>
+            <h1 th:text="${booking.bookingCode}">Booking</h1>
+        </header>
         <p class="alert" th:if="${error}" th:text="${error}"></p>
         <p class="success" th:if="${param.cancelled}">Đã hủy đơn đặt phòng.</p>
         <p class="success" th:if="${param.reviewed}">Cảm ơn đánh giá của bạn.</p>
@@ -27,6 +31,7 @@
         </form>
     </section>
     <aside class="booking-box" th:if="${booking.status.name() == 'CHECKED_OUT' and !booking.reviewed}">
+        <p class="page-kicker">Review</p>
         <h2>Đánh giá lưu trú</h2>
         <form th:action="@{/bookings/{id}/review(id=${booking.id})}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

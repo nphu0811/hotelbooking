@@ -21,10 +21,18 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login(@RequestParam(required = false) String error,
+                        @RequestParam(required = false) String captcha,
+                        @RequestParam(required = false) String locked,
                         @RequestParam(required = false) String registered,
                         Model model) {
         if (error != null) {
             model.addAttribute("error", "Email hoặc mật khẩu không chính xác, hoặc tài khoản chưa ACTIVE");
+        }
+        if (captcha != null) {
+            model.addAttribute("captchaRequired", true);
+        }
+        if (locked != null) {
+            model.addAttribute("locked", true);
         }
         if (registered != null) {
             model.addAttribute("message", "Đăng ký thành công. Dùng link verify trong email log hoặc tài khoản demo để đăng nhập.");

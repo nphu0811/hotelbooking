@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HotelBooking</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
-<main>
+<main class="home-shell">
     <section class="hero">
         <div class="hero-copy">
             <p class="eyebrow">Đặt phòng khách sạn Việt Nam</p>
-            <h1>HotelBooking</h1>
-            <p>Tìm phòng trống, giữ chỗ an toàn 15 phút, thanh toán mock sandbox và quản lý lịch sử đặt phòng.</p>
+            <h1>Stay closer to the best days.</h1>
+            <p>Khám phá phòng trống, giữ chỗ an toàn 15 phút và hoàn tất thanh toán sandbox trong một trải nghiệm đặt phòng tinh gọn.</p>
         </div>
         <form class="search-panel" th:action="@{/rooms/search}" method="get">
             <label>Địa điểm hoặc khách sạn
@@ -36,15 +37,18 @@
 
     <section class="section">
         <div class="section-heading">
-            <h2>Phòng nổi bật</h2>
-            <a th:href="@{/rooms/search(checkIn=${checkIn},checkOut=${checkOut},guests=${guests})}">Xem tất cả</a>
+            <div>
+                <p class="page-kicker">Selected stays</p>
+                <h2>Phòng nổi bật</h2>
+            </div>
+            <a class="button button-muted" th:href="@{/rooms/search(checkIn=${checkIn},checkOut=${checkOut},guests=${guests})}">Xem tất cả</a>
         </div>
         <div class="room-grid" th:if="${rooms != null and !rooms.isEmpty()}">
             <article class="room-card" th:each="room : ${rooms.content}">
                 <img th:src="@{${room.primaryImageUrl}}" th:alt="${room.name}">
                 <div class="room-card-body">
                     <h3 th:text="${room.name}">Room</h3>
-                    <p th:text="${room.hotel.name + ' - ' + room.hotel.city}">Hotel</p>
+                    <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Hotel</p>
                     <p class="price" th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</p>
                     <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}">Chi tiết</a>
                 </div>

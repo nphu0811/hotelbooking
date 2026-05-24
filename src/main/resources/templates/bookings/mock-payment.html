@@ -5,14 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mock payment</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
-<main class="page narrow">
-    <h1>Cổng thanh toán mock</h1>
-    <p class="muted">Sandbox nội bộ cho dev/test, không giao dịch tiền thật.</p>
-    <p><strong>Order ID:</strong> <span th:text="${orderId}">order</span></p>
-    <div class="actions">
+<main class="page narrow payment-panel">
+    <header class="page-header">
+        <p class="page-kicker">Sandbox gateway</p>
+        <h1>Cổng thanh toán mock</h1>
+        <p class="muted">Sandbox nội bộ cho dev/test, không giao dịch tiền thật.</p>
+    </header>
+    <div class="summary">
+        <p><strong>Order ID:</strong> <span th:text="${orderId}">order</span></p>
+    </div>
+    <div class="mock-actions">
         <a class="button" th:href="@{/payments/mock/callback(orderId=${orderId},success=true,signature='mock-secret')}">Thanh toán thành công</a>
         <a class="button button-danger" th:href="@{/payments/mock/callback(orderId=${orderId},success=false,signature='mock-secret')}">Thanh toán thất bại</a>
         <a class="button button-muted" th:href="@{/payments/mock/callback(orderId=${orderId},success=true,signature='bad')}">Callback sai HMAC</a>

@@ -17,24 +17,25 @@
 - [x] Document schema and ERD.
 - [x] Add Railway check SQL.
 - [x] Add local reset SQL.
-- [ ] Run local migration.
-- [ ] Run Railway migration if env credentials are available.
+- [x] Run local H2 schema/test migration fallback.
+- [x] Run Railway migration if env credentials are available.
 
 ## Phase C - UTC
 
 - [x] Configure Hibernate JDBC timezone UTC in `application.properties`.
 - [x] Configure Jackson timezone UTC in `application.properties`.
-- [ ] Verify DB timezone.
-- [ ] Verify app timestamp serialization.
-- [ ] Document results.
+- [x] Verify live PostgreSQL/Railway DB timezone with accepted existing credential.
+- [x] Verify local app/log timestamp rendering.
+- [x] Verify app timestamp serialization.
+- [x] Document current results.
 
 ## Phase D - Railway
 
-- [ ] Use Railway credential from environment only.
-- [ ] Verify connection without printing secret.
-- [ ] Verify schema.
-- [ ] Verify app read/write through browser.
-- [ ] Document verification.
+- [x] Use Railway credential from environment only.
+- [x] Verify connection without printing secret.
+- [x] Verify schema.
+- [x] Verify app read/write through HTTP QA fallback.
+- [x] Document verification.
 
 ## Phase E - Dataset
 
@@ -53,7 +54,7 @@
 ## Phase G - UI Design
 
 - [x] Create Stitch project.
-- [ ] Create design system in Stitch asset.
+- [ ] Create design system in Stitch asset. Blocked by Stitch MCP `Request contains an invalid argument`; local design system fallback is implemented.
 - [x] Document design tokens.
 - [x] Implement Thymeleaf templates and static assets.
 
@@ -75,6 +76,8 @@
 - [x] Unit tests.
 - [x] Integration tests.
 - [x] Security/IDOR tests.
-- [ ] Browser QA.
+- [ ] Browser QA. Blocked by Browser MCP `Browser is not available: iab`; HTTP fallback passed.
 - [x] HTTP local QA fallback.
-- [ ] Railway QA if credentials are available.
+- [x] Railway QA if credentials are available.
+- [x] Logout CSRF and role-scoped nav verified.
+- [x] Login failure CAPTCHA hook and temporary account lockout verified.

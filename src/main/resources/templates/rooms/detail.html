@@ -5,28 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${room.name}">Chi tiết phòng</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page detail-layout">
-    <section>
+    <section class="detail-main">
         <img class="detail-image" th:src="@{${room.primaryImageUrl}}" th:alt="${room.name}">
-        <h1 th:text="${room.name}">Room</h1>
-        <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.address}">Hotel</p>
-        <p th:text="${room.description}">Description</p>
-        <div class="chips">
-            <span th:each="amenity : ${room.amenities}" th:text="${amenity.name}">Amenity</span>
+        <div class="detail-copy">
+            <p class="page-kicker" th:text="${room.roomType}">Room type</p>
+            <h1 th:text="${room.name}">Room</h1>
+            <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.address}">Hotel</p>
+            <p th:text="${room.description}">Description</p>
+            <div class="chips">
+                <span th:each="amenity : ${room.amenities}" th:text="${amenity.name}">Amenity</span>
+            </div>
         </div>
-        <h2>Chính sách hủy</h2>
-        <p th:text="${room.cancellationPolicy}">Policy</p>
-        <h2>Đánh giá gần đây</h2>
-        <p class="empty" th:if="${reviews.isEmpty()}">Phòng chưa có đánh giá.</p>
-        <article class="review" th:each="review : ${reviews}">
-            <strong th:text="${'★ ' + review.rating}">5</strong>
-            <p th:text="${review.content}">Review</p>
-        </article>
+        <section class="premium-panel summary">
+            <h2>Chính sách hủy</h2>
+            <p th:text="${room.cancellationPolicy}">Policy</p>
+        </section>
+        <section>
+            <div class="section-heading">
+                <h2>Đánh giá gần đây</h2>
+            </div>
+            <p class="empty" th:if="${reviews.isEmpty()}">Phòng chưa có đánh giá.</p>
+            <article class="review" th:each="review : ${reviews}">
+                <strong th:text="${'★ ' + review.rating}">5</strong>
+                <p th:text="${review.content}">Review</p>
+            </article>
+        </section>
     </section>
     <aside class="booking-box">
+        <p class="page-kicker">Reserve</p>
         <p class="price" th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</p>
         <p th:if="${room.status.name() == 'MAINTENANCE'}" class="alert">Phòng đang bảo trì, chưa nhận đặt mới.</p>
         <form th:if="${room.status.name() == 'AVAILABLE'}" th:action="@{/bookings}" method="post">

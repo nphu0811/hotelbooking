@@ -5,16 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kết quả thanh toán</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
-<main class="page narrow">
-    <h1>Kết quả thanh toán</h1>
+<main class="page narrow payment-panel">
+    <header class="page-header">
+        <p class="page-kicker">Payment result</p>
+        <h1>Kết quả thanh toán</h1>
+    </header>
     <p class="alert" th:if="${error}" th:text="${error}"></p>
     <div class="summary" th:if="${payment}">
         <p><strong>Order ID:</strong> <span th:text="${payment.orderId}">order</span></p>
-        <p><strong>Trạng thái payment:</strong> <span th:text="${payment.status}">status</span></p>
-        <p><strong>Trạng thái booking:</strong> <span th:text="${booking.status}">status</span></p>
+        <p><strong>Trạng thái payment:</strong> <span class="badge" th:text="${payment.status}">status</span></p>
+        <p><strong>Trạng thái booking:</strong> <span class="badge" th:text="${booking.status}">status</span></p>
         <p><strong>Mã booking:</strong> <span th:text="${booking.bookingCode}">code</span></p>
     </div>
     <a class="button" th:href="@{/account/bookings}">Xem lịch sử đặt phòng</a>

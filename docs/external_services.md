@@ -7,6 +7,7 @@
 - Email: queue/log service with mock successful sends. Real SMTP is not enabled by default.
 - Images: local SVG placeholders.
 - Maps: address text only; Leaflet/OpenStreetMap is the preferred next implementation.
+- CAPTCHA: local login failure tracking shows a visible hook after 3 failures and locks accounts after 5 failures. Third-party challenge verification is reserved for real keys.
 
 ## Data Source
 

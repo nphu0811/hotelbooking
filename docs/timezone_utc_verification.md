@@ -2,21 +2,28 @@
 
 ## Configuration
 
-- `spring.jpa.properties.hibernate.jdbc.time_zone=UTC`: configured.
-- `spring.jackson.time-zone=UTC`: configured.
-- Schema timestamp columns use `TIMESTAMPTZ`.
+- `spring.jpa.properties.hibernate.jdbc.time_zone=UTC`: configured in main, local, and test runtime properties.
+- `spring.jackson.time-zone=UTC`: configured in main and test runtime properties.
+- `logging.pattern.dateformat=yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC`: configured so Spring logs render UTC `Z`.
+- PostgreSQL Flyway schema uses `TIMESTAMPTZ` for timestamp columns.
+- Application startup sets JVM default timezone to UTC in `HotelBookingApplication`.
 
-## DB Timezone
+## Verified Locally
+
+- Command: `.\gradlew.bat test`
+- Result: PASS
+- Evidence: test shutdown logs printed UTC timestamps such as `2026-05-23T16:54:52.861Z`.
+- Command: `.\gradlew.bat test --rerun-tasks`
+- Result: PASS
+- Evidence: `jacksonSerializesInstantAsUtcText()` confirms app Jackson serialization emits `2026-05-23T18:00:00Z`.
+
+## Live PostgreSQL Verification
 
 - Status: VERIFIED
 - Query: `SHOW timezone;`
-- Result: `UTC`
-
-## App Timestamp Serialization
-
-- Status: VERIFIED
-- Result: application logs print UTC `Z` timestamps after `logging.pattern.dateformat` update.
+- Result: `Etc/UTC`
+- Environment: Railway PostgreSQL via existing local `.env` variables.
 
 ## Conclusion
 
-UTC is fully configured end-to-end and verified on both application logs and live Railway PostgreSQL database.
+Application-side UTC handling is configured and locally verified. Railway PostgreSQL also reports UTC-compatible timezone `Etc/UTC`.

@@ -25,4 +25,4 @@
 
 ## Browser Note
 
-- Pending until local app is started and browser QA is run.
+- HTTP QA fallback passed against the local app. Browser automation remains blocked because the in-app browser backend is unavailable in this session.

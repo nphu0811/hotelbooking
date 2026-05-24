@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kết quả tìm kiếm</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page">
-    <h1>Kết quả tìm kiếm</h1>
+    <header class="page-header">
+        <p class="page-kicker">Availability</p>
+        <h1>Kết quả tìm kiếm</h1>
+        <p th:if="${rooms != null}" th:text="${rooms.totalElements + ' phòng phù hợp với lịch trình của bạn'}">0 phòng phù hợp</p>
+    </header>
+
     <form class="toolbar" th:action="@{/rooms/search}" method="get">
         <input name="q" th:value="${q}" placeholder="Địa điểm / khách sạn">
         <input type="date" name="checkIn" th:value="${checkIn}" required>
@@ -25,8 +31,8 @@
         </select>
         <button class="button" type="submit">Lọc</button>
     </form>
+
     <p class="alert" th:if="${error}" th:text="${error}"></p>
-    <p class="muted" th:if="${rooms != null}" th:text="${rooms.totalElements + ' phòng phù hợp'}"></p>
     <div class="room-list" th:if="${rooms != null and !rooms.isEmpty()}">
         <article class="room-row" th:each="room : ${rooms.content}">
             <img th:src="@{${room.primaryImageUrl}}" th:alt="${room.name}">

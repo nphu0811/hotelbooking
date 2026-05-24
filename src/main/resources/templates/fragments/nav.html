@@ -1,5 +1,8 @@
-<nav class="topbar" th:fragment="nav" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <a class="brand" th:href="@{/}">HotelBooking</a>
+<nav class="topbar" th:fragment="nav" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <a class="brand" th:href="@{/}">
+        <img class="brand-logo" th:src="@{/favicon.svg}" alt="" aria-hidden="true">
+        <span>HotelBooking</span>
+    </a>
     <div class="nav-links">
         <a th:href="@{/rooms/search(checkIn=${T(java.time.LocalDate).now().plusDays(1)},checkOut=${T(java.time.LocalDate).now().plusDays(3)},guests=2)}">Tìm phòng</a>
         <a sec:authorize="isAuthenticated()" th:href="@{/account/bookings}">Lịch sử</a>

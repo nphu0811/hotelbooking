@@ -1,0 +1,150 @@
+@media (max-width: 1100px) {
+    .hero {
+        grid-template-columns: 1fr;
+        align-items: center;
+        min-height: auto;
+    }
+
+    .hero::after {
+        opacity: 0.36;
+    }
+
+    .toolbar {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .room-grid,
+    .admin-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 860px) {
+    :root {
+        --text-5xl: 44px;
+        --text-4xl: 36px;
+        --text-3xl: 30px;
+    }
+
+    main,
+    .home-shell .section,
+    .narrow,
+    .auth-page {
+        width: min(100% - 28px, var(--container));
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        padding: 12px 14px;
+    }
+
+    .brand {
+        flex: 1 1 100%;
+    }
+
+    .nav-links,
+    .nav-auth {
+        flex-wrap: wrap;
+    }
+
+    .hero,
+    .detail-layout,
+    .room-row,
+    .form-grid,
+    .toolbar,
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        width: calc(100% - 20px);
+        padding: var(--space-8) var(--space-5);
+        border-radius: var(--radius-xl);
+    }
+
+    .hero::after {
+        display: none;
+    }
+
+    .hero h1 {
+        font-size: 48px;
+    }
+
+    .section-heading,
+    .admin-page .page-header {
+        display: grid;
+        justify-content: stretch;
+    }
+
+    .room-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .row-side {
+        justify-items: start;
+    }
+
+    .booking-box {
+        position: static;
+    }
+
+    .summary p {
+        display: grid;
+        gap: var(--space-1);
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        font-size: 15px;
+    }
+
+    .page {
+        padding-top: var(--space-8);
+    }
+
+    .search-panel,
+    .auth-panel,
+    .booking-box,
+    .summary {
+        padding: var(--space-5);
+        border-radius: var(--radius-lg);
+    }
+
+    .inline-form {
+        min-width: 410px;
+    }
+
+    .actions {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 430px) {
+    main,
+    .home-shell .section,
+    .narrow,
+    .auth-page {
+        width: calc(100% - 20px);
+    }
+
+    .hero h1 {
+        font-size: 40px;
+    }
+
+    .button {
+        width: 100%;
+    }
+
+    .nav-auth .button,
+    .nav-auth form .button {
+        width: auto;
+    }
+
+    .room-row {
+        padding: var(--space-3);
+    }
+}

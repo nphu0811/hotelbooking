@@ -16,7 +16,7 @@
 
 ## Phase B - PostgreSQL Schema
 
-- Status: IN_PROGRESS
+- Status: COMPLETED
 - Required outputs:
   - [x] `src/main/resources/db/migration/V1__init_schema.sql`
   - [x] `src/main/resources/db/migration/V2__indexes_constraints.sql`
@@ -28,21 +28,21 @@
 
 ## Phase C - UTC Configuration
 
-- Status: IN_PROGRESS
-- Notes: `application.properties` now contains Hibernate/Jackson UTC settings.
+- Status: COMPLETED
+- Notes: `application.properties` contains Hibernate/Jackson/logging UTC settings; local test logs and Jackson serialization verified UTC `Z`. Railway PostgreSQL reports `Etc/UTC` under the accepted existing credential.
 - Required output:
-  - [ ] `docs/timezone_utc_verification.md`
+  - [x] `docs/timezone_utc_verification.md`
 
 ## Phase D - Railway Verification
 
-- Status: BLOCKED
-- Blocker: Real Railway credential must come from environment variables and the previously exposed credential should be rotated before trusted verification.
+- Status: COMPLETED
+- Notes: User accepted using the existing Railway database/credential without rotation for this task. Verification used `.env` variables without printing secrets, confirmed schema/data, ran the app against Railway, and verified a real booking/payment write.
 - Required output:
-  - [ ] `docs/railway_verification_log.md`
+  - [x] `docs/railway_verification_log.md`
 
 ## Phase E - Dataset Import
 
-- Status: IN_PROGRESS
+- Status: COMPLETED
 - Required outputs:
   - [x] `data/raw/`
   - [x] `data/processed/`
@@ -63,7 +63,7 @@
 
 ## Phase G - UI Design
 
-- Status: IN_PROGRESS
+- Status: COMPLETED WITH STITCH ASSET BLOCKED
 - Required outputs:
   - [x] Stitch project/design system notes
   - [x] `docs/design_system.md`
@@ -71,7 +71,7 @@
 
 ## Phase H-J - Backend and Frontend Implementation
 
-- Status: IN_PROGRESS
+- Status: COMPLETED
 - Modules:
   - [x] Auth/User
   - [x] Room/Search
@@ -86,8 +86,9 @@
 
 ## Phase K - Tests and QA
 
-- Status: IN_PROGRESS
+- Status: COMPLETED WITH BROWSER AUTOMATION BLOCKED
+- Latest evidence: `.\gradlew.bat test` PASS with 11 tests; local HTTP QA fallback PASS against `http://localhost:8081` with booking `88d297f1-4014-45e7-aa33-1e52412e9692`; Railway-backed HTTP QA PASS with booking `28eeb724-a5c7-4ee6-add2-3b2f59874780` confirmed in Railway as booking `CONFIRMED` and payment `SUCCESS`.
 - Required outputs:
   - [x] `docs/test_report.md`
   - [x] `docs/browser_qa_report.md`
-  - [ ] no severe OPEN entries in `ERROR_LOG.md`
+  - [x] no severe OPEN entries in `ERROR_LOG.md`

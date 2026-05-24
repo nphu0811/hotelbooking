@@ -1,0 +1,165 @@
+.hero {
+    position: relative;
+    width: min(var(--container-wide), calc(100vw - 32px));
+    min-height: 620px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) 430px;
+    align-items: end;
+    gap: var(--space-8);
+    margin: var(--space-5) auto 0;
+    padding: clamp(28px, 5vw, 64px);
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    color: white;
+    background:
+        linear-gradient(115deg, rgba(17, 24, 39, 0.94) 0%, rgba(17, 24, 39, 0.68) 46%, rgba(17, 24, 39, 0.26) 100%),
+        url("room-danang.svg") center/cover no-repeat;
+    box-shadow: var(--shadow-xl);
+    animation: page-enter var(--duration-slow) var(--ease-spring) both;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.18) 100%);
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    right: 8%;
+    top: 10%;
+    width: 220px;
+    height: 280px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 40px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+    transform: rotate(8deg) perspective(700px) rotateY(-14deg);
+    box-shadow: 0 32px 90px rgba(0, 0, 0, 0.22);
+    animation: float-panel 8s var(--ease-spring) infinite alternate;
+}
+
+.hero-copy,
+.hero .search-panel {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-copy {
+    display: grid;
+    gap: var(--space-5);
+    max-width: 720px;
+}
+
+.hero .eyebrow {
+    color: #a5f3fc;
+}
+
+.hero h1 {
+    color: white;
+    font-size: clamp(48px, 7vw, 86px);
+    letter-spacing: -0.055em;
+}
+
+.hero p {
+    max-width: 640px;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: var(--text-lg);
+}
+
+.hero .search-panel {
+    margin: 0;
+}
+
+.hero .button {
+    width: 100%;
+}
+
+.home-shell {
+    width: 100%;
+    max-width: none;
+    padding-top: 0;
+}
+
+.home-shell .section {
+    width: min(var(--container), calc(100% - 40px));
+    margin: 0 auto;
+}
+
+.detail-main {
+    display: grid;
+    gap: var(--space-6);
+}
+
+.detail-main .detail-image {
+    aspect-ratio: 16 / 10;
+}
+
+.detail-copy {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.review {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    margin-top: var(--space-3);
+}
+
+.auth-page {
+    position: relative;
+}
+
+.auth-page::before {
+    content: "";
+    position: fixed;
+    inset: var(--topbar-height) 0 0;
+    z-index: -1;
+    background:
+        linear-gradient(115deg, rgba(17, 24, 39, 0.76), rgba(17, 24, 39, 0.18)),
+        url("room-suite.svg") center/cover no-repeat;
+    opacity: 0.92;
+}
+
+.auth-panel h1 {
+    margin-bottom: var(--space-5);
+}
+
+.auth-panel .button {
+    width: 100%;
+    margin-top: var(--space-2);
+}
+
+.payment-panel,
+.checkout-panel {
+    display: grid;
+    gap: var(--space-5);
+}
+
+.mock-actions {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.error-page {
+    min-height: calc(100vh - var(--topbar-height) - 80px);
+    display: grid;
+    place-items: center;
+}
+
+.error-card {
+    width: min(640px, 100%);
+    padding: var(--space-8);
+    border-radius: var(--radius-2xl);
+    background: var(--color-surface-elevated);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+}
+
+.admin-page .page-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+}

@@ -40,30 +40,10 @@ public class DataSeeder {
             Role superAdminRole = roleRepository.findByCode("SUPER_ADMIN")
                     .orElseGet(() -> roleRepository.save(new Role("SUPER_ADMIN", "Super administrator")));
 
-            if (!userRepository.existsByEmailIgnoreCase("customer@example.test")) {
-                User customer = new User();
-                customer.setFullName("Nguyen Minh Demo");
-                customer.setEmail("customer@example.test");
-                customer.setPhone("0912345678");
-                customer.setPasswordHash(passwordEncoder.encode("User@123"));
-                customer.setStatus(UserStatus.ACTIVE);
-                customer.setEmailVerified(true);
-                customer.getRoles().add(userRole);
-                userRepository.save(customer);
-            }
-
-            if (!userRepository.existsByEmailIgnoreCase("admin@example.test")) {
-                User admin = new User();
-                admin.setFullName("Admin Demo");
-                admin.setEmail("admin@example.test");
-                admin.setPhone("0987654321");
-                admin.setPasswordHash(passwordEncoder.encode("Admin@123"));
-                admin.setStatus(UserStatus.ACTIVE);
-                admin.setEmailVerified(true);
-                admin.getRoles().add(adminRole);
-                admin.getRoles().add(superAdminRole);
-                userRepository.save(admin);
-            }
+            upsertDemoUser(userRepository, passwordEncoder, "customer@example.test", "Nguyen Minh Demo",
+                    "0912345678", "User@123", userRole);
+            upsertDemoUser(userRepository, passwordEncoder, "admin@example.test", "Admin Demo",
+                    "0987654321", "Admin@123", adminRole, superAdminRole);
 
             if (roomRepository.count() > 0) {
                 return;
@@ -115,6 +95,23 @@ public class DataSeeder {
         hotel.setAddress(address);
         hotel.setDescription(description);
         return hotel;
+    }
+
+    private void upsertDemoUser(UserRepository userRepository, PasswordEncoder passwordEncoder, String email,
+                                String fullName, String phone, String password, Role... roles) {
+        User user = userRepository.findByEmailIgnoreCase(email).orElseGet(User::new);
+        user.setFullName(fullName);
+        user.setEmail(email);
+        user.setPhone(phone);
+        if (user.getPasswordHash() == null || !passwordEncoder.matches(password, user.getPasswordHash())) {
+            user.setPasswordHash(passwordEncoder.encode(password));
+        }
+        user.setStatus(UserStatus.ACTIVE);
+        user.setEmailVerified(true);
+        for (Role role : roles) {
+            user.getRoles().add(role);
+        }
+        userRepository.save(user);
     }
 
     private Room room(Hotel hotel, String name, String type, int capacity, String area,

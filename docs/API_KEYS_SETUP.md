@@ -50,6 +50,6 @@ No real key should be committed. Use `.env.example` as the variable list and inj
 
 - Purpose: repeated login failure protection.
 - Options: Cloudflare Turnstile or Google reCAPTCHA.
-- Variables: not implemented yet; reserve `CAPTCHA_SITE_KEY`, `CAPTCHA_SECRET`.
-- Test: after 3 failed login attempts, UI should require challenge when integration is enabled.
-- Fallback: current app documents the hook; full challenge integration is pending.
+- Variables: reserve `CAPTCHA_SITE_KEY`, `CAPTCHA_SECRET` for a real third-party challenge.
+- Test: after 3 failed login attempts, the UI shows a CAPTCHA hook; after 5 failed attempts in 15 minutes, the account is locked temporarily.
+- Fallback: current app enforces the lockout and visible hook; third-party challenge verification is pending until real keys are configured.
