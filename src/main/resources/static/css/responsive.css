@@ -14,8 +14,14 @@
     }
 
     .room-grid,
-    .admin-grid {
+    .admin-grid,
+    .admin-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-analytics,
+    .admin-board {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -54,7 +60,8 @@
     .room-row,
     .form-grid,
     .toolbar,
-    .admin-grid {
+    .admin-grid,
+    .admin-metrics {
         grid-template-columns: 1fr;
     }
 

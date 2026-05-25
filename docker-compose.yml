@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: hotelbooking
+      POSTGRES_USER: hotelbooking
+      POSTGRES_PASSWORD: local-postgres-password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hotelbooking -d hotelbooking"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hotelbooking
+      SPRING_DATASOURCE_USERNAME: hotelbooking
+      SPRING_DATASOURCE_PASSWORD: local-postgres-password
+      APP_PUBLIC_BASE_URL: ${APP_PUBLIC_BASE_URL:?set APP_PUBLIC_BASE_URL}
+      APP_PAYMENT_PROVIDER: vnpay
+      VNPAY_TMN_CODE: ${VNPAY_TMN_CODE:?set VNPAY_TMN_CODE}
+      VNPAY_HASH_SECRET: ${VNPAY_HASH_SECRET:?set VNPAY_HASH_SECRET}
+      VNPAY_PAY_URL: ${VNPAY_PAY_URL:?set VNPAY_PAY_URL}
+      VNPAY_RETURN_URL: ${VNPAY_RETURN_URL:?set VNPAY_RETURN_URL}
+      VNPAY_IPN_URL: ${VNPAY_IPN_URL:?set VNPAY_IPN_URL}
+      MAIL_HOST: ${MAIL_HOST:?set MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:?set MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:?set MAIL_PASSWORD}
+      MAIL_FROM: ${MAIL_FROM:?set MAIL_FROM}
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres-data:

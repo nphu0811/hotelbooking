@@ -11,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Locale;
@@ -24,10 +25,12 @@ public class LoginAttemptService {
 
     private final UserRepository userRepository;
     private final LoginLogRepository loginLogRepository;
+    private final Clock clock;
 
-    public LoginAttemptService(UserRepository userRepository, LoginLogRepository loginLogRepository) {
+    public LoginAttemptService(UserRepository userRepository, LoginLogRepository loginLogRepository, Clock clock) {
         this.userRepository = userRepository;
         this.loginLogRepository = loginLogRepository;
+        this.clock = clock;
     }
 
     @Transactional
@@ -50,7 +53,7 @@ public class LoginAttemptService {
                                             HttpServletRequest request) {
         String email = normalize(submittedEmail);
         Optional<User> user = userRepository.findByEmailIgnoreCase(email);
-        Instant now = Instant.now();
+        Instant now = Instant.now(clock);
         boolean showCaptcha = false;
         boolean locked = false;
 

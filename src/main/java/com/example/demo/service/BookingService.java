@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -43,17 +44,23 @@ public class BookingService {
     private final PaymentRepository paymentRepository;
     private final RefundRequestRepository refundRequestRepository;
     private final EmailService emailService;
+    private final PaymentService paymentService;
+    private final Clock clock;
 
     public BookingService(BookingRepository bookingRepository,
                           RoomRepository roomRepository,
                           PaymentRepository paymentRepository,
                           RefundRequestRepository refundRequestRepository,
-                          EmailService emailService) {
+                          EmailService emailService,
+                          PaymentService paymentService,
+                          Clock clock) {
         this.bookingRepository = bookingRepository;
         this.roomRepository = roomRepository;
         this.paymentRepository = paymentRepository;
         this.refundRequestRepository = refundRequestRepository;
         this.emailService = emailService;
+        this.paymentService = paymentService;
+        this.clock = clock;
     }
 
     @Transactional
@@ -83,7 +90,7 @@ public class BookingService {
         booking.setNights(nights);
         booking.setTotalAmount(total);
         booking.setSpecialRequest(specialRequest == null ? null : specialRequest.trim());
-        booking.setExpiresAt(Instant.now().plus(15, ChronoUnit.MINUTES));
+        booking.setExpiresAt(Instant.now(clock).plus(15, ChronoUnit.MINUTES));
         return bookingRepository.save(booking);
     }
 
@@ -115,7 +122,7 @@ public class BookingService {
         if (booking.getStatus() != BookingStatus.CONFIRMED) {
             throw new BusinessException("Đơn này không thể hủy");
         }
-        if (booking.getCheckIn().equals(LocalDate.now()) && LocalTime.now().isAfter(LocalTime.of(14, 0))) {
+        if (booking.getCheckIn().equals(LocalDate.now(clock)) && LocalTime.now(clock).isAfter(LocalTime.of(14, 0))) {
             throw new BusinessException("Không thể hủy sau giờ check-in");
         }
         int percentage = refundPercentage(booking.getCheckIn());
@@ -132,9 +139,10 @@ public class BookingService {
         refund.setPayment(payment);
         refund.setAmount(refundAmount);
         refund.setPercentage(percentage);
-        refund.setStatus(refundAmount.compareTo(BigDecimal.ZERO) > 0 ? RefundStatus.PROCESSING : RefundStatus.SUCCESS);
+        refund.setStatus(refundAmount.compareTo(BigDecimal.ZERO) > 0 ? RefundStatus.PENDING : RefundStatus.SUCCEEDED);
         refund.setIdempotencyKey(booking.getId().toString());
-        RefundRequest saved = refundRequestRepository.save(refund);
+        refund.setReason("Customer cancellation");
+        RefundRequest saved = paymentService.submitRefund(refundRequestRepository.save(refund));
         emailService.enqueue(user, booking, EmailEventType.BOOKING_CANCELLED, user.getEmail(),
                 "Xác nhận hủy đặt phòng " + booking.getBookingCode(), "booking-cancelled");
         return saved;
@@ -143,13 +151,13 @@ public class BookingService {
     @Scheduled(fixedDelay = 60_000)
     @Transactional
     public void expirePendingBookings() {
-        List<Booking> expired = bookingRepository.findByStatusAndExpiresAtBefore(BookingStatus.PENDING_PAYMENT, Instant.now());
+        List<Booking> expired = bookingRepository.findByStatusAndExpiresAtBefore(BookingStatus.PENDING_PAYMENT, Instant.now(clock));
         for (Booking booking : expired) {
             booking.setStatus(BookingStatus.EXPIRED);
             bookingRepository.save(booking);
             paymentRepository.findFirstByBookingOrderByCreatedAtDesc(booking).ifPresent(payment -> {
-                if (payment.getStatus() == PaymentStatus.INITIATED) {
-                    payment.setStatus(PaymentStatus.TIMEOUT);
+                if (payment.getStatus() == PaymentStatus.PENDING) {
+                    payment.setStatus(PaymentStatus.CANCELLED);
                     paymentRepository.save(payment);
                 }
             });
@@ -157,7 +165,7 @@ public class BookingService {
     }
 
     private void validateBookingInput(LocalDate checkIn, LocalDate checkOut, int guests) {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(clock);
         if (checkIn == null || checkIn.isBefore(today)) {
             throw new BusinessException("Ngày nhận phòng không hợp lệ");
         }
@@ -174,7 +182,7 @@ public class BookingService {
     }
 
     private int refundPercentage(LocalDate checkIn) {
-        long days = ChronoUnit.DAYS.between(LocalDate.now(), checkIn);
+        long days = ChronoUnit.DAYS.between(LocalDate.now(clock), checkIn);
         if (days >= 3) {
             return 100;
         }

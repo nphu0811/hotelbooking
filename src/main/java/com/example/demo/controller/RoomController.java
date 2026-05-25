@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -15,10 +16,12 @@ import java.util.UUID;
 public class RoomController {
     private final RoomService roomService;
     private final ReviewService reviewService;
+    private final Clock clock;
 
-    public RoomController(RoomService roomService, ReviewService reviewService) {
+    public RoomController(RoomService roomService, ReviewService reviewService, Clock clock) {
         this.roomService = roomService;
         this.reviewService = reviewService;
+        this.clock = clock;
     }
 
     @GetMapping("/rooms/{id}")
@@ -26,8 +29,8 @@ public class RoomController {
         Room room = roomService.requireDetail(id);
         model.addAttribute("room", room);
         model.addAttribute("reviews", reviewService.latestFor(room));
-        model.addAttribute("checkIn", LocalDate.now().plusDays(1));
-        model.addAttribute("checkOut", LocalDate.now().plusDays(3));
+        model.addAttribute("checkIn", LocalDate.now(clock).plusDays(1));
+        model.addAttribute("checkOut", LocalDate.now(clock).plusDays(3));
         model.addAttribute("guests", Math.min(room.getCapacity(), 2));
         return "rooms/detail";
     }

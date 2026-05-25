@@ -1,26 +1,130 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}">
-    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
-</head>
+<head th:replace="~{fragments/layout :: head('Admin dashboard')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
-<main class="page admin-page">
-    <header class="page-header">
+<main class="page admin-page admin-dashboard">
+    <header class="page-header admin-dashboard-header">
         <div>
-            <p class="page-kicker">Operations</p>
+            <p class="page-kicker">Operations center</p>
             <h1>Admin dashboard</h1>
+            <p>Quan ly inventory, booking, revenue signal va chat luong data tu mot man hinh.</p>
+        </div>
+        <div class="admin-header-actions">
+            <a class="button button-muted button-small" th:href="@{/admin/rooms}">Rooms</a>
+            <a class="button button-muted button-small" th:href="@{/admin/bookings}">Bookings</a>
+            <a class="button button-small" th:href="@{/admin/users}">Users</a>
         </div>
     </header>
-    <div class="admin-grid">
-        <a class="admin-tile" th:href="@{/admin/rooms}"><strong th:text="${rooms.totalElements}">0</strong><span>Phòng</span></a>
-        <a class="admin-tile" th:href="@{/admin/bookings}"><strong th:text="${bookings.totalElements}">0</strong><span>Booking</span></a>
-        <a class="admin-tile" th:href="@{/admin/users}"><strong th:text="${users.totalElements}">0</strong><span>Người dùng</span></a>
-    </div>
+
+    <section class="admin-metrics" aria-label="Key metrics">
+        <a class="metric-card" th:href="@{/admin/rooms}">
+            <span class="metric-label">Hotels</span>
+            <strong th:text="${stats.totalHotels}">0</strong>
+            <small><span th:text="${stats.googleHotels}">0</span> Google Places / <span th:text="${stats.overpassHotels}">0</span> OSM</small>
+        </a>
+        <a class="metric-card" th:href="@{/admin/rooms}">
+            <span class="metric-label">Rooms</span>
+            <strong th:text="${stats.totalRooms}">0</strong>
+            <small><span th:text="${stats.availableRooms}">0</span> available now</small>
+        </a>
+        <a class="metric-card" th:href="@{/admin/bookings}">
+            <span class="metric-label">Paid stays</span>
+            <strong th:text="${stats.paidBookings}">0</strong>
+            <small><span th:text="${stats.pendingBookings}">0</span> pending payment</small>
+        </a>
+        <a class="metric-card" th:href="@{/admin/users}">
+            <span class="metric-label">Active users</span>
+            <strong th:text="${stats.activeUsers}">0</strong>
+            <small>Verified customer base</small>
+        </a>
+    </section>
+
+    <section class="admin-analytics">
+        <div class="ops-panel">
+            <div class="panel-title">
+                <div>
+                    <p class="page-kicker">Revenue</p>
+                    <h2 th:text="${#numbers.formatDecimal(stats.revenue, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</h2>
+                </div>
+                <span class="badge">Confirmed pipeline</span>
+            </div>
+            <div class="signal-meter" th:style="'--signal:' + ${stats.occupancySignal} + '%'">
+                <span></span>
+            </div>
+            <div class="signal-row">
+                <span>Inventory utilization signal</span>
+                <strong th:text="${stats.occupancySignal + '%'}">0%</strong>
+            </div>
+        </div>
+
+        <div class="ops-panel">
+            <div class="panel-title">
+                <div>
+                    <p class="page-kicker">Data source</p>
+                    <h2>Hotel coverage</h2>
+                </div>
+            </div>
+            <div class="source-bars">
+                <div>
+                    <span>Google Places</span>
+                    <strong th:text="${stats.googleHotels}">0</strong>
+                </div>
+                <div>
+                    <span>OpenStreetMap</span>
+                    <strong th:text="${stats.overpassHotels}">0</strong>
+                </div>
+                <div>
+                    <span>Manual/other</span>
+                    <strong th:text="${stats.totalHotels - stats.googleHotels - stats.overpassHotels}">0</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="admin-board">
+        <div class="ops-panel">
+            <div class="panel-title">
+                <div>
+                    <p class="page-kicker">Recent bookings</p>
+                    <h2>Operational queue</h2>
+                </div>
+                <a th:href="@{/admin/bookings}">View all</a>
+            </div>
+            <div class="mini-list">
+                <article th:each="booking : ${bookings.content}">
+                    <div>
+                        <strong th:text="${booking.bookingCode}">HB-0001</strong>
+                        <span th:text="${booking.room.hotel.name + ' - ' + booking.room.name}">Hotel - Room</span>
+                    </div>
+                    <span class="status-pill" th:text="${booking.status}">CONFIRMED</span>
+                </article>
+                <p class="empty" th:if="${bookings.empty}">No bookings yet.</p>
+            </div>
+        </div>
+
+        <div class="ops-panel">
+            <div class="panel-title">
+                <div>
+                    <p class="page-kicker">Inventory</p>
+                    <h2>Rooms to manage</h2>
+                </div>
+                <a th:href="@{/admin/rooms}">View all</a>
+            </div>
+            <div class="mini-list">
+                <article th:each="room : ${rooms.content}">
+                    <div>
+                        <strong th:text="${room.name}">Standard Room</strong>
+                        <span th:text="${room.hotel != null ? room.hotel.name : 'No hotel'}">Hotel</span>
+                    </div>
+                    <span class="status-pill" th:text="${room.status}">AVAILABLE</span>
+                </article>
+                <p class="empty" th:if="${rooms.empty}">No rooms yet. Import hotel data to create room templates.</p>
+            </div>
+        </div>
+    </section>
 </main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

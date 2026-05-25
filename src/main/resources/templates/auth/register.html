@@ -1,12 +1,6 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Đăng ký</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}">
-    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
-</head>
+<head th:replace="~{fragments/layout :: head('Register')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="auth-page">
@@ -33,5 +27,7 @@
         <button class="button" type="submit">Tạo tài khoản</button>
     </form>
 </main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

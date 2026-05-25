@@ -5,38 +5,55 @@ import com.example.demo.entity.User;
 import com.example.demo.service.BookingService;
 import com.example.demo.service.BusinessException;
 import com.example.demo.service.CurrentUserService;
+import com.example.demo.web.BookingForm;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Controller
 public class BookingController {
     private final BookingService bookingService;
     private final CurrentUserService currentUserService;
+    private final boolean mockPaymentEnabled;
+    private final String paymentProvider;
 
-    public BookingController(BookingService bookingService, CurrentUserService currentUserService) {
+    public BookingController(BookingService bookingService,
+                             CurrentUserService currentUserService,
+                             @Value("${app.payment.mock.enabled:false}") boolean mockPaymentEnabled,
+                             @Value("${app.payment.provider:disabled}") String paymentProvider) {
         this.bookingService = bookingService;
         this.currentUserService = currentUserService;
+        this.mockPaymentEnabled = mockPaymentEnabled;
+        this.paymentProvider = paymentProvider;
     }
 
     @PostMapping("/bookings")
-    public String create(@RequestParam UUID roomId,
-                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
-                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut,
-                         @RequestParam int guests,
-                         @RequestParam(required = false) String specialRequest,
+    public String create(@Valid @ModelAttribute BookingForm bookingForm,
+                         BindingResult bindingResult,
                          Model model) {
         User user = currentUserService.requireCurrentUser();
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("error", "Booking request is invalid.");
+            return "error";
+        }
         try {
-            Booking booking = bookingService.createPendingBooking(user, roomId, checkIn, checkOut, guests, specialRequest);
+            Booking booking = bookingService.createPendingBooking(
+                    user,
+                    bookingForm.getRoomId(),
+                    bookingForm.getCheckIn(),
+                    bookingForm.getCheckOut(),
+                    bookingForm.getGuests(),
+                    bookingForm.getSpecialRequest());
             return "redirect:/checkout/" + booking.getId();
         } catch (BusinessException ex) {
             model.addAttribute("error", ex.getMessage());
@@ -49,6 +66,10 @@ public class BookingController {
         User user = currentUserService.requireCurrentUser();
         Booking booking = bookingService.requireOwnBooking(user, id);
         model.addAttribute("booking", booking);
+        model.addAttribute("mockPaymentEnabled", mockPaymentEnabled);
+        model.addAttribute("paymentProviderConfigured", paymentProvider != null
+                && !paymentProvider.isBlank()
+                && !"disabled".equalsIgnoreCase(paymentProvider));
         return "bookings/checkout";
     }
 

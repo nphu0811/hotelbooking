@@ -31,6 +31,7 @@ public class AdminController {
         model.addAttribute("rooms", adminService.rooms(PageRequest.of(0, 5)));
         model.addAttribute("bookings", adminService.bookings(PageRequest.of(0, 5)));
         model.addAttribute("users", adminService.users(PageRequest.of(0, 5)));
+        model.addAttribute("stats", adminService.dashboardStats());
         return "admin/dashboard";
     }
 

@@ -45,9 +45,12 @@ public class User {
     @Column(nullable = false)
     private boolean emailVerified = false;
 
-    private UUID emailVerificationToken;
+    @Column(length = 128)
+    private String emailVerificationTokenHash;
 
     private Instant emailVerificationExpiresAt;
+
+    private Instant emailVerificationLastSentAt;
 
     @Column(nullable = false)
     private int failedLoginCount = 0;
@@ -132,12 +135,12 @@ public class User {
         this.emailVerified = emailVerified;
     }
 
-    public UUID getEmailVerificationToken() {
-        return emailVerificationToken;
+    public String getEmailVerificationTokenHash() {
+        return emailVerificationTokenHash;
     }
 
-    public void setEmailVerificationToken(UUID emailVerificationToken) {
-        this.emailVerificationToken = emailVerificationToken;
+    public void setEmailVerificationTokenHash(String emailVerificationTokenHash) {
+        this.emailVerificationTokenHash = emailVerificationTokenHash;
     }
 
     public Instant getEmailVerificationExpiresAt() {
@@ -146,6 +149,14 @@ public class User {
 
     public void setEmailVerificationExpiresAt(Instant emailVerificationExpiresAt) {
         this.emailVerificationExpiresAt = emailVerificationExpiresAt;
+    }
+
+    public Instant getEmailVerificationLastSentAt() {
+        return emailVerificationLastSentAt;
+    }
+
+    public void setEmailVerificationLastSentAt(Instant emailVerificationLastSentAt) {
+        this.emailVerificationLastSentAt = emailVerificationLastSentAt;
     }
 
     public int getFailedLoginCount() {

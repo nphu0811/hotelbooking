@@ -45,6 +45,9 @@ public class EmailJob {
     @Column(nullable = false, length = 120)
     private String templateName;
 
+    @Column(columnDefinition = "TEXT")
+    private String bodyText;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EmailStatus status = EmailStatus.PENDING;
@@ -57,6 +60,9 @@ public class EmailJob {
 
     @Column(columnDefinition = "TEXT")
     private String lastError;
+
+    @Column(length = 255)
+    private String providerMessageId;
 
     @Column(nullable = false)
     private Instant createdAt = Instant.now();
@@ -121,6 +127,14 @@ public class EmailJob {
         this.templateName = templateName;
     }
 
+    public String getBodyText() {
+        return bodyText;
+    }
+
+    public void setBodyText(String bodyText) {
+        this.bodyText = bodyText;
+    }
+
     public EmailStatus getStatus() {
         return status;
     }
@@ -151,5 +165,13 @@ public class EmailJob {
 
     public void setLastError(String lastError) {
         this.lastError = lastError;
+    }
+
+    public String getProviderMessageId() {
+        return providerMessageId;
+    }
+
+    public void setProviderMessageId(String providerMessageId) {
+        this.providerMessageId = providerMessageId;
     }
 }

@@ -1,28 +1,33 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mock payment</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}">
-    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
-</head>
+<head th:replace="~{fragments/layout :: head('Mock payment')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page narrow payment-panel">
     <header class="page-header">
         <p class="page-kicker">Sandbox gateway</p>
-        <h1>Cổng thanh toán mock</h1>
-        <p class="muted">Sandbox nội bộ cho dev/test, không giao dịch tiền thật.</p>
+        <h1>Cong thanh toan mock</h1>
+        <p class="muted">Local/dev/test only. This page never moves real money.</p>
     </header>
     <div class="summary">
         <p><strong>Order ID:</strong> <span th:text="${orderId}">order</span></p>
     </div>
     <div class="mock-actions">
-        <a class="button" th:href="@{/payments/mock/callback(orderId=${orderId},success=true,signature='mock-secret')}">Thanh toán thành công</a>
-        <a class="button button-danger" th:href="@{/payments/mock/callback(orderId=${orderId},success=false,signature='mock-secret')}">Thanh toán thất bại</a>
-        <a class="button button-muted" th:href="@{/payments/mock/callback(orderId=${orderId},success=true,signature='bad')}">Callback sai HMAC</a>
+        <form th:action="@{/payments/mock/callback}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" name="orderId" th:value="${orderId}">
+            <input type="hidden" name="success" value="true">
+            <button class="button" type="submit">Mark paid</button>
+        </form>
+        <form th:action="@{/payments/mock/callback}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" name="orderId" th:value="${orderId}">
+            <input type="hidden" name="success" value="false">
+            <button class="button button-danger" type="submit">Mark failed</button>
+        </form>
     </div>
 </main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

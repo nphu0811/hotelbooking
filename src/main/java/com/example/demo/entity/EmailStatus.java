@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 public enum EmailStatus {
     PENDING,
-    SENDING,
+    RETRYING,
     SENT,
     FAILED,
     BOUNCED,

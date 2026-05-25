@@ -11,6 +11,13 @@ No real key should be committed. Use `.env.example` as the variable list and inj
 - Test: run app with env vars, then run `scripts/db/check_railway_db.sql`.
 - Fallback: local profile uses H2 with synthetic seed data.
 
+## Hotel data import (Overpass / Geoapify / Google Places)
+
+- MVP default: Overpass only (`GEOAPIFY_ENABLED=false`, `GOOGLE_PLACES_ENABLED=false`).
+- Geoapify optional enrichment: register at https://www.geoapify.com/, set `GEOAPIFY_API_KEY`, enable with `GEOAPIFY_ENABLED=true`. See `docs/geoapify-setup.md`.
+- Google Places optional enrichment: set `GOOGLE_PLACES_API_KEY` and `GOOGLE_PLACES_ENABLED=true` only when billing/API access is available. See `docs/hotel-data-import-google-places.md`.
+- Overpass: optional `HOTELDATA_OVERPASS_ENDPOINT` (defaults to public instance).
+
 ## Maps
 
 - Purpose: map display and future geocoding.
@@ -25,8 +32,8 @@ No real key should be committed. Use `.env.example` as the variable list and inj
 - Purpose: online payment.
 - Preferred implementation now: `MOCK` sandbox only, no real money.
 - VNPay sandbox: https://sandbox.vnpayment.vn/
-- MoMo sandbox: https://developers.momo.vn/
-- Variables: `VNPAY_*`, `MOMO_*`.
+- VNPay variables: `VNPAY_*`.
+- MoMo is not enabled in production until a real adapter and sandbox verification are added.
 - Test: use `/payments/mock/...` success/failure/invalid signature flows.
 - Fallback: mock payment provider remains enabled for dev/test.
 

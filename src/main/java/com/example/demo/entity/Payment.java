@@ -43,12 +43,15 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentStatus status = PaymentStatus.INITIATED;
+    private PaymentStatus status = PaymentStatus.PENDING;
 
     @Column(nullable = false, unique = true, length = 120)
     private String idempotencyKey;
 
     private Boolean signatureValid;
+
+    @Column(length = 120)
+    private String providerTransactionId;
 
     private Instant processedAt;
 
@@ -103,6 +106,10 @@ public class Payment {
         return currency;
     }
 
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public PaymentStatus getStatus() {
         return status;
     }
@@ -125,6 +132,14 @@ public class Payment {
 
     public void setSignatureValid(Boolean signatureValid) {
         this.signatureValid = signatureValid;
+    }
+
+    public String getProviderTransactionId() {
+        return providerTransactionId;
+    }
+
+    public void setProviderTransactionId(String providerTransactionId) {
+        this.providerTransactionId = providerTransactionId;
     }
 
     public Instant getProcessedAt() {

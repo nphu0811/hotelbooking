@@ -45,6 +45,9 @@ public class EmailLog {
     @Column(columnDefinition = "TEXT")
     private String errorMessage;
 
+    @Column(length = 255)
+    private String providerMessageId;
+
     private Instant sentAt;
 
     @Column(nullable = false)
@@ -72,6 +75,10 @@ public class EmailLog {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public void setProviderMessageId(String providerMessageId) {
+        this.providerMessageId = providerMessageId;
     }
 
     public void setSentAt(Instant sentAt) {

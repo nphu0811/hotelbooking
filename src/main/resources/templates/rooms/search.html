@@ -1,12 +1,6 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kết quả tìm kiếm</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}">
-    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
-</head>
+<head th:replace="~{fragments/layout :: head('Search results')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page">
@@ -16,14 +10,14 @@
         <p th:if="${rooms != null}" th:text="${rooms.totalElements + ' phòng phù hợp với lịch trình của bạn'}">0 phòng phù hợp</p>
     </header>
 
-    <form class="toolbar" th:action="@{/rooms/search}" method="get">
+    <form class="toolbar" th:action="@{/rooms/search}" method="get" aria-label="Search available rooms">
         <input name="q" th:value="${q}" placeholder="Địa điểm / khách sạn">
-        <input type="date" name="checkIn" th:value="${checkIn}" required>
-        <input type="date" name="checkOut" th:value="${checkOut}" required>
-        <input type="number" name="guests" min="1" max="10" th:value="${guests}" required>
+        <input type="date" name="checkIn" th:value="${checkIn}" aria-label="Check-in date" required>
+        <input type="date" name="checkOut" th:value="${checkOut}" aria-label="Check-out date" required>
+        <input type="number" name="guests" min="1" max="10" th:value="${guests}" aria-label="Guests" required>
         <input type="number" name="minPrice" th:value="${minPrice}" placeholder="Giá từ">
         <input type="number" name="maxPrice" th:value="${maxPrice}" placeholder="Giá đến">
-        <select name="sort">
+        <select name="sort" aria-label="Sort results">
             <option value="rating" th:selected="${sort == 'rating'}">Đánh giá</option>
             <option value="price_asc" th:selected="${sort == 'price_asc'}">Giá tăng</option>
             <option value="price_desc" th:selected="${sort == 'price_desc'}">Giá giảm</option>
@@ -35,10 +29,17 @@
     <p class="alert" th:if="${error}" th:text="${error}"></p>
     <div class="room-list" th:if="${rooms != null and !rooms.isEmpty()}">
         <article class="room-row" th:each="room : ${rooms.content}">
-            <img th:src="@{${room.primaryImageUrl}}" th:alt="${room.name}">
+            <img th:src="${room.primaryImageUrl != null ? room.primaryImageUrl : '/css/room-placeholder.svg'}" th:alt="${room.name}">
             <div>
                 <h2 th:text="${room.name}">Room</h2>
                 <p th:text="${room.hotel.name + ' - ' + room.hotel.address}">Address</p>
+                <p class="source-note" th:if="${room.hotel.source != null}">
+                    <span th:text="${'Source: ' + room.hotel.source}">Source</span>
+                    <a th:if="${room.hotel.sourceUrl != null}" th:href="${room.hotel.sourceUrl}" rel="nofollow noopener" target="_blank">record</a>
+                    <a th:if="${room.hotel.latitude != null and room.hotel.longitude != null}"
+                       th:href="${'https://www.openstreetmap.org/?mlat=' + room.hotel.latitude + '&mlon=' + room.hotel.longitude + '#map=16/' + room.hotel.latitude + '/' + room.hotel.longitude}"
+                       rel="nofollow noopener" target="_blank">map</a>
+                </p>
                 <p class="muted" th:text="${'Sức chứa ' + room.capacity + ' khách - ' + room.roomType}">Type</p>
                 <div class="chips">
                     <span th:each="amenity : ${room.amenities}" th:text="${amenity.name}">Amenity</span>
@@ -53,5 +54,7 @@
     </div>
     <p class="empty" th:if="${rooms == null or rooms.isEmpty()}">Không có phòng trống trong khoảng thời gian này.</p>
 </main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +39,18 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     @Query("select b from Booking b where b.id = :id")
     Optional<Booking> findDetailedById(@Param("id") UUID id);
 
+    @EntityGraph(attributePaths = {"room", "room.hotel", "user"})
+    @Query(value = "select b from Booking b", countQuery = "select count(b) from Booking b")
+    Page<Booking> findAdminPageWithDetails(Pageable pageable);
+
     List<Booking> findByStatusAndExpiresAtBefore(BookingStatus status, Instant expiresAt);
 
     Page<Booking> findByStatus(BookingStatus status, Pageable pageable);
+
+    long countByStatus(BookingStatus status);
+
+    long countByStatusIn(Collection<BookingStatus> statuses);
+
+    @Query("select coalesce(sum(b.totalAmount), 0) from Booking b where b.status in :statuses")
+    BigDecimal sumTotalAmountByStatusIn(@Param("statuses") Collection<BookingStatus> statuses);
 }

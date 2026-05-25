@@ -1,9 +1,10 @@
 package com.example.demo.entity;
 
 public enum PaymentStatus {
-    INITIATED,
-    SUCCESS,
+    PENDING,
+    PAID,
     FAILED,
-    TIMEOUT,
+    CANCELLED,
+    REFUND_PENDING,
     REFUNDED
 }

@@ -1,12 +1,6 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kết quả thanh toán</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}">
-    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
-</head>
+<head th:replace="~{fragments/layout :: head('Payment result')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page narrow payment-panel">
@@ -23,5 +17,7 @@
     </div>
     <a class="button" th:href="@{/account/bookings}">Xem lịch sử đặt phòng</a>
 </main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

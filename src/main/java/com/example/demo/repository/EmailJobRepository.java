@@ -10,4 +10,6 @@ import java.util.UUID;
 
 public interface EmailJobRepository extends JpaRepository<EmailJob, UUID> {
     List<EmailJob> findTop20ByStatusAndNextAttemptAtBeforeOrderByCreatedAtAsc(EmailStatus status, Instant now);
+
+    List<EmailJob> findTop20ByStatusInAndNextAttemptAtLessThanEqualOrderByCreatedAtAsc(List<EmailStatus> statuses, Instant now);
 }

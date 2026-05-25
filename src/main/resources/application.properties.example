@@ -19,6 +19,7 @@ spring.flyway.enabled=true
 app.jwt.secret=${JWT_SECRET:YOUR_JWT_SECRET_MIN_256_BITS}
 app.jwt.access-token-ttl-minutes=60
 app.jwt.refresh-token-ttl-days=7
+app.public-base-url=${APP_PUBLIC_BASE_URL:http://localhost:8080}
 
 cloudinary.cloud-name=${CLOUDINARY_CLOUD_NAME:YOUR_KEY}
 cloudinary.api-key=${CLOUDINARY_API_KEY:YOUR_KEY}
@@ -36,10 +37,10 @@ vnpay.pay-url=${VNPAY_PAY_URL:YOUR_SANDBOX_URL}
 vnpay.return-url=${VNPAY_RETURN_URL:YOUR_RETURN_URL}
 vnpay.ipn-url=${VNPAY_IPN_URL:YOUR_IPN_URL}
 
-momo.partner-code=${MOMO_PARTNER_CODE:YOUR_KEY}
-momo.access-key=${MOMO_ACCESS_KEY:YOUR_KEY}
-momo.secret-key=${MOMO_SECRET_KEY:YOUR_KEY}
-momo.endpoint=${MOMO_ENDPOINT:YOUR_SANDBOX_URL}
-
 maps.provider=${MAPS_PROVIDER:leaflet}
 google.maps.api-key=${GOOGLE_MAPS_API_KEY:YOUR_KEY}
+google.places.api-key=${GOOGLE_PLACES_API_KEY:YOUR_KEY}
+google.places.enabled=${GOOGLE_PLACES_ENABLED:false}
+geoapify.api-key=${GEOAPIFY_API_KEY:YOUR_KEY}
+geoapify.enabled=${GEOAPIFY_ENABLED:false}
+hoteldata.overpass.endpoint=${HOTELDATA_OVERPASS_ENDPOINT:https://overpass-api.de/api/interpreter}

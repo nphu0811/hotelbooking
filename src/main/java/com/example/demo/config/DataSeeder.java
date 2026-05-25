@@ -6,44 +6,35 @@ import com.example.demo.entity.Role;
 import com.example.demo.entity.Room;
 import com.example.demo.entity.RoomImage;
 import com.example.demo.entity.RoomStatus;
-import com.example.demo.entity.User;
-import com.example.demo.entity.UserStatus;
 import com.example.demo.repository.AmenityRepository;
 import com.example.demo.repository.HotelRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.RoomRepository;
-import com.example.demo.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Configuration
-@Profile({"local", "test", "default"})
+@Profile({"local", "dev", "test"})
+@ConditionalOnProperty(prefix = "app", name = "seed-demo-data", havingValue = "true")
 public class DataSeeder {
     @Bean
     CommandLineRunner seedData(RoleRepository roleRepository,
-                               UserRepository userRepository,
                                HotelRepository hotelRepository,
                                RoomRepository roomRepository,
-                               AmenityRepository amenityRepository,
-                               PasswordEncoder passwordEncoder) {
+                               AmenityRepository amenityRepository) {
         return args -> {
-            Role userRole = roleRepository.findByCode("USER")
+            roleRepository.findByCode("USER")
                     .orElseGet(() -> roleRepository.save(new Role("USER", "Default customer role")));
-            Role adminRole = roleRepository.findByCode("ADMIN")
+            roleRepository.findByCode("ADMIN")
                     .orElseGet(() -> roleRepository.save(new Role("ADMIN", "Hotel administrator")));
-            Role superAdminRole = roleRepository.findByCode("SUPER_ADMIN")
+            roleRepository.findByCode("SUPER_ADMIN")
                     .orElseGet(() -> roleRepository.save(new Role("SUPER_ADMIN", "Super administrator")));
-
-            upsertDemoUser(userRepository, passwordEncoder, "customer@example.test", "Nguyen Minh Demo",
-                    "0912345678", "User@123", userRole);
-            upsertDemoUser(userRepository, passwordEncoder, "admin@example.test", "Admin Demo",
-                    "0987654321", "Admin@123", adminRole, superAdminRole);
 
             if (roomRepository.count() > 0) {
                 return;
@@ -95,23 +86,6 @@ public class DataSeeder {
         hotel.setAddress(address);
         hotel.setDescription(description);
         return hotel;
-    }
-
-    private void upsertDemoUser(UserRepository userRepository, PasswordEncoder passwordEncoder, String email,
-                                String fullName, String phone, String password, Role... roles) {
-        User user = userRepository.findByEmailIgnoreCase(email).orElseGet(User::new);
-        user.setFullName(fullName);
-        user.setEmail(email);
-        user.setPhone(phone);
-        if (user.getPasswordHash() == null || !passwordEncoder.matches(password, user.getPasswordHash())) {
-            user.setPasswordHash(passwordEncoder.encode(password));
-        }
-        user.setStatus(UserStatus.ACTIVE);
-        user.setEmailVerified(true);
-        for (Role role : roles) {
-            user.getRoles().add(role);
-        }
-        userRepository.save(user);
     }
 
     private Room room(Hotel hotel, String name, String type, int capacity, String area,

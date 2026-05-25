@@ -1,21 +1,22 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="${room.name}">Chi tiết phòng</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}">
-    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
-</head>
+<head th:replace="~{fragments/layout :: head(${room.name})}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page detail-layout">
     <section class="detail-main">
-        <img class="detail-image" th:src="@{${room.primaryImageUrl}}" th:alt="${room.name}">
+        <img class="detail-image" th:src="${room.primaryImageUrl != null ? room.primaryImageUrl : '/css/room-placeholder.svg'}" th:alt="${room.name}">
         <div class="detail-copy">
             <p class="page-kicker" th:text="${room.roomType}">Room type</p>
             <h1 th:text="${room.name}">Room</h1>
             <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.address}">Hotel</p>
+            <p class="source-note" th:if="${room.hotel.source != null}">
+                <span th:text="${'Source: ' + room.hotel.source}">Source</span>
+                <a th:if="${room.hotel.sourceUrl != null}" th:href="${room.hotel.sourceUrl}" rel="nofollow noopener" target="_blank">record</a>
+                <a th:if="${room.hotel.latitude != null and room.hotel.longitude != null}"
+                   th:href="${'https://www.openstreetmap.org/?mlat=' + room.hotel.latitude + '&mlon=' + room.hotel.longitude + '#map=16/' + room.hotel.latitude + '/' + room.hotel.longitude}"
+                   rel="nofollow noopener" target="_blank">map</a>
+            </p>
             <p th:text="${room.description}">Description</p>
             <div class="chips">
                 <span th:each="amenity : ${room.amenities}" th:text="${amenity.name}">Amenity</span>
@@ -59,5 +60,7 @@
         </form>
     </aside>
 </main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

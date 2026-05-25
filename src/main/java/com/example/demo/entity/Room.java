@@ -70,6 +70,12 @@ public class Room {
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted = false;
 
+    @Column(nullable = false, length = 60)
+    private String roomSource = "MANUAL";
+
+    @Column(nullable = false, length = 60)
+    private String rateSource = "MANUAL";
+
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomImage> images = new ArrayList<>();
 
@@ -190,6 +196,22 @@ public class Room {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getRoomSource() {
+        return roomSource;
+    }
+
+    public void setRoomSource(String roomSource) {
+        this.roomSource = roomSource;
+    }
+
+    public String getRateSource() {
+        return rateSource;
+    }
+
+    public void setRateSource(String rateSource) {
+        this.rateSource = rateSource;
     }
 
     public List<RoomImage> getImages() {

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title}">HotelBooking</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
+</head>
+<body>
+<div th:fragment="alerts">
+    <p class="alert" th:if="${error}" th:text="${error}"></p>
+    <p class="success" th:if="${message}" th:text="${message}"></p>
+</div>
+<footer class="site-footer" th:fragment="footer">
+    <span>HotelBooking</span>
+    <span>Place data is shown with source attribution when imported from external datasets.</span>
+</footer>
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>

@@ -9,19 +9,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.LocalDate;
 
 @Controller
 public class HomeController {
     private final RoomService roomService;
+    private final Clock clock;
 
-    public HomeController(RoomService roomService) {
+    public HomeController(RoomService roomService, Clock clock) {
         this.roomService = roomService;
+        this.clock = clock;
     }
 
     @GetMapping("/")
     public String home(Model model) {
-        LocalDate checkIn = LocalDate.now().plusDays(1);
+        LocalDate checkIn = LocalDate.now(clock).plusDays(1);
         LocalDate checkOut = checkIn.plusDays(2);
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);

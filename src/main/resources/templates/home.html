@@ -1,12 +1,6 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HotelBooking</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}">
-    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
-</head>
+<head th:replace="~{fragments/layout :: head('HotelBooking')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="home-shell">
@@ -45,10 +39,11 @@
         </div>
         <div class="room-grid" th:if="${rooms != null and !rooms.isEmpty()}">
             <article class="room-card" th:each="room : ${rooms.content}">
-                <img th:src="@{${room.primaryImageUrl}}" th:alt="${room.name}">
+                <img th:src="${room.primaryImageUrl != null ? room.primaryImageUrl : '/css/room-placeholder.svg'}" th:alt="${room.name}">
                 <div class="room-card-body">
                     <h3 th:text="${room.name}">Room</h3>
                     <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Hotel</p>
+                    <p class="source-note" th:if="${room.hotel.source != null}" th:text="${'Source: ' + room.hotel.source}">Source</p>
                     <p class="price" th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</p>
                     <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}">Chi tiết</a>
                 </div>
@@ -57,5 +52,7 @@
         <p class="empty" th:if="${rooms == null or rooms.isEmpty()}">Chưa có phòng phù hợp.</p>
     </section>
 </main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

@@ -12,9 +12,11 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByEmailIgnoreCase(String email);
 
-    Optional<User> findByEmailVerificationToken(UUID token);
+    Optional<User> findByEmailVerificationTokenHash(String tokenHash);
 
     boolean existsByEmailIgnoreCase(String email);
 
     Page<User> findByStatus(UserStatus status, Pageable pageable);
+
+    long countByStatus(UserStatus status);
 }
