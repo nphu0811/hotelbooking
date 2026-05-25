@@ -4,6 +4,7 @@ import com.example.demo.entity.Booking;
 import com.example.demo.entity.Payment;
 import com.example.demo.entity.User;
 import com.example.demo.payment.PaymentIntent;
+import com.example.demo.payment.PaymentWebhookResult;
 import com.example.demo.service.BookingService;
 import com.example.demo.service.BusinessException;
 import com.example.demo.service.CurrentUserService;
@@ -16,6 +17,8 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
@@ -55,15 +58,24 @@ public class PaymentController {
         }
     }
 
-    @PostMapping("/payments/{provider}/webhook")
-    public ResponseEntity<String> webhook(@PathVariable String provider, HttpServletRequest request) throws IOException {
-        String rawPayload = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+    @RequestMapping(path = "/payments/{provider}/webhook", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<?> webhook(@PathVariable String provider, HttpServletRequest request) throws IOException {
+        String rawPayload = webhookPayload(request);
         Map<String, String> headers = Collections.list(request.getHeaderNames()).stream()
                 .collect(Collectors.toMap(name -> name, request::getHeader, (left, right) -> right));
         try {
-            Payment payment = paymentService.handleWebhook(provider, headers, rawPayload);
-            return ResponseEntity.ok(payment.getStatus().name());
+            PaymentWebhookResult result = paymentService.handleWebhookDetailed(provider, headers, rawPayload);
+            if ("vnpay".equalsIgnoreCase(provider)) {
+                if (result.alreadyProcessed()) {
+                    return vnpayIpn("02", "Order already confirmed");
+                }
+                return vnpayIpn("00", "Confirm Success");
+            }
+            return ResponseEntity.ok(result.payment().getStatus().name());
         } catch (BusinessException ex) {
+            if ("vnpay".equalsIgnoreCase(provider)) {
+                return vnpayIpn(vnpayRspCode(ex), vnpayMessage(ex));
+            }
             return ResponseEntity.badRequest().body("REJECTED");
         }
     }
@@ -96,5 +108,49 @@ public class PaymentController {
             return forwardedFor.split(",")[0].trim();
         }
         return request.getRemoteAddr();
+    }
+
+    private String webhookPayload(HttpServletRequest request) throws IOException {
+        if ("GET".equalsIgnoreCase(request.getMethod())) {
+            if (request.getQueryString() != null && !request.getQueryString().isBlank()) {
+                return request.getQueryString();
+            }
+            return request.getParameterMap().entrySet().stream()
+                    .flatMap(entry -> java.util.Arrays.stream(entry.getValue())
+                            .map(value -> encode(entry.getKey()) + "=" + encode(value)))
+                    .collect(Collectors.joining("&"));
+        }
+        return StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+    }
+
+    private String encode(String value) {
+        return java.net.URLEncoder.encode(value, StandardCharsets.UTF_8);
+    }
+
+    private ResponseEntity<Map<String, String>> vnpayIpn(String code, String message) {
+        return ResponseEntity.ok(Map.of("RspCode", code, "Message", message));
+    }
+
+    private String vnpayRspCode(BusinessException ex) {
+        String message = ex.getMessage() == null ? "" : ex.getMessage().toLowerCase();
+        if (message.contains("signature") || message.contains("checksum")) {
+            return "97";
+        }
+        if (message.contains("amount")) {
+            return "04";
+        }
+        if (message.contains("not found") || message.contains("unknown payment")) {
+            return "01";
+        }
+        return "99";
+    }
+
+    private String vnpayMessage(BusinessException ex) {
+        return switch (vnpayRspCode(ex)) {
+            case "97" -> "Invalid Checksum";
+            case "04" -> "Invalid Amount";
+            case "01" -> "Order not Found";
+            default -> "Unknown error";
+        };
     }
 }

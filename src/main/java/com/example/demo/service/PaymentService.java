@@ -12,6 +12,7 @@ import com.example.demo.payment.PaymentIntent;
 import com.example.demo.payment.PaymentIntentRequest;
 import com.example.demo.payment.PaymentProvider;
 import com.example.demo.payment.PaymentProviderRegistry;
+import com.example.demo.payment.PaymentWebhookResult;
 import com.example.demo.payment.PaymentWebhookPayload;
 import com.example.demo.payment.RefundCommand;
 import com.example.demo.payment.RefundResult;
@@ -161,6 +162,11 @@ public class PaymentService {
 
     @Transactional(noRollbackFor = BusinessException.class)
     public Payment handleWebhook(String providerName, Map<String, String> headers, String rawPayload) {
+        return handleWebhookDetailed(providerName, headers, rawPayload).payment();
+    }
+
+    @Transactional(noRollbackFor = BusinessException.class)
+    public PaymentWebhookResult handleWebhookDetailed(String providerName, Map<String, String> headers, String rawPayload) {
         PaymentProvider provider = paymentProviderRegistry.require(providerName);
         boolean signatureValid = provider.verifyWebhook(headers, rawPayload);
         PaymentWebhookPayload payload = signatureValid
@@ -169,11 +175,13 @@ public class PaymentService {
 
         Optional<PaymentWebhookEvent> duplicate = webhookEventRepository.findByProviderEventId(payload.providerEventId());
         if (duplicate.isPresent()) {
-            return paymentRepository.findByOrderId(payload.orderId())
+            Payment duplicatePayment = paymentRepository.findByOrderId(payload.orderId())
                     .orElseThrow(() -> new BusinessException("Duplicate webhook references an unknown payment"));
+            return new PaymentWebhookResult(duplicatePayment, true);
         }
 
         Payment payment = paymentRepository.findByOrderId(payload.orderId()).orElse(null);
+        boolean alreadyProcessed = payment != null && payment.getStatus() != PaymentStatus.PENDING;
         PaymentWebhookEvent event = new PaymentWebhookEvent();
         event.setProvider(provider.getProviderName().toUpperCase());
         event.setProviderEventId(payload.providerEventId());
@@ -194,7 +202,7 @@ public class PaymentService {
             applyWebhookStatus(payment, payload);
             event.setProcessed(true);
             event.setProcessedAt(Instant.now(clock));
-            return paymentRepository.save(payment);
+            return new PaymentWebhookResult(paymentRepository.save(payment), alreadyProcessed);
         } catch (RuntimeException ex) {
             event.setProcessed(false);
             event.setErrorMessage(ex.getMessage());

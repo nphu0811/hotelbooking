@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +31,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -40,8 +42,10 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {
@@ -132,14 +136,44 @@ class VnPayPaymentFlowTests {
         PaymentIntent intent = paymentService.createPaymentIntent(booking);
         String rawPayload = signedPayload(intent.orderId(), booking.getTotalAmount(), "VND", "TXN-HTTP-IPN");
 
-        mockMvc.perform(post("/payments/vnpay/webhook")
-                        .contentType("application/x-www-form-urlencoded")
-                        .content(rawPayload))
+        mockMvc.perform(get(URI.create("/payments/vnpay/webhook?" + rawPayload)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("PAID"));
+                .andExpect(jsonPath("$.RspCode").value("00"))
+                .andExpect(jsonPath("$.Message").value("Confirm Success"));
 
         assertThat(paymentRepository.findByOrderId(intent.orderId()).orElseThrow().getStatus())
                 .isEqualTo(PaymentStatus.PAID);
+    }
+
+    @Test
+    void vnpayIpnReturnsProviderCodesForDuplicateInvalidSignatureAndWrongAmount() throws Exception {
+        Booking booking = createBooking(107);
+        PaymentIntent intent = paymentService.createPaymentIntent(booking);
+        String rawPayload = signedPayload(intent.orderId(), booking.getTotalAmount(), "VND", "TXN-IPN-CODES");
+
+        mockMvc.perform(get(URI.create("/payments/vnpay/webhook?" + rawPayload)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.RspCode").value("00"));
+        mockMvc.perform(get(URI.create("/payments/vnpay/webhook?" + rawPayload)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.RspCode").value("02"));
+
+        Booking badSignatureBooking = createBooking(108);
+        PaymentIntent badSignatureIntent = paymentService.createPaymentIntent(badSignatureBooking);
+        String badSignature = signedPayload(badSignatureIntent.orderId(),
+                badSignatureBooking.getTotalAmount(), "VND", "TXN-IPN-BAD-SIG")
+                .replaceFirst("vnp_SecureHash=[^&]+", "vnp_SecureHash=bad");
+        mockMvc.perform(get(URI.create("/payments/vnpay/webhook?" + badSignature)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.RspCode").value("97"));
+
+        Booking wrongAmountBooking = createBooking(109);
+        PaymentIntent wrongAmountIntent = paymentService.createPaymentIntent(wrongAmountBooking);
+        String wrongAmount = signedPayload(wrongAmountIntent.orderId(),
+                wrongAmountBooking.getTotalAmount().add(BigDecimal.valueOf(1_000)), "VND", "TXN-IPN-AMOUNT");
+        mockMvc.perform(get(URI.create("/payments/vnpay/webhook?" + wrongAmount)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.RspCode").value("04"));
     }
 
     @Test
@@ -201,15 +235,18 @@ class VnPayPaymentFlowTests {
     }
 
     private Booking createBooking(int dayOffset) {
-        var room = roomRepository.findAll().stream()
-                .filter(candidate -> candidate.getStatus() == RoomStatus.AVAILABLE)
+        LocalDate checkIn = LocalDate.now().plusDays(dayOffset);
+        LocalDate checkOut = LocalDate.now().plusDays(dayOffset + 2);
+        var roomId = roomRepository.searchAvailableIds("", checkIn, checkOut, 2, null, null,
+                        RoomStatus.AVAILABLE, PageRequest.of(0, 1))
+                .stream()
                 .findFirst()
                 .orElseThrow();
         return bookingService.createPendingBooking(
                 user,
-                room.getId(),
-                LocalDate.now().plusDays(dayOffset),
-                LocalDate.now().plusDays(dayOffset + 2),
+                roomId,
+                checkIn,
+                checkOut,
                 2,
                 null
         );

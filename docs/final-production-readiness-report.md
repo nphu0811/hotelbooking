@@ -11,6 +11,7 @@ True production go-live still requires live external-provider verification with 
 ## Fixed In This Pass
 
 - VNPay webhook/IPN endpoint is public and CSRF-exempt while still requiring provider HMAC validation before state changes.
+- VNPay IPN now accepts the provider GET callback contract and returns provider-style JSON `RspCode`/`Message` responses.
 - VNPay return endpoint is read-only and does not confirm payment without webhook/IPN state.
 - VNPay payment URL now includes provider-style create time and client IP.
 - Verification emails now contain a real `/verify/{token}` link built from `APP_PUBLIC_BASE_URL`; only the token hash is stored.
@@ -29,6 +30,7 @@ True production go-live still requires live external-provider verification with 
 - Geoapify local dry-run: PASS, fetched 5, inserted 5, updated 0, skipped 0
 - Secret scan for known high-risk tokens/real Geoapify key: PASS, no matches
 - VNPay HTTP webhook regression: PASS, anonymous signed IPN reaches controller and confirms payment
+- VNPay IPN response-code regression: PASS, signed, duplicate, invalid-signature, and wrong-amount callbacks return expected provider codes
 
 ## Screenshots
 

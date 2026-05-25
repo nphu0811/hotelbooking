@@ -21,6 +21,15 @@ Do not commit provider credentials.
 
 VNPay IPN needs a publicly reachable HTTPS URL. For local provider verification, expose the app through an approved tunnel or deploy to staging first, then set `VNPAY_IPN_URL` to that public endpoint.
 
+The project-side VNPay IPN endpoint is `/payments/vnpay/webhook`. It accepts the provider's GET query-string callback and returns VNPay-style JSON response codes:
+
+- `00` when a pending payment is confirmed or failed exactly once.
+- `02` when the same transaction/order is already processed.
+- `04` when the signed amount does not match the local payment.
+- `97` when the HMAC checksum is invalid.
+- `01` when the order cannot be found.
+- `99` for unexpected processing errors.
+
 ## Sandbox Verification Procedure
 
 1. Start the app with `SPRING_PROFILES_ACTIVE=prod` and the VNPay sandbox variables.
@@ -28,7 +37,7 @@ VNPay IPN needs a publicly reachable HTTPS URL. For local provider verification,
 3. Create a booking and start payment.
 4. Confirm the redirect URL goes to the VNPay sandbox host and contains a signed `vnp_SecureHash`.
 5. Complete the sandbox payment in VNPay.
-6. Confirm VNPay POSTs/IPNs to `/payments/vnpay/webhook`.
+6. Confirm VNPay sends IPN to `/payments/vnpay/webhook`.
 7. Verify:
    - valid signature confirms payment and booking,
    - duplicate webhook does not create a second confirmation,
