@@ -1,12 +1,11 @@
 # HotelBooking
 
-Spring Boot hotel booking application hardened for production-style deployment, payment/email provider boundaries, and legal hotel place-data import.
+Spring Boot hotel booking application prepared for deployment with PostgreSQL/Flyway, SMTP email, and VNPay payment boundaries.
 
 ## Requirements
 
 - Java 21
-- Node.js 20+ for Playwright smoke tests
-- Docker for local PostgreSQL or CI-like database checks
+- Docker for local PostgreSQL or container deployment
 
 ## Local Setup
 
@@ -31,18 +30,15 @@ Required environment variables:
 - `VNPAY_TMN_CODE`, `VNPAY_HASH_SECRET`, `VNPAY_PAY_URL`, `VNPAY_RETURN_URL`, `VNPAY_IPN_URL` when `APP_PAYMENT_PROVIDER=vnpay`
 - `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM`
 
-See `docs/production-profile.md` and `docs/security-rotation-checklist.md`.
+Do not commit real credentials. Use platform environment variables for all production secrets.
 
 ## Database And Migrations
 
 Flyway migrations are in `src/main/resources/db/migration`. Production runs against PostgreSQL with `spring.jpa.hibernate.ddl-auto=none`.
 
 ```bash
-./gradlew test
 ./gradlew build
 ```
-
-The Testcontainers migration test runs when Docker is available; otherwise it is skipped by JUnit.
 
 ## Import Real Hotel Data
 
@@ -61,22 +57,16 @@ Room/rate templates created for OSM places are marked `INTERNAL_TEMPLATE` and `I
 - Payment confirmation is webhook/IPN-driven with signature verification and idempotent event storage.
 - Refund requests remain pending/processing unless a provider refund completes.
 
-See `docs/payment-email-refund.md`.
-
-## Tests
+## Build
 
 ```bash
-./gradlew clean test
-./gradlew build
-npm install
-npx playwright install chromium
-npm run test:e2e -- --reporter=line --workers=1
+./gradlew clean build
 ```
 
-## Health And Operations
+## Health
 
 ```bash
 curl http://localhost:8080/actuator/health
 ```
 
-Actuator exposes `health`, `info`, and `metrics`. See `docs/deployment-checklist.md` for deployment, smoke checks, backup notes, and data import procedure.
+Actuator exposes `health`, `info`, and `metrics` when enabled by configuration.

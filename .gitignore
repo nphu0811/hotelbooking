@@ -41,7 +41,28 @@ out/
 .env
 .env.local
 
-### Node / Browser Tests ###
+### Local runtime logs ###
+logs/
+*.log
+
+### Documentation / generated reports kept local only ###
+docs/
+hotel_booking_markdown_package/
+DECISIONS.md
+ERROR_LOG.md
+TASKS.md
+HELP.md
+hotel_booking_ai_build_prompt.md
+
+### Local data/import scratch files ###
+data/
+scripts/
+
+### Tests / browser QA kept local only ###
+src/test/
 node_modules/
 test-results/
 playwright-report/
+package.json
+package-lock.json
+playwright.config.ts
