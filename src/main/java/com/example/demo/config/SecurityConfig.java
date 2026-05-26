@@ -100,7 +100,7 @@ public class SecurityConfig {
                     }
                 })
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/", "/rooms/**", "/login", "/register", "/signup", "/verify/**", "/error",
+                    auth.requestMatchers("/", "/rooms/**", "/login", "/login/otp/**", "/register", "/signup", "/verify/**", "/error",
                             "/actuator/health", "/actuator/health/**", "/css/**", "/js/**", "/favicon.svg").permitAll();
                     auth.requestMatchers(paymentEndpoint("/webhook"), paymentEndpoint("/return")).permitAll();
                     if (h2ConsoleEnabled) {

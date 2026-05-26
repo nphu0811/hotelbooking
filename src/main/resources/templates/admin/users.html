@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('User management')}"></head>
+<head th:replace="~{fragments/layout :: head('Quản lý người dùng')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page admin-page">
@@ -11,12 +11,32 @@
         </div>
     </header>
     <div class="table-wrap">
-        <table>
-            <thead><tr><th>Họ tên</th><th>Email</th><th>Trạng thái</th><th>Role</th><th>Hành động</th></tr></thead>
+        <table class="users-table">
+            <thead>
+            <tr>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Email verified</th>
+                <th>Phone verified</th>
+                <th>Trạng thái</th>
+                <th>Role</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
             <tbody>
             <tr th:each="user : ${users.content}">
                 <td th:text="${user.fullName}">User</td>
                 <td th:text="${user.email}">email</td>
+                <td th:text="${user.phone}">phone</td>
+                <td>
+                    <span class="verify-badge verified" th:if="${user.emailVerified}">Verified</span>
+                    <span class="verify-badge not-verified static" th:unless="${user.emailVerified}">Not verified</span>
+                </td>
+                <td>
+                    <span class="verify-badge verified" th:if="${user.phoneVerified}">Verified</span>
+                    <span class="verify-badge not-verified static" th:unless="${user.phoneVerified}">Not verified</span>
+                </td>
                 <td><span class="badge" th:text="${user.status}">Status</span></td>
                 <td><span th:each="role : ${user.roles}" th:text="${role.code + ' '}">USER</span></td>
                 <td class="actions">

@@ -101,6 +101,13 @@
         display: grid;
         gap: var(--space-1);
     }
+
+    .otp-inline,
+    .verification-item {
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
 }
 
 @media (max-width: 640px) {

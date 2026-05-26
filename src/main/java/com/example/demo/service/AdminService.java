@@ -72,6 +72,8 @@ public class AdminService {
                 BookingStatus.CHECKED_OUT));
         long pendingBookings = bookingRepository.countByStatus(BookingStatus.PENDING_PAYMENT);
         long activeUsers = userRepository.countByStatus(UserStatus.ACTIVE);
+        long emailVerifiedUsers = userRepository.countByEmailVerifiedTrue();
+        long phoneVerifiedUsers = userRepository.countByPhoneVerifiedTrue();
         BigDecimal revenue = bookingRepository.sumTotalAmountByStatusIn(List.of(
                 BookingStatus.CONFIRMED,
                 BookingStatus.CHECKED_IN,
@@ -86,6 +88,8 @@ public class AdminService {
                 paidBookings,
                 pendingBookings,
                 activeUsers,
+                emailVerifiedUsers,
+                phoneVerifiedUsers,
                 revenue == null ? BigDecimal.ZERO : revenue,
                 Math.min(occupancySignal, 100));
     }
@@ -176,6 +180,8 @@ public class AdminService {
             long paidBookings,
             long pendingBookings,
             long activeUsers,
+            long emailVerifiedUsers,
+            long phoneVerifiedUsers,
             BigDecimal revenue,
             int occupancySignal
     ) {

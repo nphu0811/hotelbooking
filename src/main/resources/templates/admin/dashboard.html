@@ -36,7 +36,7 @@
         <a class="metric-card" th:href="@{/admin/users}">
             <span class="metric-label">Active users</span>
             <strong th:text="${stats.activeUsers}">0</strong>
-            <small>Verified customer base</small>
+            <small><span th:text="${stats.emailVerifiedUsers}">0</span> email verified / <span th:text="${stats.phoneVerifiedUsers}">0</span> phone verified</small>
         </a>
     </section>
 

@@ -78,6 +78,7 @@ public class SmtpEmailProvider implements EmailProvider {
             case REVIEW_REQUEST -> "Thank you for staying with us. Sign in to leave your review.";
             case ACCOUNT_UNLOCKED -> "Your HotelBooking account has been unlocked.";
             case EMAIL_VERIFICATION -> "Verify your HotelBooking account from the latest verification email.";
+            case LOGIN_OTP -> "Use the latest OTP email to sign in to HotelBooking.";
         };
     }
 }

@@ -45,12 +45,29 @@ public class User {
     @Column(nullable = false)
     private boolean emailVerified = false;
 
+    @Column(nullable = false)
+    private boolean phoneVerified = false;
+
     @Column(length = 128)
     private String emailVerificationTokenHash;
 
     private Instant emailVerificationExpiresAt;
 
     private Instant emailVerificationLastSentAt;
+
+    @Column(length = 128)
+    private String phoneVerificationTokenHash;
+
+    private Instant phoneVerificationExpiresAt;
+
+    private Instant phoneVerificationLastSentAt;
+
+    @Column(length = 128)
+    private String loginOtpTokenHash;
+
+    private Instant loginOtpExpiresAt;
+
+    private Instant loginOtpLastSentAt;
 
     @Column(nullable = false)
     private int failedLoginCount = 0;
@@ -135,6 +152,14 @@ public class User {
         this.emailVerified = emailVerified;
     }
 
+    public boolean isPhoneVerified() {
+        return phoneVerified;
+    }
+
+    public void setPhoneVerified(boolean phoneVerified) {
+        this.phoneVerified = phoneVerified;
+    }
+
     public String getEmailVerificationTokenHash() {
         return emailVerificationTokenHash;
     }
@@ -157,6 +182,54 @@ public class User {
 
     public void setEmailVerificationLastSentAt(Instant emailVerificationLastSentAt) {
         this.emailVerificationLastSentAt = emailVerificationLastSentAt;
+    }
+
+    public String getPhoneVerificationTokenHash() {
+        return phoneVerificationTokenHash;
+    }
+
+    public void setPhoneVerificationTokenHash(String phoneVerificationTokenHash) {
+        this.phoneVerificationTokenHash = phoneVerificationTokenHash;
+    }
+
+    public Instant getPhoneVerificationExpiresAt() {
+        return phoneVerificationExpiresAt;
+    }
+
+    public void setPhoneVerificationExpiresAt(Instant phoneVerificationExpiresAt) {
+        this.phoneVerificationExpiresAt = phoneVerificationExpiresAt;
+    }
+
+    public Instant getPhoneVerificationLastSentAt() {
+        return phoneVerificationLastSentAt;
+    }
+
+    public void setPhoneVerificationLastSentAt(Instant phoneVerificationLastSentAt) {
+        this.phoneVerificationLastSentAt = phoneVerificationLastSentAt;
+    }
+
+    public String getLoginOtpTokenHash() {
+        return loginOtpTokenHash;
+    }
+
+    public void setLoginOtpTokenHash(String loginOtpTokenHash) {
+        this.loginOtpTokenHash = loginOtpTokenHash;
+    }
+
+    public Instant getLoginOtpExpiresAt() {
+        return loginOtpExpiresAt;
+    }
+
+    public void setLoginOtpExpiresAt(Instant loginOtpExpiresAt) {
+        this.loginOtpExpiresAt = loginOtpExpiresAt;
+    }
+
+    public Instant getLoginOtpLastSentAt() {
+        return loginOtpLastSentAt;
+    }
+
+    public void setLoginOtpLastSentAt(Instant loginOtpLastSentAt) {
+        this.loginOtpLastSentAt = loginOtpLastSentAt;
     }
 
     public int getFailedLoginCount() {

@@ -10,6 +10,7 @@ import com.example.demo.web.RegisterForm;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -32,16 +33,19 @@ public class AuthController {
     private final CustomUserDetailsService customUserDetailsService;
     private final CurrentUserService currentUserService;
     private final com.example.demo.repository.UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     public AuthController(AuthService authService,
                           CustomUserDetailsService customUserDetailsService,
                           CurrentUserService currentUserService,
-                          com.example.demo.repository.UserRepository userRepository) {
+                          com.example.demo.repository.UserRepository userRepository,
+                          AuthenticationManager authenticationManager) {
         this.authService = authService;
         this.customUserDetailsService = customUserDetailsService;
         this.currentUserService = currentUserService;
         this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
     }
 
     @GetMapping("/login")
@@ -52,23 +56,18 @@ public class AuthController {
                         @RequestParam(required = false) String resent,
                         Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()
-                && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
-            boolean isAdmin = authentication.getAuthorities().stream()
-                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPER_ADMIN"));
-            if (isAdmin) {
+        if (isRealAuthentication(authentication)) {
+            if (isAdmin(authentication)) {
                 return "redirect:/admin";
             }
-            
-            String email = authentication.getName();
-            User user = userRepository.findByEmailIgnoreCase(email).orElse(null);
+            User user = userRepository.findByEmailIgnoreCase(authentication.getName()).orElse(null);
             if (user != null && user.getStatus() == UserStatus.PENDING_VERIFICATION) {
                 return "redirect:/verification";
             }
             return "redirect:/";
         }
         if (error != null) {
-            model.addAttribute("error", "Email or password is incorrect, or the account is not active");
+            model.addAttribute("passwordError", "Email hoặc mật khẩu không chính xác, hoặc tài khoản chưa hoạt động.");
         }
         if (captcha != null) {
             model.addAttribute("captchaRequired", true);
@@ -77,33 +76,68 @@ public class AuthController {
             model.addAttribute("locked", true);
         }
         if (registered != null) {
-            model.addAttribute("message", "If the account can be registered, a verification email will be sent.");
+            model.addAttribute("message", "Nếu tài khoản có thể đăng ký, mã xác thực đã được gửi đến email.");
         }
         if (resent != null) {
-            model.addAttribute("message", "If the account is waiting for verification, a new email will be sent.");
+            model.addAttribute("message", "Nếu tài khoản đang chờ xác thực, mã mới đã được gửi.");
         }
         return "auth/login";
+    }
+
+    @PostMapping("/login/otp/request")
+    public String requestLoginOtp(@RequestParam String identifier, Model model) {
+        try {
+            AuthService.OtpDelivery delivery = authService.requestLoginOtp(identifier);
+            model.addAttribute("identifier", delivery.identifier());
+            model.addAttribute("channel", delivery.channel());
+            model.addAttribute("maskedDestination", delivery.maskedDestination());
+            model.addAttribute("message", "Mã OTP đã được gửi.");
+            return "auth/login-otp";
+        } catch (BusinessException ex) {
+            model.addAttribute("otpError", ex.getMessage());
+            model.addAttribute("identifier", identifier);
+            return "auth/login";
+        }
+    }
+
+    @PostMapping("/login/otp/verify")
+    public String verifyLoginOtp(@RequestParam String identifier,
+                                 @RequestParam String otp,
+                                 Model model,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) {
+        try {
+            User user = authService.verifyLoginOtp(identifier, otp);
+            authenticateUser(user, request, response);
+            if (user.getRoles().stream().anyMatch(role -> "ADMIN".equals(role.getCode()) || "SUPER_ADMIN".equals(role.getCode()))) {
+                return "redirect:/admin";
+            }
+            return "redirect:/";
+        } catch (BusinessException ex) {
+            model.addAttribute("error", ex.getMessage());
+            model.addAttribute("identifier", identifier);
+            model.addAttribute("channel", authService.isEmailIdentifier(identifier) ? "email" : "phone");
+            model.addAttribute("maskedDestination", identifier);
+            return "auth/login-otp";
+        }
     }
 
     @GetMapping({"/register", "/signup"})
     public String registerForm(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()
-                && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
-            boolean isAdmin = authentication.getAuthorities().stream()
-                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPER_ADMIN"));
-            if (isAdmin) {
+        if (isRealAuthentication(authentication)) {
+            if (isAdmin(authentication)) {
                 return "redirect:/admin";
             }
-            
-            String email = authentication.getName();
-            User user = userRepository.findByEmailIgnoreCase(email).orElse(null);
+            User user = userRepository.findByEmailIgnoreCase(authentication.getName()).orElse(null);
             if (user != null && user.getStatus() == UserStatus.PENDING_VERIFICATION) {
                 return "redirect:/verification";
             }
             return "redirect:/";
         }
-        model.addAttribute("registerForm", new RegisterForm());
+        if (!model.containsAttribute("registerForm")) {
+            model.addAttribute("registerForm", new RegisterForm());
+        }
         return "auth/register";
     }
 
@@ -114,8 +148,7 @@ public class AuthController {
                            HttpServletRequest request,
                            HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("error", "Please correct the highlighted registration fields.");
-            preserveRegisterForm(model, registerForm);
+            model.addAttribute("error", "Vui lòng kiểm tra lại các trường đăng ký.");
             return "auth/register";
         }
         try {
@@ -125,21 +158,10 @@ public class AuthController {
                     registerForm.getPhone(),
                     registerForm.getPassword(),
                     registerForm.getConfirmPassword());
-
-            // Programmatically authenticate user upon successful registration
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getEmail());
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                    userDetails, userDetails.getPassword(), userDetails.getAuthorities()
-            );
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            context.setAuthentication(auth);
-            SecurityContextHolder.setContext(context);
-            securityContextRepository.saveContext(context, request, response);
-
+            authenticateByPassword(user.getEmail(), registerForm.getPassword(), request, response);
             return "redirect:/verification";
         } catch (BusinessException ex) {
             model.addAttribute("error", ex.getMessage());
-            preserveRegisterForm(model, registerForm);
             return "auth/register";
         }
     }
@@ -148,7 +170,7 @@ public class AuthController {
     public String verificationForm(Model model) {
         try {
             User user = currentUserService.requireCurrentUser();
-            if (user.getStatus() == UserStatus.ACTIVE) {
+            if (user.getStatus() == UserStatus.ACTIVE && user.isEmailVerified()) {
                 return "redirect:/";
             }
             model.addAttribute("email", user.getEmail());
@@ -159,24 +181,22 @@ public class AuthController {
     }
 
     @PostMapping("/verification")
-    public String verifyOtp(@RequestParam String otp, Model model) {
+    public String verifyOtp(@RequestParam String otp,
+                            Model model,
+                            HttpServletRequest request,
+                            HttpServletResponse response) {
         try {
             User user = currentUserService.requireCurrentUser();
             authService.verifyOtp(user.getEmail(), otp);
-
-            // Refresh security authentication state to ACTIVE
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getEmail());
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                    userDetails, userDetails.getPassword(), userDetails.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(auth);
-
+            User refreshed = userRepository.findByEmailIgnoreCase(user.getEmail()).orElse(user);
+            authenticateUser(refreshed, request, response);
             return "redirect:/?verified";
         } catch (BusinessException ex) {
             model.addAttribute("error", ex.getMessage());
             try {
                 model.addAttribute("email", currentUserService.requireCurrentUser().getEmail());
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
             return "auth/verification";
         } catch (Exception ex) {
             return "redirect:/login";
@@ -195,7 +215,8 @@ public class AuthController {
             model.addAttribute("error", ex.getMessage());
             try {
                 model.addAttribute("email", currentUserService.requireCurrentUser().getEmail());
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
             return "auth/verification";
         } catch (Exception ex) {
             return "redirect:/login";
@@ -206,17 +227,47 @@ public class AuthController {
     public String verify(@PathVariable String token, Model model) {
         try {
             authService.verify(token);
-            model.addAttribute("message", "Account verified. You can sign in.");
+            model.addAttribute("message", "Email đã được xác thực. Bạn có thể đăng nhập.");
         } catch (BusinessException ex) {
-            model.addAttribute("error", ex.getMessage());
+            model.addAttribute("otpError", ex.getMessage());
         }
         return "auth/login";
     }
 
-    private void preserveRegisterForm(Model model, RegisterForm form) {
-        model.addAttribute("fullName", form.getFullName());
-        model.addAttribute("email", form.getEmail());
-        model.addAttribute("phone", form.getPhone());
-        model.addAttribute("registerForm", form);
+    private void authenticateByPassword(String email,
+                                        String rawPassword,
+                                        HttpServletRequest request,
+                                        HttpServletResponse response) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, rawPassword));
+        saveAuthentication(authentication, request, response);
+    }
+
+    private void authenticateUser(User user, HttpServletRequest request, HttpServletResponse response) {
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getEmail());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        saveAuthentication(authentication, request, response);
+    }
+
+    private void saveAuthentication(Authentication authentication,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response) {
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+        request.getSession(true);
+        securityContextRepository.saveContext(context, request, response);
+    }
+
+    private boolean isRealAuthentication(Authentication authentication) {
+        return authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken);
+    }
+
+    private boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPER_ADMIN"));
     }
 }

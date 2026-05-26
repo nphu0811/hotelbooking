@@ -1,30 +1,63 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Login')}"></head>
+<head th:replace="~{fragments/layout :: head('Đăng nhập - HotelBooking')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="auth-page">
-    <form class="auth-panel" th:action="@{/login}" method="post">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        <p class="page-kicker">Welcome back</p>
-        <h1>Đăng nhập</h1>
-        <p class="alert" th:if="${error}" th:text="${error}"></p>
+    <section class="auth-panel">
+        <p class="page-kicker">HotelBooking account</p>
+        <h1>Đăng nhập hoặc tạo tài khoản</h1>
+        <p class="muted auth-copy">Nhập email hoặc số điện thoại để nhận OTP. Nếu muốn dùng mật khẩu, mở mục bên dưới.</p>
+
+        <p class="alert" th:if="${otpError}" th:text="${otpError}"></p>
         <p class="alert" th:if="${locked}">Tài khoản tạm thời bị khóa do đăng nhập sai nhiều lần. Vui lòng thử lại sau 15 phút.</p>
         <p class="success" th:if="${message}" th:text="${message}"></p>
-        <label>Email
-            <input name="username" type="email" autocomplete="username" required>
-        </label>
-        <label>Mật khẩu
-            <input name="password" type="password" autocomplete="current-password" required>
-        </label>
-        <div class="captcha-hook" th:if="${captchaRequired}">
-            <span>CAPTCHA</span>
-            <p class="muted">Bước xác minh bổ sung đang bật cho phiên đăng nhập này.</p>
-        </div>
-        <button class="button" type="submit">Đăng nhập</button>
-        <a th:href="@{/register}">Tạo tài khoản mới</a>
+
+        <form th:action="@{/login/otp/request}" method="post" data-validate="otp-login" novalidate>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <label class="form-field">Email hoặc số điện thoại
+                <input name="identifier" type="text" autocomplete="username"
+                       placeholder="id@email.com hoặc 0912345678"
+                       th:value="${identifier}" data-validate-field="identifier" required>
+                <span class="field-error" data-field-error="identifier"></span>
+            </label>
+            <button class="button" type="submit">Tiếp tục</button>
+        </form>
+
+        <div class="auth-divider"><span>hoặc</span></div>
+
+        <details class="auth-password" th:attr="open=${passwordError != null || captchaRequired != null ? 'open' : null}">
+            <summary>Đăng nhập bằng mật khẩu</summary>
+            <form th:action="@{/login}" method="post" data-validate="password-login" novalidate>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <p class="alert" th:if="${passwordError}" th:text="${passwordError}"></p>
+                <label class="form-field">Email
+                    <input name="username" type="email" autocomplete="username"
+                           th:classappend="${passwordError != null ? 'is-invalid' : ''}"
+                           data-validate-field="email" required>
+                    <span class="field-error" data-field-error="email" th:text="${passwordError}"></span>
+                </label>
+                <label class="form-field">Mật khẩu
+                    <input name="password" type="password" autocomplete="current-password"
+                           minlength="8" th:classappend="${passwordError != null ? 'is-invalid' : ''}"
+                           data-validate-field="password" required>
+                    <span class="field-error" data-field-error="password" th:if="${passwordError}">Vui lòng kiểm tra lại mật khẩu.</span>
+                    <span class="field-error" data-field-error="password" th:unless="${passwordError}"></span>
+                </label>
+                <div class="captcha-hook" th:if="${captchaRequired}">
+                    <span>CAPTCHA</span>
+                    <p class="muted">Bước xác minh bổ sung đang bật cho phiên đăng nhập này.</p>
+                </div>
+                <button class="button" type="submit">Đăng nhập</button>
+            </form>
+        </details>
+
+        <p class="auth-terms">Bằng việc đăng nhập, bạn đồng ý với điều khoản sử dụng và chính sách bảo mật của HotelBooking.</p>
+        <a class="auth-link" th:href="@{/register}">Tạo tài khoản mới</a>
+    </section>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
+<script th:src="@{/js/auth-validation.js(v=1)}"></script>
 </body>
 </html>

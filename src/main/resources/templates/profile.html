@@ -4,43 +4,103 @@
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="auth-page">
-    <form class="auth-panel" th:action="@{/profile}" method="post">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <section class="auth-panel profile-panel">
         <p class="page-kicker">Thông tin tài khoản</p>
         <h1>Hồ sơ của bạn</h1>
 
         <p class="alert" th:if="${error}" th:text="${error}"></p>
         <p class="success" th:if="${message}" th:text="${message}"></p>
 
-        <label>Email
-            <input type="email" th:value="${user.email}" disabled style="background: rgba(255, 255, 255, 0.4); cursor: not-allowed; opacity: 0.7;">
-        </label>
+        <form th:action="@{/profile}" method="post" data-validate="profile" novalidate>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-        <label>Họ và tên
-            <input name="fullName" type="text" th:value="${user.fullName}" required minlength="2" maxlength="100">
-        </label>
-
-        <label>Số điện thoại
-            <input name="phone" type="tel" th:value="${user.phone}" required pattern="^(0|\+84)\d{9,10}$" title="Số điện thoại Việt Nam hợp lệ (ví dụ: 0912345678)">
-        </label>
-
-        <fieldset style="border: 1px solid rgba(37, 99, 235, 0.2); border-radius: var(--radius-lg); padding: var(--space-4); margin: var(--space-5) 0; background: rgba(37, 99, 235, 0.02);">
-            <legend style="padding: 0 10px; font-size: var(--text-xs); font-weight: 900; color: var(--color-primary); letter-spacing: 0.05em;">ĐỔI MẬT KHẨU (BỎ TRỐNG NẾU KHÔNG ĐỔI)</legend>
-            <label style="margin-top: var(--space-2);">Mật khẩu hiện tại
-                <input name="currentPassword" type="password" autocomplete="current-password">
+            <label class="form-field">Họ và tên
+                <input name="fullName" type="text" th:value="${user.fullName}"
+                       minlength="2" maxlength="100" data-validate-field="fullName" required>
+                <span class="field-error" data-field-error="fullName"></span>
             </label>
-            <label>Mật khẩu mới
-                <input name="newPassword" type="password" autocomplete="new-password">
-            </label>
-            <label>Xác nhận mật khẩu mới
-                <input name="confirmPassword" type="password" autocomplete="new-password">
-            </label>
-        </fieldset>
 
-        <button class="button" type="submit" style="width: 100%; margin-top: var(--space-4);">Cập nhật thông tin</button>
-    </form>
+            <label class="form-field">Email
+                <input name="email" type="email" th:value="${user.email}"
+                       data-validate-field="email" autocomplete="email" required>
+                <span class="field-error" data-field-error="email"></span>
+            </label>
+
+            <label class="form-field">Số điện thoại
+                <input name="phone" type="tel" th:value="${user.phone}"
+                       placeholder="0912345678" data-validate-field="phone" autocomplete="tel" required>
+                <span class="field-error" data-field-error="phone"></span>
+            </label>
+
+            <fieldset class="profile-fieldset">
+                <legend>Đổi mật khẩu</legend>
+                <label class="form-field">Mật khẩu hiện tại
+                    <input name="currentPassword" type="password" autocomplete="current-password"
+                           data-validate-field="currentPassword">
+                    <span class="field-error" data-field-error="currentPassword"></span>
+                </label>
+                <label class="form-field">Mật khẩu mới
+                    <input name="newPassword" type="password" autocomplete="new-password"
+                           data-validate-field="optionalStrongPassword">
+                    <span class="field-error" data-field-error="newPassword"></span>
+                </label>
+                <label class="form-field">Xác nhận mật khẩu mới
+                    <input name="confirmPassword" type="password" autocomplete="new-password"
+                           data-validate-field="optionalConfirmPassword" data-match-field="newPassword">
+                    <span class="field-error" data-field-error="confirmPassword"></span>
+                </label>
+            </fieldset>
+
+            <button class="button" type="submit">Cập nhật thông tin</button>
+        </form>
+
+        <div class="verification-panel">
+            <div class="verification-item">
+                <div>
+                    <strong>Email</strong>
+                    <p th:text="${user.email}">email@example.com</p>
+                </div>
+                <span class="verify-badge verified" th:if="${user.emailVerified}">Verified</span>
+                <form th:if="${!user.emailVerified}" th:action="@{/profile/verify-email/request}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button class="verify-badge not-verified" type="submit">Not verified</button>
+                </form>
+            </div>
+            <form class="otp-inline" th:if="${showEmailOtp}" th:action="@{/profile/verify-email}" method="post"
+                  data-validate="otp-code" novalidate>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <label class="form-field">OTP email
+                    <input name="otp" type="text" inputmode="numeric" maxlength="6" data-validate-field="otp" required>
+                    <span class="field-error" data-field-error="otp"></span>
+                </label>
+                <button class="button button-small" type="submit">Xác thực email</button>
+            </form>
+
+            <div class="verification-item">
+                <div>
+                    <strong>Số điện thoại</strong>
+                    <p th:text="${user.phone}">0912345678</p>
+                </div>
+                <span class="verify-badge verified" th:if="${user.phoneVerified}">Verified</span>
+                <form th:if="${!user.phoneVerified}" th:action="@{/profile/verify-phone/request}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button class="verify-badge not-verified" type="submit">Not verified</button>
+                </form>
+            </div>
+            <form class="otp-inline" th:if="${showPhoneOtp}" th:action="@{/profile/verify-phone}" method="post"
+                  data-validate="otp-code" novalidate>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <label class="form-field">OTP số điện thoại
+                    <input name="otp" type="text" inputmode="numeric" maxlength="6" data-validate-field="otp" required>
+                    <span class="field-error" data-field-error="otp"></span>
+                </label>
+                <button class="button button-small" type="submit">Xác thực số điện thoại</button>
+            </form>
+        </div>
+    </section>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
+<script th:src="@{/js/auth-validation.js(v=1)}"></script>
 </body>
 </html>
