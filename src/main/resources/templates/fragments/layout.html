@@ -4,16 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${title}">HotelBooking</title>
-    <script>
-        (function () {
-            try {
-                var savedTheme = localStorage.getItem("hotelbooking-theme");
-                document.documentElement.dataset.theme = savedTheme === "dark" ? "dark" : "light";
-            } catch (error) {
-                document.documentElement.dataset.theme = "light";
-            }
-        })();
-    </script>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/app.css}">
     <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
@@ -26,8 +17,6 @@
     <span>HotelBooking</span>
     <span>Place data is shown with source attribution when imported from external datasets.</span>
 </footer>
-<th:block th:fragment="scripts">
-    <script th:src="@{/js/theme.js}" defer></script>
-</th:block>
+<th:block th:fragment="scripts"></th:block>
 </body>
 </html>

@@ -1,8 +1,14 @@
 (function () {
     var storageKey = "hotelbooking-theme";
     var root = document.documentElement;
-    var toggle = document.querySelector("[data-theme-toggle]");
-    var label = document.querySelector("[data-theme-toggle-label]");
+
+    function savedTheme() {
+        try {
+            return localStorage.getItem(storageKey);
+        } catch (error) {
+            return null;
+        }
+    }
 
     function currentTheme() {
         return root.dataset.theme === "dark" ? "dark" : "light";
@@ -20,6 +26,9 @@
         var nextTheme = theme === "dark" ? "dark" : "light";
         root.dataset.theme = nextTheme;
 
+        var toggle = document.querySelector("[data-theme-toggle]");
+        var label = document.querySelector("[data-theme-toggle-label]");
+
         if (toggle) {
             var isDark = nextTheme === "dark";
             toggle.setAttribute("aria-checked", String(isDark));
@@ -35,11 +44,24 @@
         }
     }
 
-    setTheme(currentTheme(), false);
+    setTheme(savedTheme(), false);
 
-    if (toggle) {
+    function bindToggle() {
+        var toggle = document.querySelector("[data-theme-toggle]");
+
+        if (!toggle) {
+            return;
+        }
+
+        setTheme(currentTheme(), false);
         toggle.addEventListener("click", function () {
             setTheme(currentTheme() === "dark" ? "light" : "dark", true);
         });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", bindToggle);
+    } else {
+        bindToggle();
     }
 })();
