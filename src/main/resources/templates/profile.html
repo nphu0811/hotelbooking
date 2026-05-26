@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Hồ sơ cá nhân - HotelBooking')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="auth-page">
+    <form class="auth-panel" th:action="@{/profile}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <p class="page-kicker">Thông tin tài khoản</p>
+        <h1>Hồ sơ của bạn</h1>
+
+        <p class="alert" th:if="${error}" th:text="${error}"></p>
+        <p class="success" th:if="${message}" th:text="${message}"></p>
+
+        <label>Email
+            <input type="email" th:value="${user.email}" disabled style="background: rgba(255, 255, 255, 0.4); cursor: not-allowed; opacity: 0.7;">
+        </label>
+
+        <label>Họ và tên
+            <input name="fullName" type="text" th:value="${user.fullName}" required minlength="2" maxlength="100">
+        </label>
+
+        <label>Số điện thoại
+            <input name="phone" type="tel" th:value="${user.phone}" required pattern="^(0|\+84)\d{9,10}$" title="Số điện thoại Việt Nam hợp lệ (ví dụ: 0912345678)">
+        </label>
+
+        <fieldset style="border: 1px solid rgba(37, 99, 235, 0.2); border-radius: var(--radius-lg); padding: var(--space-4); margin: var(--space-5) 0; background: rgba(37, 99, 235, 0.02);">
+            <legend style="padding: 0 10px; font-size: var(--text-xs); font-weight: 900; color: var(--color-primary); letter-spacing: 0.05em;">ĐỔI MẬT KHẨU (BỎ TRỐNG NẾU KHÔNG ĐỔI)</legend>
+            <label style="margin-top: var(--space-2);">Mật khẩu hiện tại
+                <input name="currentPassword" type="password" autocomplete="current-password">
+            </label>
+            <label>Mật khẩu mới
+                <input name="newPassword" type="password" autocomplete="new-password">
+            </label>
+            <label>Xác nhận mật khẩu mới
+                <input name="confirmPassword" type="password" autocomplete="new-password">
+            </label>
+        </fieldset>
+
+        <button class="button" type="submit" style="width: 100%; margin-top: var(--space-4);">Cập nhật thông tin</button>
+    </form>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

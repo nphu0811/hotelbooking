@@ -31,14 +31,17 @@ public class AuthController {
     private final AuthService authService;
     private final CustomUserDetailsService customUserDetailsService;
     private final CurrentUserService currentUserService;
+    private final com.example.demo.repository.UserRepository userRepository;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     public AuthController(AuthService authService,
                           CustomUserDetailsService customUserDetailsService,
-                          CurrentUserService currentUserService) {
+                          CurrentUserService currentUserService,
+                          com.example.demo.repository.UserRepository userRepository) {
         this.authService = authService;
         this.customUserDetailsService = customUserDetailsService;
         this.currentUserService = currentUserService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/login")
@@ -48,6 +51,22 @@ public class AuthController {
                         @RequestParam(required = false) String registered,
                         @RequestParam(required = false) String resent,
                         Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()
+                && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPER_ADMIN"));
+            if (isAdmin) {
+                return "redirect:/admin";
+            }
+            
+            String email = authentication.getName();
+            User user = userRepository.findByEmailIgnoreCase(email).orElse(null);
+            if (user != null && user.getStatus() == UserStatus.PENDING_VERIFICATION) {
+                return "redirect:/verification";
+            }
+            return "redirect:/";
+        }
         if (error != null) {
             model.addAttribute("error", "Email or password is incorrect, or the account is not active");
         }
@@ -68,6 +87,22 @@ public class AuthController {
 
     @GetMapping({"/register", "/signup"})
     public String registerForm(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()
+                && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPER_ADMIN"));
+            if (isAdmin) {
+                return "redirect:/admin";
+            }
+            
+            String email = authentication.getName();
+            User user = userRepository.findByEmailIgnoreCase(email).orElse(null);
+            if (user != null && user.getStatus() == UserStatus.PENDING_VERIFICATION) {
+                return "redirect:/verification";
+            }
+            return "redirect:/";
+        }
         model.addAttribute("registerForm", new RegisterForm());
         return "auth/register";
     }

@@ -38,12 +38,19 @@ public class BookingController {
         this.paymentProvider = paymentProvider;
     }
 
+    @GetMapping("/bookings")
+    public String getBookings() {
+        return "redirect:/";
+    }
+
     @PostMapping("/bookings")
     public String create(@Valid @ModelAttribute BookingForm bookingForm,
                          BindingResult bindingResult,
                          Model model) {
         User user = currentUserService.requireCurrentUser();
-        if (user.getStatus() == UserStatus.PENDING_VERIFICATION) {
+        boolean isAdmin = user.getRoles().stream()
+                .anyMatch(role -> role.getCode().equals("ADMIN") || role.getCode().equals("SUPER_ADMIN"));
+        if (user.getStatus() == UserStatus.PENDING_VERIFICATION && !isAdmin) {
             return "redirect:/verification";
         }
         if (bindingResult.hasErrors()) {

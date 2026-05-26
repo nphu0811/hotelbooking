@@ -40,11 +40,28 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthenticationSuccessHandler authenticationSuccessHandler(LoginAttemptService loginAttemptService) {
+    AuthenticationSuccessHandler authenticationSuccessHandler(LoginAttemptService loginAttemptService,
+                                                              com.example.demo.repository.UserRepository userRepository) {
         SavedRequestAwareAuthenticationSuccessHandler delegate = new SavedRequestAwareAuthenticationSuccessHandler();
         delegate.setDefaultTargetUrl("/");
         return (request, response, authentication) -> {
             loginAttemptService.recordSuccess(authentication, request);
+            
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPER_ADMIN"));
+            
+            if (isAdmin) {
+                new DefaultRedirectStrategy().sendRedirect(request, response, "/admin");
+                return;
+            }
+            
+            String email = authentication.getName();
+            com.example.demo.entity.User user = userRepository.findByEmailIgnoreCase(email).orElse(null);
+            if (user != null && user.getStatus() == com.example.demo.entity.UserStatus.PENDING_VERIFICATION) {
+                new DefaultRedirectStrategy().sendRedirect(request, response, "/verification");
+                return;
+            }
+            
             delegate.onAuthenticationSuccess(request, response, authentication);
         };
     }
