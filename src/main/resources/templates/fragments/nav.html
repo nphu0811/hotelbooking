@@ -8,6 +8,15 @@
         <a sec:authorize="isAuthenticated()" th:href="@{/account/bookings}">Lịch sử</a>
         <a sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" th:href="@{/admin}">Admin</a>
     </div>
+    <button class="theme-toggle" type="button" role="switch" aria-checked="false"
+            aria-label="Chuyển sang chế độ tối" data-theme-toggle>
+        <span class="theme-toggle-track" aria-hidden="true">
+            <span class="theme-toggle-symbol theme-toggle-sun">☀</span>
+            <span class="theme-toggle-symbol theme-toggle-moon">☾</span>
+            <span class="theme-toggle-thumb"></span>
+        </span>
+        <span class="sr-only" data-theme-toggle-label>Chế độ sáng</span>
+    </button>
     <div class="nav-auth">
         <a sec:authorize="isAnonymous()" th:href="@{/login}">Đăng nhập</a>
         <a sec:authorize="isAnonymous()" class="button button-small" th:href="@{/register}">Đăng ký</a>
