@@ -23,15 +23,6 @@
         </div>
         <button class="button" type="submit">Đăng nhập</button>
         <a th:href="@{/register}">Tạo tài khoản mới</a>
-    </form>
-    <form class="auth-panel compact-panel" th:action="@{/verification/resend}" method="post">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        <p class="page-kicker">Verification</p>
-        <label>Email
-            <input name="email" type="email" autocomplete="email" placeholder="email@example.com" required>
-        </label>
-        <button class="button button-muted" type="submit">Resend verification</button>
-    </form>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>

@@ -29,7 +29,13 @@ public class HomeController {
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
         model.addAttribute("guests", 2);
-        model.addAttribute("rooms", roomService.search("", checkIn, checkOut, 2, null, null, "rating", 0));
+        
+        // Fetch rooms for carousels
+        model.addAttribute("rooms", roomService.search("", checkIn, checkOut, 1, null, null, "rating", 0));
+        model.addAttribute("hanoiRooms", roomService.search("Hà Nội", checkIn, checkOut, 1, null, null, "rating", 0));
+        model.addAttribute("hcmRooms", roomService.search("Hồ Chí Minh", checkIn, checkOut, 1, null, null, "rating", 0));
+        model.addAttribute("danangRooms", roomService.search("Đà Nẵng", checkIn, checkOut, 1, null, null, "rating", 0));
+        
         return "home";
     }
 

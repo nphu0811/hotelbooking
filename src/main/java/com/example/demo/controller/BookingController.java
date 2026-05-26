@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.User;
+import com.example.demo.entity.UserStatus;
 import com.example.demo.service.BookingService;
 import com.example.demo.service.BusinessException;
 import com.example.demo.service.CurrentUserService;
@@ -42,6 +43,9 @@ public class BookingController {
                          BindingResult bindingResult,
                          Model model) {
         User user = currentUserService.requireCurrentUser();
+        if (user.getStatus() == UserStatus.PENDING_VERIFICATION) {
+            return "redirect:/verification";
+        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("error", "Booking request is invalid.");
             return "error";

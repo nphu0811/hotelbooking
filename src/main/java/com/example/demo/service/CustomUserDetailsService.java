@@ -40,7 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             user.setLockReason(null);
             userRepository.save(user);
         }
-        boolean active = user.getStatus() == UserStatus.ACTIVE;
+        boolean active = user.getStatus() == UserStatus.ACTIVE || user.getStatus() == UserStatus.PENDING_VERIFICATION;
         boolean notLocked = user.getLockedUntil() == null || user.getLockedUntil().isBefore(Instant.now(clock));
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getCode()))

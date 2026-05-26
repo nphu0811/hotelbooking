@@ -199,3 +199,56 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-5);
 }
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Horizontal scrolling room container */
+.room-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 1.5rem;
+    padding: 0.5rem 0.25rem 1.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(37, 99, 235, 0.3) transparent;
+}
+
+.room-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.room-scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.room-scroll-container::-webkit-scrollbar-thumb {
+    background-color: rgba(37, 99, 235, 0.3);
+    border-radius: 4px;
+    border: 2px solid transparent;
+}
+
+.room-scroll-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(37, 99, 235, 0.5);
+}
+
+.room-scroll-container .room-card {
+    flex: 0 0 320px;
+    margin: 0;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.room-scroll-container .room-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+/* border-top helper class */
+.border-top {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-8);
+    margin-top: var(--space-8);
+}

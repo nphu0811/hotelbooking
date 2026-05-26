@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Xác thực OTP - HotelBooking')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="auth-page">
+    <div class="auth-panel">
+        <p class="page-kicker">Mã OTP Xác Thực</p>
+        <h1>Xác thực tài khoản</h1>
+        <p class="muted" style="margin-bottom: 24px;">Chúng tôi đã gửi mã xác thực gồm 6 chữ số đến email <strong th:text="${email}">email@example.com</strong>. Vui lòng nhập mã để kích hoạt đầy đủ tài khoản.</p>
+        
+        <p class="alert" th:if="${error}" th:text="${error}"></p>
+        <p class="success" th:if="${message}" th:text="${message}"></p>
+
+        <form th:action="@{/verification}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <label>Mã xác thực OTP (6 chữ số)
+                <input name="otp" type="text" pattern="\d{6}" maxlength="6" placeholder="______" style="text-align: center; font-size: var(--text-xl); letter-spacing: 0.3em; font-weight: bold;" required autofocus autocomplete="one-time-code">
+            </label>
+            <button class="button" type="submit" style="margin-top: 16px;">Xác thực tài khoản</button>
+        </form>
+
+        <div style="margin-top: 24px; border-top: 1px solid var(--color-border); padding-top: 16px; text-align: center;">
+            <p class="muted" style="font-size: var(--text-xs); margin-bottom: 8px;">Không nhận được mã hoặc mã hết hạn?</p>
+            <form th:action="@{/verification/resend}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button class="button button-muted button-small" type="submit">Gửi lại mã OTP</button>
+            </form>
+        </div>
+    </div>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

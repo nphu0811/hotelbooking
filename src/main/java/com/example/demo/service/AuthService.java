@@ -99,10 +99,32 @@ public class AuthService {
     @Transactional
     public void verify(String token) {
         User user = userRepository.findByEmailVerificationTokenHash(hashToken(token))
-                .orElseThrow(() -> new BusinessException("Verification link is invalid"));
+                .orElseThrow(() -> new BusinessException("Mã xác thực không hợp lệ"));
         if (user.getEmailVerificationExpiresAt() == null
                 || user.getEmailVerificationExpiresAt().isBefore(Instant.now(clock))) {
-            throw new BusinessException("Verification link has expired");
+            throw new BusinessException("Mã xác thực đã hết hạn");
+        }
+        user.setEmailVerified(true);
+        user.setStatus(UserStatus.ACTIVE);
+        user.setEmailVerificationTokenHash(null);
+        user.setEmailVerificationExpiresAt(null);
+        user.setEmailVerificationLastSentAt(null);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void verifyOtp(String email, String otp) {
+        User user = userRepository.findByEmailIgnoreCase(normalizeEmail(email))
+                .orElseThrow(() -> new BusinessException("Không tìm thấy tài khoản người dùng"));
+        if (user.getStatus() == UserStatus.ACTIVE) {
+            return;
+        }
+        if (user.getEmailVerificationTokenHash() == null || !user.getEmailVerificationTokenHash().equals(hashToken(otp))) {
+            throw new BusinessException("Mã OTP không chính xác, vui lòng kiểm tra lại");
+        }
+        if (user.getEmailVerificationExpiresAt() == null
+                || user.getEmailVerificationExpiresAt().isBefore(Instant.now(clock))) {
+            throw new BusinessException("Mã OTP đã hết hạn, vui lòng gửi lại mã mới");
         }
         user.setEmailVerified(true);
         user.setStatus(UserStatus.ACTIVE);
@@ -114,9 +136,15 @@ public class AuthService {
 
     @Transactional
     public void resendVerification(String email) {
-        userRepository.findByEmailIgnoreCase(normalizeEmail(email))
-                .filter(user -> user.getStatus() == UserStatus.PENDING_VERIFICATION)
-                .ifPresent(this::resendVerificationIfAllowed);
+        User user = userRepository.findByEmailIgnoreCase(normalizeEmail(email))
+                .filter(u -> u.getStatus() == UserStatus.PENDING_VERIFICATION)
+                .orElseThrow(() -> new BusinessException("Không tìm thấy yêu cầu xác thực cho tài khoản này"));
+        Instant now = Instant.now(clock);
+        if (user.getEmailVerificationLastSentAt() != null
+                && user.getEmailVerificationLastSentAt().plus(VERIFICATION_RESEND_COOLDOWN).isAfter(now)) {
+            throw new BusinessException("Vui lòng đợi 10 phút trước khi yêu cầu gửi lại mã OTP mới");
+        }
+        resendVerificationIfAllowed(user);
     }
 
     private void resendVerificationIfAllowed(User user) {
@@ -133,36 +161,37 @@ public class AuthService {
     private String setVerificationToken(User user, Instant now) {
         String rawToken = generateVerificationToken();
         user.setEmailVerificationTokenHash(hashToken(rawToken));
-        user.setEmailVerificationExpiresAt(now.plus(24, ChronoUnit.HOURS));
+        user.setEmailVerificationExpiresAt(now.plus(15, ChronoUnit.MINUTES));
         user.setEmailVerificationLastSentAt(now);
         return rawToken;
     }
 
     private void enqueueVerificationEmail(User user, String rawToken) {
         String verifyUrl = publicBaseUrl + "/verify/" + rawToken;
-        String body = "Welcome to HotelBooking.\n\n"
-                + "Verify your email address by opening this link within 24 hours:\n"
+        String body = "Chào mừng bạn đến với HotelBooking.\n\n"
+                + "Mã xác thực OTP của bạn là: " + rawToken + "\n"
+                + "Mã này có hiệu lực trong 15 phút. Tuyệt đối không chia sẻ mã này cho bất kỳ ai.\n\n"
+                + "Hoặc bạn có thể bấm trực tiếp vào liên kết sau để xác thực tài khoản:\n"
                 + verifyUrl + "\n\n"
-                + "If you did not create this account, ignore this email.";
+                + "Nếu bạn không thực hiện đăng ký tài khoản này, vui lòng bỏ qua email này.";
         emailService.enqueue(user, null, EmailEventType.EMAIL_VERIFICATION,
-                user.getEmail(), "Verify your HotelBooking account", "email-verification", body);
+                user.getEmail(), "Xác thực tài khoản HotelBooking - Mã OTP: " + rawToken, "email-verification", body);
     }
 
     private String generateVerificationToken() {
-        byte[] bytes = new byte[32];
-        secureRandom.nextBytes(bytes);
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+        int otp = 100000 + secureRandom.nextInt(900000);
+        return String.valueOf(otp);
     }
 
     private String hashToken(String token) {
         if (token == null || token.isBlank()) {
-            throw new BusinessException("Verification link is invalid");
+            throw new BusinessException("Mã OTP không hợp lệ");
         }
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             return HexFormat.of().formatHex(digest.digest(token.getBytes(StandardCharsets.UTF_8)));
         } catch (Exception ex) {
-            throw new BusinessException("Verification token could not be checked");
+            throw new BusinessException("Không thể kiểm tra mã OTP");
         }
     }
 

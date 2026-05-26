@@ -5,7 +5,10 @@
     </a>
     <div class="nav-links">
         <a th:href="@{/rooms/search(checkIn=${T(java.time.LocalDate).now().plusDays(1)},checkOut=${T(java.time.LocalDate).now().plusDays(3)},guests=2)}">Tìm phòng</a>
-        <a th:href="@{/recommend}">Gợi ý AI</a>
+        <a th:href="@{/#ai-recommendation}">Gợi ý AI</a>
+        <a th:href="@{/#hanoi}">Hà Nội</a>
+        <a th:href="@{/#tphcm}">TP. Hồ Chí Minh</a>
+        <a th:href="@{/#danang}">Đà Nẵng</a>
         <a sec:authorize="isAuthenticated()" th:href="@{/account/bookings}">Lịch sử</a>
         <a sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" th:href="@{/admin}">Admin</a>
     </div>

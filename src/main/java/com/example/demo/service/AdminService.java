@@ -135,8 +135,8 @@ public class AdminService {
         booking.setCheckedOutAt(Instant.now(clock));
         Booking saved = bookingRepository.save(booking);
         auditService.record(actor, "CHECK_OUT", "BOOKING", saved.getId());
-        emailService.enqueue(saved.getUser(), saved, EmailEventType.REVIEW_REQUEST,
-                saved.getUser().getEmail(), "Mời đánh giá trải nghiệm lưu trú", "review-request");
+        emailService.enqueue(saved.getUser(), saved, EmailEventType.CHECKED_OUT,
+                saved.getUser().getEmail(), "Xác nhận check-out thành công", "checked-out");
         return saved;
     }
 
