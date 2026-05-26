@@ -42,3 +42,14 @@ google.places.enabled=${GOOGLE_PLACES_ENABLED:false}
 geoapify.api-key=${GEOAPIFY_API_KEY:YOUR_KEY}
 geoapify.enabled=${GEOAPIFY_ENABLED:false}
 hoteldata.overpass.endpoint=${HOTELDATA_OVERPASS_ENDPOINT:https://overpass-api.de/api/interpreter}
+
+# OAuth2 settings
+spring.security.oauth2.client.registration.google.client-id=${GOOGLE_CLIENT_ID:mock-google-id}
+spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_SECRET:mock-google-secret}
+spring.security.oauth2.client.registration.google.scope=profile,email
+spring.security.oauth2.client.registration.google.redirect-uri={baseUrl}/login/oauth2/code/{registrationId}
+
+spring.security.oauth2.client.registration.facebook.client-id=${FACEBOOK_CLIENT_ID:mock-facebook-id}
+spring.security.oauth2.client.registration.facebook.client-secret=${FACEBOOK_CLIENT_SECRET:mock-facebook-secret}
+spring.security.oauth2.client.registration.facebook.scope=email,public_profile
+spring.security.oauth2.client.registration.facebook.redirect-uri={baseUrl}/login/oauth2/code/{registrationId}

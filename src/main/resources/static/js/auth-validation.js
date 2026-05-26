@@ -5,10 +5,11 @@
     var phonePattern = /^(0|\+84)\d{9,10}$/;
     var strongPasswordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
-    function fieldError(form, name) {
+    function fieldError(form, name, rule) {
         var nodes = form.querySelectorAll("[data-field-error]");
         for (var i = 0; i < nodes.length; i += 1) {
-            if (nodes[i].getAttribute("data-field-error") === name) {
+            var attr = nodes[i].getAttribute("data-field-error");
+            if (attr === name || (rule && attr === rule) || (name === "username" && attr === "email")) {
                 return nodes[i];
             }
         }
@@ -18,7 +19,8 @@
     function setError(form, input, message) {
         input.classList.toggle("is-invalid", Boolean(message));
         input.setAttribute("aria-invalid", message ? "true" : "false");
-        var target = fieldError(form, input.name);
+        var rule = input.getAttribute("data-validate-field");
+        var target = fieldError(form, input.name, rule);
         if (target) {
             target.textContent = message || "";
         }
@@ -143,6 +145,21 @@
         form.addEventListener("submit", function (event) {
             if (!validateForm(form)) {
                 event.preventDefault();
+            } else {
+                // Disable submit button and show loading state to prevent double submits (fixes concurrent 403 Forbidden)
+                var submitBtn = form.querySelector("button[type='submit']");
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add("is-loading");
+                    submitBtn.innerHTML = '<span class="spinner"></span> Đang xử lý...';
+                    
+                    // Also disable other buttons inside the same form to prevent stray clicks
+                    form.querySelectorAll("button").forEach(function (btn) {
+                        if (btn !== submitBtn) {
+                            btn.disabled = true;
+                        }
+                    });
+                }
             }
         });
         form.querySelectorAll("[data-validate-field]").forEach(function (input) {

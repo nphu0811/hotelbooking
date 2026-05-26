@@ -85,6 +85,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http,
                                             AuthenticationSuccessHandler authenticationSuccessHandler,
                                             AuthenticationFailureHandler authenticationFailureHandler,
+                                            com.example.demo.service.CustomOAuth2UserService customOAuth2UserService,
                                             Environment environment) throws Exception {
         boolean localDebugProfile = environment.acceptsProfiles(Profiles.of("local", "dev", "test"));
         boolean h2ConsoleEnabled = localDebugProfile
@@ -100,7 +101,7 @@ public class SecurityConfig {
                     }
                 })
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/", "/rooms/**", "/login", "/login/otp/**", "/register", "/signup", "/verify/**", "/error",
+                    auth.requestMatchers("/", "/rooms/**", "/login", "/login/password", "/login/otp/**", "/login/oauth-mock", "/login/oauth2/**", "/register", "/signup", "/verify/**", "/error",
                             "/actuator/health", "/actuator/health/**", "/css/**", "/js/**", "/favicon.svg").permitAll();
                     auth.requestMatchers(paymentEndpoint("/webhook"), paymentEndpoint("/return")).permitAll();
                     if (h2ConsoleEnabled) {
@@ -126,6 +127,13 @@ public class SecurityConfig {
                         .successHandler(authenticationSuccessHandler)
                         .failureHandler(authenticationFailureHandler)
                         .permitAll())
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", false)
+                        .successHandler(authenticationSuccessHandler)
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        ))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")

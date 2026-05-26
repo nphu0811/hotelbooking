@@ -959,3 +959,123 @@ tbody tr:hover {
     font-size: var(--text-xs);
     font-weight: 900;
 }
+
+/* Premium OAuth Social & Mock Login Styles */
+.oauth-section {
+    margin: var(--space-6) 0 var(--space-4) 0;
+    width: 100%;
+}
+
+.oauth-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.oauth-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 46px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.62);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--duration-fast) var(--ease-out),
+        background-color var(--duration-fast) var(--ease-out),
+        border-color var(--duration-fast) var(--ease-out),
+        box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.oauth-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.oauth-btn:active {
+    transform: translateY(0);
+}
+
+.google-btn {
+    border-color: rgba(239, 68, 68, 0.28);
+}
+
+.google-btn:hover {
+    border-color: rgba(239, 68, 68, 0.5);
+    background: rgba(254, 242, 242, 0.85);
+    color: #dc2626;
+}
+
+.facebook-btn {
+    border-color: rgba(37, 99, 235, 0.28);
+}
+
+.facebook-btn:hover {
+    border-color: rgba(37, 99, 235, 0.5);
+    background: rgba(239, 246, 255, 0.85);
+    color: #1d4ed8;
+}
+
+.oauth-icon {
+    font-size: var(--text-base);
+    font-weight: 900;
+}
+
+.oauth-mocks {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: var(--space-3) 0 var(--space-4) 0;
+    font-size: var(--text-xs);
+}
+
+.mock-link {
+    color: var(--color-primary);
+    font-weight: 800;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out), text-decoration var(--duration-fast) var(--ease-out);
+}
+
+.mock-link:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+.mock-dot {
+    color: var(--color-text-muted);
+}
+
+/* Double-click Protection Loading & Spinner styles */
+.button.is-loading {
+    pointer-events: none;
+    opacity: 0.86;
+    background: var(--color-text-muted);
+    box-shadow: none;
+}
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

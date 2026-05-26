@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.User;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.UserStatus;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.BusinessException;
@@ -27,12 +28,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.repository.RoleRepository;
+
 @Controller
 public class AuthController {
     private final AuthService authService;
     private final CustomUserDetailsService customUserDetailsService;
     private final CurrentUserService currentUserService;
     private final com.example.demo.repository.UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
@@ -40,11 +44,13 @@ public class AuthController {
                           CustomUserDetailsService customUserDetailsService,
                           CurrentUserService currentUserService,
                           com.example.demo.repository.UserRepository userRepository,
+                          RoleRepository roleRepository,
                           AuthenticationManager authenticationManager) {
         this.authService = authService;
         this.customUserDetailsService = customUserDetailsService;
         this.currentUserService = currentUserService;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
     }
 
@@ -82,6 +88,65 @@ public class AuthController {
             model.addAttribute("message", "Nếu tài khoản đang chờ xác thực, mã mới đã được gửi.");
         }
         return "auth/login";
+    }
+
+    @GetMapping("/login/password")
+    public String loginPassword(@RequestParam(required = false) String error,
+                                @RequestParam(required = false) String captcha,
+                                @RequestParam(required = false) String locked,
+                                Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (isRealAuthentication(authentication)) {
+            if (isAdmin(authentication)) {
+                return "redirect:/admin";
+            }
+            User user = userRepository.findByEmailIgnoreCase(authentication.getName()).orElse(null);
+            if (user != null && user.getStatus() == UserStatus.PENDING_VERIFICATION) {
+                return "redirect:/verification";
+            }
+            return "redirect:/";
+        }
+        if (error != null) {
+            model.addAttribute("passwordError", "Email hoặc mật khẩu không chính xác, hoặc tài khoản chưa hoạt động.");
+        }
+        if (captcha != null) {
+            model.addAttribute("captchaRequired", true);
+        }
+        if (locked != null) {
+            model.addAttribute("locked", true);
+        }
+        return "auth/login-password";
+    }
+
+    @GetMapping("/login/oauth-mock")
+    public String oauthMock(@RequestParam String provider,
+                            HttpServletRequest request,
+                            HttpServletResponse response) {
+        String email = "mock." + provider.toLowerCase() + "@example.com";
+        String name = "Mock " + provider.substring(0, 1).toUpperCase() + provider.substring(1).toLowerCase() + " User";
+        
+        Role userRole = roleRepository.findByCode("USER")
+                .orElseThrow(() -> new BusinessException("Thiếu role USER."));
+        
+        User user = userRepository.findByEmailIgnoreCase(email).orElseGet(() -> {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setFullName(name);
+            newUser.setStatus(UserStatus.ACTIVE);
+            newUser.setEmailVerified(true);
+            newUser.setPasswordHash(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(java.util.UUID.randomUUID().toString()));
+            newUser.getRoles().add(userRole);
+            return userRepository.save(newUser);
+        });
+        
+        if (user.getStatus() != UserStatus.ACTIVE || !user.isEmailVerified()) {
+            user.setStatus(UserStatus.ACTIVE);
+            user.setEmailVerified(true);
+            userRepository.save(user);
+        }
+        
+        authenticateUser(user, request, response);
+        return "redirect:/";
     }
 
     @PostMapping("/login/otp/request")

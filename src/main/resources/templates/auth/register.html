@@ -62,11 +62,23 @@
         </label>
 
         <button class="button" type="submit">Tạo tài khoản</button>
+
+        <div class="oauth-section">
+            <div class="auth-divider"><span>hoặc đăng ký bằng</span></div>
+            <div class="oauth-buttons">
+                <a th:href="@{/oauth2/authorization/google}" class="oauth-btn google-btn">
+                    <span class="oauth-icon">G</span> Google
+                </a>
+                <a th:href="@{/oauth2/authorization/facebook}" class="oauth-btn facebook-btn">
+                    <span class="oauth-icon">f</span> Facebook
+                </a>
+        </div>
+
         <a class="auth-link" th:href="@{/login}">Đã có tài khoản? Đăng nhập</a>
     </form>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
-<script th:src="@{/js/auth-validation.js(v=1)}"></script>
+<script th:src="@{/js/auth-validation.js(v=2)}"></script>
 </body>
 </html>
