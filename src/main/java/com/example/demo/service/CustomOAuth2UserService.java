@@ -95,9 +95,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .map(GrantedAuthority.class::cast)
                 .toList();
         
-        String userNameAttributeName = userRequest.getClientRegistration()
-                .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+        java.util.Map<String, Object> customAttributes = new java.util.HashMap<>(attributes);
+        customAttributes.put("email", finalEmail);
+        customAttributes.put("name", finalName);
                 
-        return new DefaultOAuth2User(authorities, attributes, userNameAttributeName);
+        return new DefaultOAuth2User(authorities, customAttributes, "email");
     }
 }

@@ -31,30 +31,52 @@
     </section>
 
     <!-- AI Recommendation Section -->
-    <section id="ai-recommendation" class="section premium-panel" style="margin-top: -30px; position: relative; z-index: 10; border-radius: var(--radius-xl); background: var(--color-surface); box-shadow: var(--shadow-lg);">
-        <div class="section-heading">
-            <div>
+    <section id="ai-recommendation" class="section ai-recommendation-panel">
+        <div class="section-heading ai-heading">
+            <div class="ai-title-wrapper">
+                <span class="ai-badge">
+                    <span>✨</span> AI Powered
+                </span>
                 <p class="page-kicker">Trải nghiệm Trí tuệ Nhân tạo (OpenAI)</p>
-                <h2>Gợi ý phòng cùng AI</h2>
+                <h2>Gợi ý phòng thông minh</h2>
+            </div>
+            <div class="ai-decorator">
+                <svg class="magic-wand" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 4-2 2 2 2-2 2"/>
+                    <path d="m20 11-2 2 2 2-2 2"/>
+                    <path d="M19 3h.01"/>
+                    <path d="M7.21 15 2.64 19.57a1 1 0 0 0 0 1.42.99.99 0 0 0 1.42 0L8.64 16.4"/>
+                    <path d="m13 10-6 6"/>
+                    <path d="M14 9h.01"/>
+                    <path d="M9 4h.01"/>
+                </svg>
             </div>
         </div>
         
-        <form id="ai-form" class="search-panel" style="background: transparent; box-shadow: none; padding: 0; max-width: 100%; border: none;">
+        <form id="ai-form" class="ai-form-container">
             <input type="hidden" id="csrf-token" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <label style="font-weight: 600;">Mô tả mong muốn của bạn (địa điểm, số khách, khoảng giá, sở thích...)
-                <textarea id="ai-prompt" rows="3" placeholder="Ví dụ: Tôi muốn đặt phòng đi hưởng tuần trăng mật ở Đà Lạt cho 2 người, cần phòng yên tĩnh và ấm áp, ngân sách khoảng 1.5 triệu..." required style="width: 100%; padding: 12px 16px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text); font-family: inherit; font-size: var(--text-sm); line-height: 1.6; resize: vertical;"></textarea>
-            </label>
-            <div class="prompt-suggestions" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center;">
-                <span class="suggestion-label" style="font-size: var(--text-xs); color: var(--color-text-muted); font-weight: 700;">Gợi ý:</span>
-                <button type="button" class="btn-suggest" onclick="fillPrompt('Tìm phòng cho gia đình 4 người ở Đà Nẵng, phòng rộng rãi, có hồ bơi và ăn sáng miễn phí.')" style="border: 1px solid rgba(37, 99, 235, 0.16); border-radius: var(--radius-full); background: rgba(239, 246, 255, 0.2); color: var(--color-primary); font-size: var(--text-xs); font-weight: 700; padding: 6px 14px; cursor: pointer;">Gia đình ở Đà Nẵng</button>
-                <button type="button" class="btn-suggest" onclick="fillPrompt('Tôi cần phòng Deluxe ở trung tâm phố cổ Hà Nội cho chuyến công tác 2 người, yên tĩnh làm việc.')" style="border: 1px solid rgba(37, 99, 235, 0.16); border-radius: var(--radius-full); background: rgba(239, 246, 255, 0.2); color: var(--color-primary); font-size: var(--text-xs); font-weight: 700; padding: 6px 14px; cursor: pointer;">Công tác ở Hà Nội</button>
-                <button type="button" class="btn-suggest" onclick="fillPrompt('Kiếm phòng gác mái ấm cúng nhìn ra vườn thông lãng mạn ở Đà Lạt cho cặp đôi.')" style="border: 1px solid rgba(37, 99, 235, 0.16); border-radius: var(--radius-full); background: rgba(239, 246, 255, 0.2); color: var(--color-primary); font-size: var(--text-xs); font-weight: 700; padding: 6px 14px; cursor: pointer;">Cặp đôi ở Đà Lạt</button>
+            <div class="ai-input-group">
+                <label for="ai-prompt" class="ai-input-label">Mô tả mong muốn của bạn (địa điểm, số khách, khoảng giá, sở thích...)</label>
+                <div class="ai-textarea-wrapper">
+                    <textarea id="ai-prompt" rows="3" placeholder="Ví dụ: Tôi muốn tìm phòng Suite có ban công nhìn ra hồ nước yên tĩnh tại Đà Lạt cho chuyến đi trăng mật lãng mạn 2 người, ngân sách tầm 2 triệu/đêm..." required></textarea>
+                </div>
             </div>
-            <button class="button" type="submit" style="margin-top: 16px; width: 100%;">AI Phân Tích & Gợi Ý</button>
+            <div class="prompt-suggestions">
+                <span class="suggestion-label">💡 Gợi ý nhanh:</span>
+                <div class="suggestion-chips">
+                    <button type="button" class="btn-suggest" onclick="fillPrompt('Tìm phòng cho gia đình 4 người ở Đà Nẵng, phòng rộng rãi, có hồ bơi và ăn sáng miễn phí.')">🏖️ Gia đình ở Đà Nẵng</button>
+                    <button type="button" class="btn-suggest" onclick="fillPrompt('Tôi cần phòng Deluxe ở trung tâm phố cổ Hà Nội cho chuyến công tác 2 người, yên tĩnh làm việc.')">💼 Công tác ở Hà Nội</button>
+                    <button type="button" class="btn-suggest" onclick="fillPrompt('Kiếm phòng gác mái ấm cúng nhìn ra vườn thông lãng mạn ở Đà Lạt cho cặp đôi.')">🌲 Cặp đôi ở Đà Lạt</button>
+                </div>
+            </div>
+            <button class="button ai-submit-btn" type="submit">
+                <span>Phân tích & Tìm kiếm bằng AI</span>
+                <span>✨</span>
+            </button>
         </form>
 
         <!-- AI results placeholder -->
-        <div id="ai-results" style="margin-top: 24px; display: none;"></div>
+        <div id="ai-results" class="ai-results-container" style="display: none;"></div>
     </section>
 
     <!-- Featured Rooms Carousel Section -->
@@ -173,10 +195,10 @@
         // Show loading state
         resultsContainer.style.display = 'block';
         resultsContainer.innerHTML = `
-            <div style="padding: 32px; text-align: center; background: rgba(37, 99, 235, 0.05); border: 1px dashed rgba(37, 99, 235, 0.2); border-radius: var(--radius-lg);">
-                <div class="ai-icon" style="font-size: var(--text-2xl); display: inline-block; margin-bottom: 12px; animation: pulse 1.5s infinite ease-in-out;">✦</div>
-                <h4 style="margin: 0 0 8px 0; color: var(--color-primary);">AI đang phân tích và tìm kiếm phòng tốt nhất cho bạn...</h4>
-                <p class="muted" style="margin: 0; font-size: var(--text-xs);">Quá trình này có thể mất tới 10-15 giây do AI tính toán thông tin địa lý và chi phí.</p>
+            <div class="ai-loader-container">
+                <div class="ai-loader-icon">✦</div>
+                <h4>AI đang phân tích và tìm kiếm phòng tốt nhất cho bạn...</h4>
+                <p class="muted">Quá trình này có thể mất tới 10-15 giây do AI tính toán thông tin địa lý và chi phí.</p>
             </div>
         `;
         
@@ -203,8 +225,8 @@
         .then(data => {
             if (!data || data.length === 0) {
                 resultsContainer.innerHTML = `
-                    <div style="padding: 24px; text-align: center; border: 1px solid var(--color-border); border-radius: var(--radius-lg);">
-                        <p class="muted" style="margin: 0;">Rất tiếc, AI không tìm thấy phòng nào phù hợp hoàn toàn với mô tả của bạn. Hãy thử thay đổi yêu cầu xem sao nhé!</p>
+                    <div style="padding: 24px; text-align: center; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface);">
+                        <p class="muted" style="margin: 0; font-size: var(--text-sm); font-weight: 500;">Rất tiếc, AI không tìm thấy phòng nào phù hợp hoàn toàn với mô tả của bạn. Hãy thử thay đổi yêu cầu xem sao nhé!</p>
                     </div>
                 `;
                 return;
@@ -222,20 +244,26 @@
             
             data.forEach(rec => {
                 const formattedPrice = new Intl.NumberFormat('vi-VN').format(rec.pricePerNight);
+                const imageUrl = rec.primaryImageUrl || '/css/room-placeholder.svg';
                 html += `
-                    <article class="room-card" style="flex: 0 0 350px;">
-                        <img src="${rec.primaryImageUrl}" alt="${rec.name}" style="height: 200px; width: 100%; object-fit: cover;">
+                    <article class="room-card ai-curated-card" style="flex: 0 0 350px;">
+                        <div class="ai-card-img-wrapper">
+                            <img src="${imageUrl}" alt="${rec.name}">
+                            <span class="ai-card-badge">✨ AI Pick</span>
+                        </div>
                         <div class="room-card-body">
-                            <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: bold; color: var(--color-accent); letter-spacing: 0.05em; margin-bottom: 4px;">✦ ĐỀ XUẤT CỦA AI</span>
-                            <h3 style="margin-top: 2px;">${rec.name}</h3>
-                            <p class="muted">${rec.hotelName} - ${rec.hotelCity}</p>
+                            <h3 class="ai-card-title">${rec.name}</h3>
+                            <p class="muted ai-card-subtitle">${rec.hotelName} • ${rec.hotelCity}</p>
                             
-                            <div style="margin: 8px 0; padding: 10px; background: rgba(6, 182, 212, 0.04); border-left: 2px solid var(--color-accent); border-radius: 0 var(--radius-md) var(--radius-md) 0;">
-                                <p style="margin: 0; font-size: var(--text-xs); line-height: 1.4; color: var(--color-text-soft); font-weight: 500;">${rec.reason}</p>
+                            <div class="ai-reason-bubble">
+                                <span class="ai-reason-icon">💡</span>
+                                <p>${rec.reason}</p>
                             </div>
                             
-                            <p class="price" style="margin-top: 8px;">${formattedPrice} VND / đêm</p>
-                            <a class="button" href="/rooms/${rec.roomId}">Đặt ngay</a>
+                            <div class="ai-card-footer">
+                                <p class="price">${formattedPrice} VND <span class="price-unit">/ đêm</span></p>
+                                <a class="button ai-book-btn" href="/rooms/${rec.roomId}">Đặt ngay</a>
+                            </div>
                         </div>
                     </article>
                 `;
