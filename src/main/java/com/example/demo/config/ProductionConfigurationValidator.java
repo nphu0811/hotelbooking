@@ -36,20 +36,25 @@ public class ProductionConfigurationValidator {
         requireValue(environment, "spring.datasource.url");
         requireValue(environment, "spring.datasource.username");
         requireValue(environment, "spring.datasource.password");
-        requireValue(environment, "mail.host");
-        requireValue(environment, "mail.port");
-        requireValue(environment, "mail.username");
-        requireValue(environment, "mail.password");
-        requireValue(environment, "mail.from");
-
         String datasourceUrl = value(environment, "spring.datasource.url");
         if (datasourceUrl.toLowerCase(Locale.ROOT).startsWith("jdbc:h2:")) {
             throw invalid("spring.datasource.url", "H2 is not allowed in the production profile");
         }
 
-        String emailProvider = requireValue(environment, "app.email.provider");
-        if (!"smtp".equals(emailProvider.toLowerCase(Locale.ROOT))) {
-            throw invalid("app.email.provider", "production email provider must be smtp");
+        String emailProvider = requireValue(environment, "app.email.provider").toLowerCase(Locale.ROOT);
+        if ("brevo".equals(emailProvider)) {
+            requireValue(environment, "brevo.api-key");
+            requireValue(environment, "mail.from");
+        } else {
+            throw invalid("app.email.provider", "production email provider must be brevo");
+        }
+
+        String smsProvider = value(environment, "app.sms.provider").toLowerCase(Locale.ROOT);
+        if ("brevo".equals(smsProvider)) {
+            requireValue(environment, "brevo.api-key");
+            requireValue(environment, "brevo.sms.sender");
+        } else if (!"console".equals(smsProvider) && !"disabled".equals(smsProvider) && !smsProvider.isBlank()) {
+            throw invalid("app.sms.provider", "production SMS provider must be brevo, console, or disabled");
         }
 
         String paymentProvider = requireValue(environment, "app.payment.provider").toLowerCase(Locale.ROOT);

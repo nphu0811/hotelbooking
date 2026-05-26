@@ -25,11 +25,9 @@ cloudinary.cloud-name=${CLOUDINARY_CLOUD_NAME:YOUR_KEY}
 cloudinary.api-key=${CLOUDINARY_API_KEY:YOUR_KEY}
 cloudinary.api-secret=${CLOUDINARY_API_SECRET:YOUR_KEY}
 
-mail.host=${MAIL_HOST:smtp.gmail.com}
-mail.port=${MAIL_PORT:587}
-mail.username=${MAIL_USERNAME:YOUR_EMAIL}
-mail.password=${MAIL_PASSWORD:YOUR_APP_PASSWORD}
 mail.from=${MAIL_FROM:YOUR_EMAIL}
+brevo.api-key=${BREVO_API_KEY:}
+brevo.sms.sender=${BREVO_SMS_SENDER:HotelBook}
 
 vnpay.tmn-code=${VNPAY_TMN_CODE:YOUR_KEY}
 vnpay.hash-secret=${VNPAY_HASH_SECRET:YOUR_KEY}

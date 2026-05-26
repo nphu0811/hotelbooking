@@ -1,6 +1,6 @@
 # HotelBooking
 
-Spring Boot hotel booking application prepared for deployment with PostgreSQL/Flyway, SMTP email, and VNPay payment boundaries.
+Spring Boot hotel booking application prepared for deployment with PostgreSQL/Flyway, Brevo HTTP email/SMS API, and VNPay payment boundaries.
 
 ## Requirements
 
@@ -28,7 +28,7 @@ Required environment variables:
 - `APP_PAYMENT_PROVIDER`
 - `APP_PUBLIC_BASE_URL` public HTTPS base URL used in email links and provider redirects
 - `VNPAY_TMN_CODE`, `VNPAY_HASH_SECRET`, `VNPAY_PAY_URL`, `VNPAY_RETURN_URL`, `VNPAY_IPN_URL` when `APP_PAYMENT_PROVIDER=vnpay`
-- `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM`
+- `BREVO_API_KEY`, `BREVO_SMS_SENDER`, `MAIL_FROM` for Brevo email & SMS transactional delivery
 
 Do not commit real credentials. Use platform environment variables for all production secrets.
 
@@ -53,7 +53,7 @@ Room/rate templates created for OSM places are marked `INTERNAL_TEMPLATE` and `I
 ## Payment, Email, Refund
 
 - Local/test: `MockPaymentProvider` and `ConsoleEmailProvider`.
-- Production: mock providers are denied; SMTP and a real payment adapter are required.
+- Production: mock providers are denied; Brevo HTTP APIs and a real payment adapter are required.
 - Payment confirmation is webhook/IPN-driven with signature verification and idempotent event storage.
 - Refund requests remain pending/processing unless a provider refund completes.
 
