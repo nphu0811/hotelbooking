@@ -14,8 +14,59 @@
     <p class="success" th:if="${message}" th:text="${message}"></p>
 </div>
 <footer class="site-footer" th:fragment="footer">
-    <span>HotelBooking</span>
-    <span>Place data is shown with source attribution when imported from external datasets.</span>
+    <div class="footer-container">
+        <div class="footer-grid">
+            <div class="footer-col footer-col-brand">
+                <a th:href="@{/}" class="footer-logo">
+                    <img class="brand-logo" th:src="@{/favicon.svg}" alt="" aria-hidden="true">
+                    <span>HotelBooking</span>
+                </a>
+                <p class="footer-desc">Trải nghiệm đặt phòng khách sạn trực tuyến tinh gọn, bảo mật và tin cậy hàng đầu Việt Nam. Tích hợp công nghệ AI gợi ý phòng nghỉ thông minh tối ưu cho kỳ nghỉ của bạn.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Facebook">FB</a>
+                    <a href="#" aria-label="Instagram">IG</a>
+                    <a href="#" aria-label="LinkedIn">LI</a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Liên Kết Nhanh</h4>
+                <ul class="footer-links">
+                    <li><a th:href="@{/}">Trang Chủ</a></li>
+                    <li><a th:href="@{/rooms/search(checkIn=${T(java.time.LocalDate).now().plusDays(1)},checkOut=${T(java.time.LocalDate).now().plusDays(3)},guests=2)}">Tìm Phòng Trống</a></li>
+                    <li><a th:href="@{/recommend}">AI Gợi Ý Phòng</a></li>
+                    <li><a sec:authorize="isAuthenticated()" th:href="@{/account/bookings}">Lịch Sử Đặt Phòng</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Hỗ Trợ & Chính Sách</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Trung Tâm Trợ Giúp</a></li>
+                    <li><a href="#">Chính Sách Hủy Phòng</a></li>
+                    <li><a href="#">Điều Khoản Sử Dụng</a></li>
+                    <li><a href="#">Chính Sách Bảo Mật</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Thông Tin Liên Hệ</h4>
+                <p class="footer-contact">
+                    <strong>Địa chỉ:</strong> 12 Tràng Thi, Hoàn Kiếm, Hà Nội, Việt Nam<br>
+                    <strong>Điện thoại:</strong> +84 (24) 3934 7888<br>
+                    <strong>Email:</strong> support@hotelbooking.vn<br>
+                    <strong>Giờ làm việc:</strong> 24/7 (Cả ngày lễ)
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer-divider"></div>
+        
+        <div class="footer-bottom">
+            <p class="copyright">&copy; <span th:text="${T(java.time.LocalDate).now().getYear()}">2026</span> HotelBooking. Bảo lưu mọi quyền.</p>
+            <p class="attribution">Dữ liệu địa điểm được cung cấp và ghi nhận bản quyền từ OpenStreetMap contributors, Geoapify và Google Places API.</p>
+        </div>
+    </div>
 </footer>
 <th:block th:fragment="scripts"></th:block>
 </body>

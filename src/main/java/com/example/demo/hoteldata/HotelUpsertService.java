@@ -110,7 +110,7 @@ public class HotelUpsertService {
         room.setRateSource("INTERNAL_ESTIMATE");
         RoomImage image = new RoomImage();
         image.setRoom(room);
-        image.setImageUrl(blankToFallback(record.primaryImageUrl(), "/css/room-placeholder.svg"));
+        image.setImageUrl(blankToFallback(record.primaryImageUrl(), getFallbackImageUrl(hotel.getCity())));
         image.setAltText(hotel.getName());
         image.setPrimary(true);
         room.getImages().add(image);
@@ -164,6 +164,25 @@ public class HotelUpsertService {
                 .replaceAll("[^a-z0-9]+", "-")
                 .replaceAll("(^-|-$)", "");
         return normalized.isBlank() ? "hotel" : normalized;
+    }
+
+    private String getFallbackImageUrl(String city) {
+        if (city == null) return "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80";
+        String normalized = city.toLowerCase(Locale.ROOT);
+        if (normalized.contains("ha noi") || normalized.contains("hà nội")) {
+            return "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80";
+        } else if (normalized.contains("da nang") || normalized.contains("đà nẵng")) {
+            return "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80";
+        } else if (normalized.contains("da lat") || normalized.contains("đà lạt")) {
+            return "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1200&q=80";
+        } else if (normalized.contains("phu quoc") || normalized.contains("phú quốc")) {
+            return "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80";
+        } else if (normalized.contains("nha trang")) {
+            return "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=80";
+        } else if (normalized.contains("ho chi minh") || normalized.contains("hồ chí minh") || normalized.contains("saigon") || normalized.contains("sài gòn")) {
+            return "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=1200&q=80";
+        }
+        return "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80";
     }
 
     private String sha256(String value) {

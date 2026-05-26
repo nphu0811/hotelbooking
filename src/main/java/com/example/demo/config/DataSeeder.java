@@ -56,23 +56,23 @@ public class DataSeeder {
             roomRepository.save(room(hanoi, "Deluxe Phố Cổ", "Deluxe", 2, "32", "1250000",
                     "Phòng sáng, cửa sổ lớn, bàn làm việc và khu tắm đứng.",
                     "Hủy trước 3 ngày hoàn 100%, trước 1-2 ngày hoàn 50%.",
-                    "/css/room-hanoi.svg", wifi, breakfast));
+                    "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", wifi, breakfast));
             roomRepository.save(room(hanoi, "Family Suite Hồ Gươm", "Suite", 4, "48", "2450000",
                     "Suite hai không gian ngủ, phù hợp gia đình muốn ở gần phố cổ.",
                     "Hủy linh hoạt theo chính sách hệ thống.",
-                    "/css/room-suite.svg", wifi, breakfast, airport));
+                    "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80", wifi, breakfast, airport));
             roomRepository.save(room(danang, "Ocean View King", "King", 2, "38", "1850000",
                     "Ban công nhìn biển, giường king và khu lounge nhỏ.",
                     "Hủy trước 3 ngày hoàn 100%, sau đó áp dụng biểu phí.",
-                    "/css/room-danang.svg", wifi, pool, breakfast));
+                    "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80", wifi, pool, breakfast));
             roomRepository.save(room(danang, "Twin City Comfort", "Twin", 2, "30", "980000",
                     "Phòng twin tối giản, phù hợp khách công tác và nhóm bạn.",
                     "Không hoàn tiền trong ngày check-in.",
-                    "/css/room-twin.svg", wifi));
+                    "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80", wifi));
             Room maintenance = room(dalat, "Garden Attic", "Studio", 2, "28", "890000",
                     "Gác mái ấm áp nhìn ra vườn thông.",
                     "Đang bảo trì định kỳ.",
-                    "/css/room-dalat.svg", wifi, breakfast);
+                    "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1200&q=80", wifi, breakfast);
             maintenance.setStatus(RoomStatus.MAINTENANCE);
             roomRepository.save(maintenance);
         };
