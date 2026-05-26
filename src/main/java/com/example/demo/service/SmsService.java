@@ -62,6 +62,7 @@ public class SmsService {
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+            log.info("Brevo SMS response status: {}, body: {}", response.statusCode(), response.body());
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 return;
             }
