@@ -101,7 +101,11 @@ public class ProductionConfigurationValidator {
 
     private static String value(Environment environment, String key) {
         try {
-            return environment.getProperty(key, "").trim();
+            String val = environment.getProperty(key, "").trim();
+            if (val.startsWith("\"") && val.endsWith("\"") && val.length() >= 2) {
+                val = val.substring(1, val.length() - 1).trim();
+            }
+            return val;
         } catch (RuntimeException ex) {
             throw invalid(key, "must be set in production");
         }
