@@ -11,11 +11,12 @@
     </button>
     <div class="nav-panel" id="site-nav-panel" data-nav-panel>
         <div class="nav-links">
-            <a th:href="@{/#rooms}">Destinations</a>
-            <a th:href="@{/#hanoi}">Suites</a>
-            <a th:href="@{/#ai-recommendation}">Experience</a>
-            <a th:href="@{/#offers}">Offers</a>
-            <a sec:authorize="isAuthenticated()" th:href="@{/account/bookings}">My Stays</a>
+            <a th:href="@{/ai-recommendation}">Gợi ý AI</a>
+            <a th:href="@{/#popular-hotels}">Phổ Biến</a>
+            <a th:href="@{/#hanoi}">Hà Nội</a>
+            <a th:href="@{/#hcm}">TP. HCM</a>
+            <a th:href="@{/#danang}">Đà Nẵng</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/account/bookings}">Lịch sử</a>
             <a sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" th:href="@{/admin}">Admin</a>
         </div>
         <div class="nav-auth">
