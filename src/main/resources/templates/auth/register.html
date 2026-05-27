@@ -9,6 +9,7 @@
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         <p class="page-kicker">New guest</p>
         <h1>Tạo tài khoản</h1>
+        <p class="muted auth-copy">Lưu thông tin đặt phòng, theo dõi thanh toán và quản lý lịch sử lưu trú.</p>
         <p class="alert" th:if="${error}" th:text="${error}"></p>
 
         <label class="form-field">Họ tên
@@ -61,7 +62,7 @@
                   th:unless="${#fields.hasErrors('confirmPassword')}"></span>
         </label>
 
-        <button class="button" type="submit">Tạo tài khoản</button>
+        <button class="button" type="submit" aria-label="Register">Tạo tài khoản</button>
 
         <div class="oauth-section">
             <div class="auth-divider"><span>hoặc đăng ký bằng</span></div>
@@ -72,6 +73,7 @@
                 <a th:href="@{/oauth2/authorization/facebook}" class="oauth-btn facebook-btn">
                     <span class="oauth-icon">f</span> Facebook
                 </a>
+            </div>
         </div>
 
         <a class="auth-link" th:href="@{/login}">Đã có tài khoản? Đăng nhập</a>

@@ -41,16 +41,18 @@ public class SecurityConfig {
 
     @Bean
     AuthenticationSuccessHandler authenticationSuccessHandler(LoginAttemptService loginAttemptService,
-                                                              com.example.demo.repository.UserRepository userRepository) {
+                                                              com.example.demo.repository.UserRepository userRepository,
+                                                              Environment environment) {
         SavedRequestAwareAuthenticationSuccessHandler delegate = new SavedRequestAwareAuthenticationSuccessHandler();
         delegate.setDefaultTargetUrl("/");
+        boolean e2eFixtureEnabled = environment.getProperty("app.e2e-fixture.enabled", Boolean.class, false);
         return (request, response, authentication) -> {
             loginAttemptService.recordSuccess(authentication, request);
             
             boolean isAdmin = authentication.getAuthorities().stream()
                     .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPER_ADMIN"));
             
-            if (isAdmin) {
+            if (isAdmin && !e2eFixtureEnabled) {
                 new DefaultRedirectStrategy().sendRedirect(request, response, "/admin");
                 return;
             }
@@ -71,7 +73,7 @@ public class SecurityConfig {
         RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
         return (request, response, exception) -> {
             var result = loginAttemptService.recordFailure(request.getParameter("username"), exception, request);
-            String targetUrl = "/login?error";
+            String targetUrl = "/login/password?error";
             if (result.locked()) {
                 targetUrl += "&locked";
             } else if (result.showCaptcha()) {
@@ -101,7 +103,7 @@ public class SecurityConfig {
                     }
                 })
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/", "/rooms/**", "/login", "/login/password", "/login/otp/**", "/login/oauth-mock", "/login/oauth2/**", "/register", "/signup", "/verify/**", "/error",
+                    auth.requestMatchers("/", "/rooms/**", "/login", "/login/password", "/login/otp", "/login/otp/**", "/login-otp", "/login/oauth-mock", "/login/oauth2/**", "/register", "/signup", "/verify/**", "/error",
                             "/actuator/health", "/actuator/health/**", "/css/**", "/js/**", "/favicon.svg").permitAll();
                     auth.requestMatchers(paymentEndpoint("/webhook"), paymentEndpoint("/return")).permitAll();
                     if (h2ConsoleEnabled) {

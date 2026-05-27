@@ -33,7 +33,8 @@
             <button class="button button-muted button-small" type="submit">Gửi lại mã OTP</button>
         </form>
 
-        <a class="auth-link" th:href="@{/login}">Quay lại đăng nhập</a>
+        <a class="auth-link" th:href="@{/login/otp}">Đổi email hoặc số điện thoại</a>
+        <a class="auth-link" th:href="@{/login/password}">Đăng nhập bằng mật khẩu</a>
     </section>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>

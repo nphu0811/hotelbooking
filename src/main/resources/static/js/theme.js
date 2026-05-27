@@ -23,20 +23,20 @@
     }
 
     function setTheme(theme, persist) {
-        var nextTheme = theme === "dark" ? "dark" : "light";
+        var nextTheme = theme === "light" ? "light" : "dark";
+        var isDark = nextTheme === "dark";
         root.dataset.theme = nextTheme;
 
         var toggle = document.querySelector("[data-theme-toggle]");
         var label = document.querySelector("[data-theme-toggle-label]");
 
         if (toggle) {
-            var isDark = nextTheme === "dark";
             toggle.setAttribute("aria-checked", String(isDark));
             toggle.setAttribute("aria-label", isDark ? "Chuyển sang chế độ sáng" : "Chuyển sang chế độ tối");
         }
 
         if (label) {
-            label.textContent = nextTheme === "dark" ? "Chế độ tối" : "Chế độ sáng";
+            label.textContent = isDark ? "Chế độ tối" : "Chế độ sáng";
         }
 
         if (persist) {

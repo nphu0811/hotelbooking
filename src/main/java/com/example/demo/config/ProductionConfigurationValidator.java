@@ -69,7 +69,17 @@ public class ProductionConfigurationValidator {
             requireHttpsUrl(environment, "vnpay.ipn-url");
             return;
         }
-        throw invalid("app.payment.provider", "supported production provider is vnpay");
+        if ("momo".equals(paymentProvider)) {
+            requireValue(environment, "momo.partner-code");
+            requireValue(environment, "momo.access-key");
+            requireValue(environment, "momo.secret-key");
+            requireHttpsUrl(environment, "app.public-base-url");
+            requireHttpsUrl(environment, "momo.create-url");
+            requireHttpsUrl(environment, "momo.return-url");
+            requireHttpsUrl(environment, "momo.ipn-url");
+            return;
+        }
+        throw invalid("app.payment.provider", "supported production providers are vnpay and momo");
     }
 
     private static void requireFalse(Environment environment, String key) {

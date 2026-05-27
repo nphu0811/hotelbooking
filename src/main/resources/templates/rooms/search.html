@@ -48,7 +48,7 @@
             <div class="row-side">
                 <strong th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND'}">0</strong>
                 <span th:text="${'★ ' + room.averageRating + ' (' + room.reviewCount + ')'}">Rating</span>
-                <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}">Chi tiết</a>
+                <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}" aria-label="Detail">Chi tiết</a>
             </div>
         </article>
     </div>

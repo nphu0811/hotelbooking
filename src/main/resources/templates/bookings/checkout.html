@@ -7,7 +7,7 @@
     <header class="page-header">
         <p class="page-kicker">Checkout</p>
         <h1>Xác nhận đặt phòng</h1>
-        <p>Kiểm tra thông tin giữ chỗ trước khi chuyển sang cổng thanh toán.</p>
+        <p>Kiểm tra thông tin giữ chỗ và chọn phương thức thanh toán.</p>
     </header>
     <div class="summary">
         <p><strong>Mã giữ chỗ:</strong> <span th:text="${booking.bookingCode}">HB</span></p>
@@ -16,18 +16,47 @@
         <p><strong>Ngày:</strong> <span th:text="${booking.checkIn + ' -> ' + booking.checkOut}">Dates</span></p>
         <p><strong>Số khách:</strong> <span th:text="${booking.guestCount}">2</span></p>
         <p><strong>Tổng tiền:</strong> <span class="price" th:text="${#numbers.formatDecimal(booking.totalAmount,0,'COMMA',0,'POINT') + ' VND'}">0</span></p>
-        <p><strong>Hết hạn giữ chỗ:</strong> <span th:text="${booking.expiresAt}">time</span></p>
+        <p><strong>Trạng thái:</strong> <span class="badge" th:text="${booking.status}">Status</span></p>
     </div>
-    <div th:if="${error}" class="alert" style="margin-bottom: var(--space-5);">
+    <div class="hold-status" th:if="${booking.status.name() == 'PENDING_PAYMENT'}"
+         data-hold-expiry th:attr="data-expires-at=${booking.expiresAt}">
+        <div>
+            <p class="page-kicker">Giữ chỗ</p>
+            <strong data-hold-countdown>05:00</strong>
+            <small>Hết hạn lúc <time data-hold-absolute th:datetime="${booking.expiresAt}" th:text="${booking.expiresAt}">time</time></small>
+        </div>
+        <span class="badge">5 phút</span>
+    </div>
+    <div th:if="${error}" class="alert checkout-alert">
         <span th:text="${error}">Error message</span>
     </div>
-    <form th:if="${paymentProviderConfigured}" th:action="@{/payments/start/{id}(id=${booking.id})}" method="post">
+    <p class="alert" th:if="${!bookingPayable}">Giữ chỗ đã hết hạn hoặc booking không còn chờ thanh toán.</p>
+    <form class="payment-method-form" th:if="${bookingPayable}" th:action="@{/payments/start/{id}(id=${booking.id})}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        <button class="button" type="submit">Thanh toán</button>
+        <div class="payment-method-grid" role="radiogroup" aria-label="Phương thức thanh toán">
+            <label class="payment-method-card" th:each="method : ${paymentMethods}"
+                   th:classappend="${!method.configured} ? ' is-disabled' : ''">
+                <input type="radio" name="provider" th:value="${method.code}"
+                       th:checked="${method.selected}" th:disabled="${!method.configured}">
+                <span class="payment-method-brand" th:text="${method.shortName}">PAY</span>
+                <span class="payment-method-copy">
+                    <strong th:text="${method.name}">Method</strong>
+                    <small th:text="${method.description}">Description</small>
+                </span>
+                <span class="payment-method-state" th:text="${method.state}">State</span>
+            </label>
+        </div>
+        <p class="alert" th:unless="${hasConfiguredPaymentMethod}">
+            Chưa có cổng thanh toán khả dụng. Hãy cấu hình VNPAY hoặc MoMo trong biến môi trường trước khi thanh toán.
+        </p>
+        <button class="button" type="submit" aria-label="Continue to payment" data-hold-action
+                th:disabled="${!hasConfiguredPaymentMethod}">
+            Tiếp tục thanh toán
+        </button>
     </form>
-    <p class="alert" th:unless="${paymentProviderConfigured}">Thanh toán chưa được cấu hình cho môi trường này.</p>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
+<script th:src="@{/js/booking-hold.js(v=1)}"></script>
 </body>
 </html>

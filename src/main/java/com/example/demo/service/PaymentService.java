@@ -104,12 +104,16 @@ public class PaymentService {
         }
 
         PaymentProvider provider = paymentProviderRegistry.require(providerName);
-        String idempotencyKey = booking.getId() + ":" + provider.getProviderName();
+        String baseIdempotencyKey = booking.getId() + ":" + provider.getProviderName();
+        String idempotencyKey = baseIdempotencyKey;
         Optional<Payment> existing = paymentRepository.findFirstByBookingOrderByCreatedAtDesc(booking);
         if (existing.isPresent()
                 && existing.get().getProvider().equalsIgnoreCase(provider.getProviderName())
                 && existing.get().getStatus() == PaymentStatus.PENDING) {
             return provider.createPaymentIntent(toIntentRequest(booking, existing.get().getIdempotencyKey(), clientIpAddress));
+        }
+        if (existing.isPresent()) {
+            idempotencyKey = baseIdempotencyKey + ":" + UUID.randomUUID().toString().substring(0, 8);
         }
 
         PaymentIntent intent = provider.createPaymentIntent(toIntentRequest(booking, idempotencyKey, clientIpAddress));

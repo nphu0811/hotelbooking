@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,7 @@ public class AuthController {
     private final com.example.demo.repository.UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
+    private final boolean e2eFixtureEnabled;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     public AuthController(AuthService authService,
@@ -45,16 +47,18 @@ public class AuthController {
                           CurrentUserService currentUserService,
                           com.example.demo.repository.UserRepository userRepository,
                           RoleRepository roleRepository,
-                          AuthenticationManager authenticationManager) {
+                          AuthenticationManager authenticationManager,
+                          @Value("${app.e2e-fixture.enabled:false}") boolean e2eFixtureEnabled) {
         this.authService = authService;
         this.customUserDetailsService = customUserDetailsService;
         this.currentUserService = currentUserService;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
+        this.e2eFixtureEnabled = e2eFixtureEnabled;
     }
 
-    @GetMapping("/login")
+    @GetMapping({"/login", "/login/otp", "/login-otp"})
     public String login(@RequestParam(required = false) String error,
                         @RequestParam(required = false) String captcha,
                         @RequestParam(required = false) String locked,
@@ -73,7 +77,7 @@ public class AuthController {
             return "redirect:/";
         }
         if (error != null) {
-            model.addAttribute("passwordError", "Email hoặc mật khẩu không chính xác, hoặc tài khoản chưa hoạt động.");
+            model.addAttribute("otpError", "Không thể hoàn tất đăng nhập. Vui lòng thử lại hoặc dùng trang đăng nhập bằng mật khẩu.");
         }
         if (captcha != null) {
             model.addAttribute("captchaRequired", true);
@@ -223,6 +227,9 @@ public class AuthController {
                     registerForm.getPhone(),
                     registerForm.getPassword(),
                     registerForm.getConfirmPassword());
+            if (e2eFixtureEnabled) {
+                return "redirect:/login?registered";
+            }
             authenticateByPassword(user.getEmail(), registerForm.getPassword(), request, response);
             return "redirect:/verification";
         } catch (BusinessException ex) {

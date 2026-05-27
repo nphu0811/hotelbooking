@@ -5,22 +5,22 @@
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page error-page">
     <section class="error-card">
-        <div class="error-icon-container">
+        <div class="error-icon-container" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
                 <line x1="12" y1="9" x2="12" y2="13"/>
                 <line x1="12" y1="17" x2="12.01" y2="17"/>
             </svg>
         </div>
-        <p class="page-kicker">Request Stopped</p>
+        <p class="page-kicker">Request stopped</p>
         <h1>Không thể thực hiện thao tác</h1>
         <div class="error-alert">
-            <div style="font-weight: 700; font-size: var(--text-xs); text-transform: uppercase; color: var(--color-error); margin-bottom: 4px; letter-spacing: 0.05em;">Chi tiết lỗi</div>
+            <div class="error-alert-label">Chi tiết lỗi</div>
             <span th:text="${error ?: 'Đã có lỗi xảy ra hoặc phiên làm việc của bạn đã hết hạn. Vui lòng thử lại.'}">Error</span>
         </div>
         <div class="error-actions">
             <a class="button" th:href="@{/}">Về trang chủ</a>
-            <a class="button button-muted" href="javascript:history.back()">Quay lại</a>
+            <button class="button button-muted" type="button" data-history-back>Quay lại</button>
         </div>
     </section>
 </main>

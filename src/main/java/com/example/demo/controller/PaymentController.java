@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -43,18 +44,21 @@ public class PaymentController {
     }
 
     @PostMapping("/payments/start/{bookingId}")
-    public String start(@PathVariable UUID bookingId, Model model, HttpServletRequest request) {
+    public String start(@PathVariable UUID bookingId,
+                        @RequestParam(required = false) String provider,
+                        HttpServletRequest request,
+                        RedirectAttributes redirectAttributes) {
         User user = currentUserService.requireCurrentUser();
         Booking booking = bookingService.requireOwnBooking(user, bookingId);
         try {
-            PaymentIntent intent = paymentService.createConfiguredPaymentIntent(booking, clientIp(request));
+            PaymentIntent intent = provider == null || provider.isBlank()
+                    ? paymentService.createConfiguredPaymentIntent(booking, clientIp(request))
+                    : paymentService.createPaymentIntent(booking, provider, clientIp(request));
             return "redirect:" + intent.redirectUrl();
         } catch (BusinessException ex) {
-            model.addAttribute("booking", booking);
-            model.addAttribute("error", ex.getMessage());
-            model.addAttribute("paymentProviderConfigured", true);
-            model.addAttribute("mockPaymentEnabled", false);
-            return "bookings/checkout";
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            redirectAttributes.addFlashAttribute("selectedPaymentProvider", provider);
+            return "redirect:/checkout/" + booking.getId();
         }
     }
 
@@ -90,7 +94,9 @@ public class PaymentController {
             return "bookings/payment-result";
         }
         try {
-            Payment payment = paymentService.requirePaymentByOrderId(orderId);
+            Payment payment = hasSignature(params)
+                    ? paymentService.handleWebhookDetailed(provider, Map.of(), encodedParams(params)).payment()
+                    : paymentService.requirePaymentByOrderId(orderId);
             if (!payment.getProvider().equalsIgnoreCase(provider)) {
                 throw new BusinessException("Payment provider mismatch");
             }
@@ -100,6 +106,16 @@ public class PaymentController {
             model.addAttribute("error", "Payment status is not available yet.");
         }
         return "bookings/payment-result";
+    }
+
+    private boolean hasSignature(Map<String, String> params) {
+        return params.containsKey("vnp_SecureHash") || params.containsKey("signature");
+    }
+
+    private String encodedParams(Map<String, String> params) {
+        return params.entrySet().stream()
+                .map(entry -> encode(entry.getKey()) + "=" + encode(entry.getValue()))
+                .collect(Collectors.joining("&"));
     }
 
     private String clientIp(HttpServletRequest request) {

@@ -1,4 +1,61 @@
 @media (max-width: 1100px) {
+    .topbar {
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        padding: 12px 14px;
+    }
+
+    .brand {
+        flex: 1 1 auto;
+    }
+
+    .nav-menu-toggle {
+        display: inline-grid;
+    }
+
+    .nav-panel {
+        flex: 1 1 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: max-height 320ms var(--ease-spring),
+            opacity var(--duration-normal) var(--ease-out),
+            transform var(--duration-normal) var(--ease-out);
+    }
+
+    .nav-panel.is-open {
+        max-height: 560px;
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .nav-links,
+    .nav-auth {
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: stretch;
+        gap: var(--space-2);
+        padding: var(--space-3);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .nav-links a,
+    .nav-auth > a,
+    .nav-auth form .button {
+        justify-content: center;
+        width: 100%;
+    }
+
     .hero {
         grid-template-columns: 1fr;
         align-items: center;
@@ -40,19 +97,60 @@
     }
 
     .topbar {
-        align-items: flex-start;
+        align-items: center;
         flex-wrap: wrap;
         gap: var(--space-3);
         padding: 12px 14px;
     }
 
     .brand {
+        flex: 1 1 auto;
+    }
+
+    .nav-menu-toggle {
+        display: inline-grid;
+    }
+
+    .nav-panel {
         flex: 1 1 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: max-height 320ms var(--ease-spring),
+            opacity var(--duration-normal) var(--ease-out),
+            transform var(--duration-normal) var(--ease-out);
+    }
+
+    .nav-panel.is-open {
+        max-height: 560px;
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
     }
 
     .nav-links,
     .nav-auth {
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: stretch;
+        gap: var(--space-2);
+        padding: var(--space-3);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .nav-links a,
+    .nav-auth > a,
+    .nav-auth form .button {
+        justify-content: center;
+        width: 100%;
     }
 
     .hero,
@@ -102,11 +200,54 @@
         gap: var(--space-1);
     }
 
+    .hold-status,
+    .payment-method-card {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    .hold-status {
+        display: grid;
+    }
+
+    .payment-method-state {
+        justify-self: start;
+    }
+
     .otp-inline,
     .verification-item {
         display: grid;
         grid-template-columns: 1fr;
         align-items: stretch;
+    }
+}
+
+@media (max-width: 1100px) {
+    .nav-panel:has(form[action="/logout"]):not(.is-open) {
+        flex: 0 0 auto;
+        max-height: none;
+        opacity: 1;
+        overflow: visible;
+        transform: none;
+        pointer-events: auto;
+    }
+
+    .nav-panel:has(form[action="/logout"]):not(.is-open) .nav-links,
+    .nav-panel:has(form[action="/logout"]):not(.is-open) .theme-toggle,
+    .nav-panel:has(form[action="/logout"]):not(.is-open) .nav-auth > a {
+        display: none;
+    }
+
+    .nav-panel:has(form[action="/logout"]):not(.is-open) .nav-auth {
+        display: flex;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .nav-panel:has(form[action="/logout"]).is-open {
+        flex: 1 1 100%;
     }
 }
 
@@ -151,11 +292,6 @@
 
     .button {
         width: 100%;
-    }
-
-    .nav-auth .button,
-    .nav-auth form .button {
-        width: auto;
     }
 
     .room-row {

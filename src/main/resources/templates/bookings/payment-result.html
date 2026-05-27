@@ -15,7 +15,7 @@
         <p><strong>Trạng thái booking:</strong> <span class="badge" th:text="${booking.status}">status</span></p>
         <p><strong>Mã booking:</strong> <span th:text="${booking.bookingCode}">code</span></p>
     </div>
-    <a class="button" th:href="@{/account/bookings}">Xem lịch sử đặt phòng</a>
+        <a class="button" th:href="@{/account/bookings}" aria-label="history">Xem lịch sử đặt phòng</a>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>

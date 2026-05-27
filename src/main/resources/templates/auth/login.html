@@ -6,7 +6,7 @@
 <main class="auth-page">
     <section class="auth-panel">
         <p class="page-kicker">HotelBooking account</p>
-        <h1>Đăng nhập hoặc tạo tài khoản</h1>
+        <h1>Đăng nhập bằng OTP</h1>
         <p class="muted auth-copy">Nhập email hoặc số điện thoại để nhận mã OTP xác thực.</p>
 
         <p class="alert" th:if="${otpError}" th:text="${otpError}"></p>
@@ -24,7 +24,7 @@
             <button class="button" type="submit">Tiếp tục</button>
         </form>
 
-        <a class="button button-muted button-outline" style="width: 100%; margin-top: 15px; display: inline-flex;" th:href="@{/login/password}">Đăng nhập bằng mật khẩu</a>
+        <a class="button button-muted button-outline auth-switch" th:href="@{/login/password}">Đăng nhập bằng mật khẩu</a>
 
         <div class="oauth-section">
             <div class="auth-divider"><span>hoặc tiếp tục với</span></div>
@@ -35,6 +35,7 @@
                 <a th:href="@{/oauth2/authorization/facebook}" class="oauth-btn facebook-btn">
                     <span class="oauth-icon">f</span> Facebook
                 </a>
+            </div>
         </div>
 
         <p class="auth-terms">Bằng việc đăng nhập, bạn đồng ý với điều khoản sử dụng và chính sách bảo mật của HotelBooking.</p>

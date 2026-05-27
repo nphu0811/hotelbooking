@@ -24,7 +24,7 @@ main {
 .page-kicker,
 .eyebrow {
     width: fit-content;
-    color: var(--color-primary-dark);
+    color: var(--color-accent);
     font-size: var(--text-xs);
     font-weight: 850;
     letter-spacing: 0.12em;

@@ -33,6 +33,7 @@ import java.util.UUID;
 
 @Service
 public class BookingService {
+    private static final long PAYMENT_HOLD_MINUTES = 5;
     private static final Set<BookingStatus> ACTIVE_STATUSES = Set.of(
             BookingStatus.PENDING_PAYMENT,
             BookingStatus.CONFIRMED,
@@ -90,7 +91,7 @@ public class BookingService {
         booking.setNights(nights);
         booking.setTotalAmount(total);
         booking.setSpecialRequest(specialRequest == null ? null : specialRequest.trim());
-        booking.setExpiresAt(Instant.now(clock).plus(15, ChronoUnit.MINUTES));
+        booking.setExpiresAt(Instant.now(clock).plus(PAYMENT_HOLD_MINUTES, ChronoUnit.MINUTES));
         return bookingRepository.save(booking);
     }
 
@@ -98,18 +99,23 @@ public class BookingService {
         return bookingRepository.findByUserOrderByCreatedAtDesc(user, pageable);
     }
 
+    @Transactional
     public Booking requireOwnBooking(User user, UUID bookingId) {
         Booking booking = bookingRepository.findDetailedById(bookingId)
                 .orElseThrow(() -> new BusinessException("Không tìm thấy đơn đặt phòng"));
         if (!booking.getUser().getId().equals(user.getId())) {
             throw new BusinessException("Bạn không có quyền truy cập đơn này");
         }
+        expireIfPaymentHoldElapsed(booking);
         return booking;
     }
 
+    @Transactional
     public Booking requireBooking(UUID bookingId) {
-        return bookingRepository.findDetailedById(bookingId)
+        Booking booking = bookingRepository.findDetailedById(bookingId)
                 .orElseThrow(() -> new BusinessException("Không tìm thấy đơn đặt phòng"));
+        expireIfPaymentHoldElapsed(booking);
+        return booking;
     }
 
     @Transactional
@@ -190,5 +196,21 @@ public class BookingService {
             return 50;
         }
         return 0;
+    }
+
+    private void expireIfPaymentHoldElapsed(Booking booking) {
+        if (booking.getStatus() != BookingStatus.PENDING_PAYMENT
+                || booking.getExpiresAt() == null
+                || booking.getExpiresAt().isAfter(Instant.now(clock))) {
+            return;
+        }
+        booking.setStatus(BookingStatus.EXPIRED);
+        bookingRepository.save(booking);
+        paymentRepository.findFirstByBookingOrderByCreatedAtDesc(booking).ifPresent(payment -> {
+            if (payment.getStatus() == PaymentStatus.PENDING) {
+                payment.setStatus(PaymentStatus.CANCELLED);
+                paymentRepository.save(payment);
+            }
+        });
     }
 }

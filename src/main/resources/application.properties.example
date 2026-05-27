@@ -35,6 +35,13 @@ vnpay.pay-url=${VNPAY_PAY_URL:YOUR_SANDBOX_URL}
 vnpay.return-url=${VNPAY_RETURN_URL:YOUR_RETURN_URL}
 vnpay.ipn-url=${VNPAY_IPN_URL:YOUR_IPN_URL}
 
+momo.partner-code=${MOMO_PARTNER_CODE:YOUR_PARTNER_CODE}
+momo.access-key=${MOMO_ACCESS_KEY:YOUR_ACCESS_KEY}
+momo.secret-key=${MOMO_SECRET_KEY:YOUR_SECRET_KEY}
+momo.create-url=${MOMO_CREATE_URL:https://test-payment.momo.vn/v2/gateway/api/create}
+momo.return-url=${MOMO_RETURN_URL:${app.public-base-url}/payments/momo/return}
+momo.ipn-url=${MOMO_IPN_URL:${app.public-base-url}/payments/momo/webhook}
+
 maps.provider=${MAPS_PROVIDER:leaflet}
 google.maps.api-key=${GOOGLE_MAPS_API_KEY:YOUR_KEY}
 google.places.api-key=${GOOGLE_PLACES_API_KEY:YOUR_KEY}

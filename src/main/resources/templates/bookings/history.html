@@ -29,7 +29,7 @@
                 <td th:text="${booking.checkIn + ' -> ' + booking.checkOut}">Dates</td>
                 <td th:text="${#numbers.formatDecimal(booking.totalAmount,0,'COMMA',0,'POINT')}">0</td>
                 <td><span class="badge" th:text="${booking.status}">Status</span></td>
-                <td><a class="button button-small button-muted" th:href="@{/account/bookings/{id}(id=${booking.id})}">Chi tiết</a></td>
+                <td><a class="button button-small button-muted" th:href="@{/account/bookings/{id}(id=${booking.id})}" aria-label="Detail">Chi tiết</a></td>
             </tr>
             </tbody>
         </table>
