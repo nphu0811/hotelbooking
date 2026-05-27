@@ -103,6 +103,28 @@
         var toggle = document.querySelector("[data-nav-toggle]");
         var panel = document.querySelector("[data-nav-panel]");
         var backButtons = document.querySelectorAll("[data-history-back]");
+        var compactNavQuery = window.matchMedia ? window.matchMedia("(max-width: 1100px)") : null;
+
+        function hasPersistentNavControls() {
+            return panel && panel.querySelector('form[action="/logout"]');
+        }
+
+        function syncMenuA11y(open) {
+            if (!panel) {
+                return;
+            }
+
+            var compact = compactNavQuery ? compactNavQuery.matches : false;
+            var hidePanel = compact && !open && !hasPersistentNavControls();
+
+            if (hidePanel) {
+                panel.setAttribute("aria-hidden", "true");
+                panel.inert = true;
+            } else {
+                panel.removeAttribute("aria-hidden");
+                panel.inert = false;
+            }
+        }
 
         function setMenu(open) {
             if (!toggle || !panel) {
@@ -112,9 +134,20 @@
             toggle.setAttribute("aria-label", open ? "Đóng menu" : "Mở menu");
             panel.classList.toggle("is-open", open);
             document.documentElement.classList.toggle("nav-open", open);
+            syncMenuA11y(open);
         }
 
         if (toggle && panel) {
+            setMenu(false);
+
+            if (compactNavQuery) {
+                if (compactNavQuery.addEventListener) {
+                    compactNavQuery.addEventListener("change", function () { setMenu(false); });
+                } else if (compactNavQuery.addListener) {
+                    compactNavQuery.addListener(function () { setMenu(false); });
+                }
+            }
+
             toggle.addEventListener("click", function () {
                 setMenu(toggle.getAttribute("aria-expanded") !== "true");
             });
