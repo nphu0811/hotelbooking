@@ -40,8 +40,7 @@
     <section id="ai-recommendation" class="section ai-recommendation-panel">
         <div class="section-heading ai-heading">
             <div>
-                <span class="ai-badge">Experience</span>
-                <p class="page-kicker">Concierge intelligence</p>
+                <p class="page-kicker">Gợi ý AI</p>
                 <h2>AI stay curation</h2>
                 <p>Describe the mood, destination and budget. LUMIÈRE will shortlist stays that fit your plan.</p>
             </div>
@@ -70,7 +69,7 @@
     <section id="popular-hotels" class="section">
         <div class="section-heading">
             <div>
-                <h2 class="page-kicker">Phổ Biến</h2>
+                <p class="page-kicker">Phổ Biến</p>
                 <p>Trải nghiệm lưu trú tinh tế, quy trình đặt phòng trực quan và các kỳ nghỉ được tuyển chọn tại những điểm đến hấp dẫn nhất Việt Nam.</p>
             </div>
             <a class="button button-muted" th:href="@{/rooms/search(checkIn=${checkIn},checkOut=${checkOut},guests=${guests})}">View all</a>
@@ -94,7 +93,7 @@
     <section id="hanoi" class="section border-top">
         <div class="section-heading">
             <div>
-                <h2 class="page-kicker">Hà Nội</h2>
+                <p class="page-kicker">Hà Nội</p>
                 <p>Trải nghiệm lưu trú tinh tế, quy trình đặt phòng trực quan và các kỳ nghỉ được tuyển chọn tại những điểm đến hấp dẫn nhất Việt Nam.</p>
             </div>
             <a class="button button-muted" th:href="@{/rooms/search(q='Hà Nội',checkIn=${checkIn},checkOut=${checkOut},guests=1)}">Explore</a>
@@ -117,7 +116,7 @@
     <section id="hcm" class="section border-top">
         <div class="section-heading">
             <div>
-                <h2 class="page-kicker">TP. HCM</h2>
+                <p class="page-kicker">TP. HCM</p>
                 <p>Trải nghiệm lưu trú tinh tế, quy trình đặt phòng trực quan và các kỳ nghỉ được tuyển chọn tại những điểm đến hấp dẫn nhất Việt Nam.</p>
             </div>
             <a class="button button-muted" th:href="@{/rooms/search(q='TP. HCM',checkIn=${checkIn},checkOut=${checkOut},guests=1)}">Explore</a>
@@ -140,7 +139,7 @@
     <section id="danang" class="section border-top">
         <div class="section-heading">
             <div>
-                <h2 class="page-kicker">Đà Nẵng</h2>
+                <p class="page-kicker">Đà Nẵng</p>
                 <p>Trải nghiệm lưu trú tinh tế, quy trình đặt phòng trực quan và các kỳ nghỉ được tuyển chọn tại những điểm đến hấp dẫn nhất Việt Nam.</p>
             </div>
             <a class="button button-muted" th:href="@{/rooms/search(q='Đà Nẵng',checkIn=${checkIn},checkOut=${checkOut},guests=1)}">Explore</a>
@@ -160,29 +159,7 @@
         <p class="empty" th:if="${danangRooms == null or danangRooms.isEmpty()}">Chưa có phòng tại khu vực này.</p>
     </section>
 
-    <section id="hcm" class="section border-top">
-        <div class="section-heading">
-            <div>
-                <p class="page-kicker">Urban stays</p>
-                <h2>TP. Hồ Chí Minh</h2>
-                <p>High-energy city hotels with calm interiors and practical access to business districts.</p>
-            </div>
-            <a class="button button-muted" th:href="@{/rooms/search(q='Hồ Chí Minh',checkIn=${checkIn},checkOut=${checkOut},guests=1)}">Explore</a>
-        </div>
-
-        <div class="room-scroll-container" th:if="${hcmRooms != null and !hcmRooms.isEmpty()}">
-            <article class="room-card" th:each="room : ${hcmRooms.content}">
-                <img th:src="${room.primaryImageUrl != null ? room.primaryImageUrl : '/css/room-placeholder.svg'}" th:alt="${room.name}">
-                <div class="room-card-body">
-                    <h3 th:text="${room.name}">Room</h3>
-                    <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Hotel</p>
-                    <p class="price" th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</p>
-                    <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}" aria-label="Detail">View suite</a>
-                </div>
-            </article>
-        </div>
-        <p class="empty" th:if="${hcmRooms == null or hcmRooms.isEmpty()}">Chưa có phòng tại khu vực này.</p>
-    </section>
+    
 </main>
 
 <div th:replace="~{fragments/layout :: footer}"></div>
