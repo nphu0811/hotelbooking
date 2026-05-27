@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Booking Hold Details - Lumière Hotels</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#006a61",
+                        "on-tertiary-fixed-variant": "#004e61",
+                        "on-tertiary-fixed": "#001f28",
+                        "primary-fixed": "#e1e2ea",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-fixed": "#00201d",
+                        "surface-tint": "#5c5e65",
+                        "surface-container": "#edeeef",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#006f66",
+                        "tertiary-fixed-dim": "#6cd3f7",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#191c1d",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "outline": "#76777b",
+                        "inverse-on-surface": "#f0f1f2",
+                        "tertiary-fixed": "#b7eaff",
+                        "primary-container": "#1a1d23",
+                        "primary-fixed-dim": "#c4c6ce",
+                        "outline-variant": "#c6c6cb",
+                        "surface-variant": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed-variant": "#44474d",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-primary-container": "#82858c",
+                        "inverse-primary": "#c4c6ce",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary": "#000204",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#191c22",
+                        "on-tertiary-container": "#0590b1",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "primary": "#010306",
+                        "surface": "#f8f9fa",
+                        "on-surface-variant": "#45474b",
+                        "tertiary-container": "#00202a",
+                        "secondary-container": "#86f2e4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "section-gap": "120px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Playfair Display"],
+                        "label-sm": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "display-lg": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["Playfair Display"],
+                        "label-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 20px 0 rgba(1, 3, 6, 0.04);
+        }
+        
+        .timer-gradient {
+            background: linear-gradient(90deg, #ba1a1a 0%, #006a61 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        @keyframes pulse-border {
+            0% { border-color: rgba(186, 26, 26, 0.3); }
+            50% { border-color: rgba(186, 26, 26, 0.8); }
+            100% { border-color: rgba(186, 26, 26, 0.3); }
+        }
+
+        .timer-container {
+            border: 1px solid transparent;
+            animation: pulse-border 2s infinite;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col">
+<!-- Top Navigation (Suppressed for Transactional Page, but keeping a minimal brand anchor as it's a detail page) -->
+<header class="bg-surface-container-lowest border-b border-outline-variant/20 py-4 px-margin-mobile md:px-margin-desktop sticky top-0 z-50">
+<div class="max-w-container-max mx-auto flex justify-between items-center">
+<div class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary">LUMIÈRE HOTELS</div>
+<a class="text-on-surface-variant hover:text-secondary transition-colors font-label-md text-label-md flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[18px]">close</span>
+                Exit Booking
+            </a>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-8 pb-section-gap px-margin-mobile md:px-margin-desktop">
+<div class="max-w-[1000px] mx-auto">
+<!-- Top Banner: Countdown Hold -->
+<div class="timer-container bg-surface-container-lowest p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4 glass-panel">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-error text-[32px]">schedule</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary">Room held for <span class="font-display-lg text-[32px] timer-gradient font-bold ml-2" id="countdown-timer">05:00</span></h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Please complete your payment before the timer expires to secure your reservation.</p>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-8 py-3 rounded font-label-md text-label-md hover:bg-secondary transition-colors whitespace-nowrap">
+                    Complete Payment
+                </button>
+</div>
+<!-- Bento Grid Layout for Details -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Left Column: Primary Details -->
+<div class="md:col-span-8 flex flex-col gap-gutter">
+<!-- Property & Room Info -->
+<section class="glass-panel rounded-xl overflow-hidden p-0">
+<div class="h-48 w-full bg-surface-container-high relative">
+<img alt="Room Image" class="w-full h-full object-cover" data-alt="A luxurious hotel suite interior bathed in natural sunlight. High-end modern minimalist furniture with a neutral palette of whites, creams, and soft woods. A large window offers a breathtaking view of a serene ocean. The atmosphere is calm, exclusive, and expensive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxKC_anKZPg8_QrEx1SemGdEj2ZKhdCzN7-A29lrngFCWmp3hX_E9eDN8fMNGMy-k3ZFWK5VAG7Wy1OJHP6Q6d9VjmuwxHVBBZaiDrAG7wnDNyJB6tKd1CYsjDEEvBIvxBt-vOqoN2oa4vPTiiGiO9YCesbYl1z1XylmEeLeBiy2Em_jFi6auf3KiBtJOzOll_xiOyr8ZpMA7nRoB0wWglvNm3hdPQnXWUeT6tn3MLQToNzKh_T64NLZfkMoK5IVhO6bpFQonb4Vif"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-on-primary">
+<span class="bg-secondary/20 text-secondary-fixed backdrop-blur-md px-3 py-1 rounded text-[10px] font-bold tracking-wider uppercase mb-2 inline-block">Grand Suite</span>
+<h1 class="font-headline-lg text-headline-lg font-medium">Lumière Maldives</h1>
+</div>
+</div>
+<div class="p-8">
+<div class="grid grid-cols-2 gap-8 mb-6 border-b border-outline-variant/20 pb-6">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Check-in</p>
+<p class="font-body-lg text-body-lg text-primary">Oct 14, 2024</p>
+<p class="font-body-md text-body-md text-on-surface-variant">3:00 PM</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Check-out</p>
+<p class="font-body-lg text-body-lg text-primary">Oct 21, 2024</p>
+<p class="font-body-md text-body-md text-on-surface-variant">11:00 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-6 text-on-surface-variant font-body-md text-body-md">
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-[20px]">person</span> 2 Adults</div>
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-[20px]">bed</span> 1 King Bed</div>
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-[20px]">view_timeline</span> 7 Nights</div>
+</div>
+</div>
+</section>
+<!-- Guest Information -->
+<section class="glass-panel rounded-xl p-8">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">badge</span>
+                            Guest Details
+                        </h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Primary Guest</p>
+<p class="font-body-lg text-body-lg text-primary">Eleanor Vance</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Contact Email</p>
+<p class="font-body-lg text-body-lg text-primary">e.vance@example.com</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Phone Number</p>
+<p class="font-body-lg text-body-lg text-primary">+1 (555) 019-2834</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Special Requests</p>
+<p class="font-body-lg text-body-lg text-primary">Late arrival (approx 8 PM)</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Cost Breakdown & Actions -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<!-- Payment Summary -->
+<section class="glass-panel rounded-xl p-6 bg-surface-container-lowest flex-grow flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-6 pb-4 border-b border-outline-variant/20">Payment Summary</h3>
+<div class="space-y-4 flex-grow font-body-md text-body-md text-on-surface-variant">
+<div class="flex justify-between">
+<span>Grand Suite (7 nights)</span>
+<span class="text-primary font-medium">$4,550.00</span>
+</div>
+<div class="flex justify-between">
+<span>Taxes &amp; Fees</span>
+<span class="text-primary font-medium">$546.00</span>
+</div>
+<div class="flex justify-between">
+<span>Resort Fee</span>
+<span class="text-primary font-medium">$210.00</span>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-outline-variant/20">
+<div class="flex justify-between items-end mb-2">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Due</span>
+<span class="font-headline-lg text-headline-lg text-primary">$5,306.00</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant bg-surface-container p-2 rounded mt-4">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span>Payment status: <span class="font-bold text-error">Pending (Hold)</span></span>
+</div>
+</div>
+</section>
+<!-- Policy & Actions -->
+<section class="glass-panel rounded-xl p-6">
+<div class="mb-6">
+<h4 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">policy</span> Cancellation Policy
+                            </h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">
+                                Fully refundable if cancelled before Oct 1, 2024. Cancellations made after this date will incur a fee equal to the first night's stay.
+                            </p>
+</div>
+<div class="flex flex-col gap-3">
+<button class="w-full border border-outline text-primary px-6 py-3 rounded font-label-md text-label-md hover:bg-surface-container-high transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">edit</span> Modify Booking
+                            </button>
+<button class="w-full text-error px-6 py-3 rounded font-label-md text-label-md hover:bg-error-container/50 transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">cancel</span> Cancel Hold
+                            </button>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest w-full pt-section-gap pb-12 border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="md:col-span-1">
+<div class="font-headline-sm text-headline-sm font-bold text-primary mb-4">LUMIÈRE HOTELS</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">© 2024 Lumière Hotels &amp; Resorts. All rights reserved.</p>
+</div>
+<div class="md:col-span-3 flex flex-wrap gap-6 justify-start md:justify-end">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Cookie Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-secondary transition-colors" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple 5-minute countdown script
+        document.addEventListener("DOMContentLoaded", function() {
+            let duration = 5 * 60; // 5 minutes in seconds
+            const display = document.getElementById('countdown-timer');
+            const timerContainer = document.querySelector('.timer-container');
+            
+            const timer = setInterval(function () {
+                let minutes = parseInt(duration / 60, 10);
+                let seconds = parseInt(duration % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--duration < 0) {
+                    clearInterval(timer);
+                    display.textContent = "00:00";
+                    display.classList.remove('timer-gradient');
+                    display.classList.add('text-error');
+                    timerContainer.style.animation = 'none';
+                    timerContainer.style.borderColor = 'rgba(186, 26, 26, 1)'; // Solid error border
+                    // Here you would typically trigger UI updates to disable payment, etc.
+                } else if (duration < 60) {
+                    // Make pulse faster in last minute
+                     timerContainer.style.animationDuration = '1s';
+                }
+            }, 1000);
+        });
+    </script>
+</body></html>

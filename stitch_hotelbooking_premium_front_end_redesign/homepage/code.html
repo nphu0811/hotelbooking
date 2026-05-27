@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumière Hotels - Discover Serene Exclusivity</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#191c1d",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e1e3e4",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f8f9fa",
+                        "primary": "#000000",
+                        "surface-dim": "#d9dadb",
+                        "primary-fixed-dim": "#c8c6c5",
+                        "secondary-fixed-dim": "#c6c6c6",
+                        "outline": "#747878",
+                        "outline-variant": "#c4c7c7",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#1a1c1c",
+                        "on-surface": "#191c1d",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-fixed": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary": "#000000",
+                        "secondary-container": "#e0dfdf",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "surface-container-high": "#e7e8e9",
+                        "surface": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "on-primary-container": "#858383",
+                        "secondary-fixed": "#e3e2e2",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#444748",
+                        "background": "#f8f9fa",
+                        "surface-variant": "#e1e3e4",
+                        "on-secondary-fixed-variant": "#464747",
+                        "primary-container": "#1c1b1b",
+                        "inverse-primary": "#c8c6c5",
+                        "on-primary-fixed-variant": "#474746",
+                        "on-tertiary-container": "#838484",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-tint": "#5f5e5e",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-secondary-container": "#626363",
+                        "secondary": "#5d5e5f",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "inverse-surface": "#2e3132",
+                        "primary-fixed": "#e5e2e1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "80px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Montserrat"],
+                        "body-md": ["Montserrat"],
+                        "label-sm": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "headline-xl": ["Montserrat"],
+                        "headline-md": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-xl": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Montserrat', sans-serif; background-color: theme('colors.background'); color: theme('colors.on-background'); overflow-x: hidden; }
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+        .soft-shadow {
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.04);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, theme('colors.primary'), theme('colors.secondary'));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        #threejs-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10; /* Above bg, below content */
+            pointer-events: none; /* Let clicks pass through to content */
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+<!-- Background Gradient Blobs -->
+<div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-gradient-to-tr from-gray-200/40 to-transparent rounded-full blur-[100px] pointer-events-none -z-10"></div>
+<div class="fixed bottom-[10%] right-[-10%] w-[600px] h-[600px] bg-gradient-to-bl from-gray-300/30 to-transparent rounded-full blur-[120px] pointer-events-none -z-10"></div>
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl dark:bg-surface-container/70 border-b border-outline-variant/30 shadow-sm dark:shadow-none transition-all duration-300">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full max-w-container-max mx-auto">
+<a class="font-headline-md text-headline-md tracking-widest text-primary dark:text-on-primary" href="#">
+                LUMIÈRE HOTELS
+            </a>
+<nav class="hidden md:flex space-x-8 font-body-md text-body-md tracking-wide">
+<a class="text-primary dark:text-on-primary border-b-2 border-primary pb-1" href="#">Destinations</a>
+<a class="text-secondary dark:text-on-secondary-fixed-variant hover:text-primary transition-colors duration-300" href="#">Suites</a>
+<a class="text-secondary dark:text-on-secondary-fixed-variant hover:text-primary transition-colors duration-300" href="#">Experience</a>
+<a class="text-secondary dark:text-on-secondary-fixed-variant hover:text-primary transition-colors duration-300" href="#">Offers</a>
+</nav>
+<button class="hidden md:block bg-primary text-on-primary font-label-sm text-label-sm uppercase px-6 py-3 rounded-full hover:shadow-lg transition-shadow duration-300">
+                Book Now
+            </button>
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center justify-center px-margin-mobile md:px-margin-desktop overflow-hidden" id="hero-section">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0 bg-cover bg-center" data-alt="A breathtaking, hyper-realistic 3D architectural rendering of a modern, minimalist luxury hotel lobby bathed in soft, diffused natural light. The space features fluid, organic curves, expansive white polished floors, and subtle metallic silver accents. The lighting creates a serene, high-end 'soft minimalist' aesthetic with deep blacks, pristine whites, and platinum tones. The atmosphere is calm, exclusive, and technologically sophisticated." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBBxmrsIdR5tVVbBwDdaxb3GnLwS5YaknWUdYRVy4jVgqYwkUqEBA29-LNJlcrji1xQ8gdSmzLzYaRVikElcitq3MhxKIXho49QJY1pOfxyZXuXFt_hn4VUJMCHOZN_mZnRWrD6qwybhMlYPSkq-48NufUoMsaJoOj5i2kfauaS04amAnCH1i1tmpd0vTsTnB93LHMrUn6tn_JAe8-IoUrjwh96Nw585sA05j48z_OChq83uawptNrElq3dvwbnx0tBtx0Qcpy3GYJQ');">
+<!-- Subtle overlay for text readability -->
+<div class="absolute inset-0 bg-gradient-to-b from-surface/40 to-surface/90 backdrop-blur-[4px]"></div>
+</div>
+<!-- Three.js Container -->
+<div id="threejs-container"></div>
+<div class="relative z-20 w-full max-w-container-max mx-auto flex flex-col justify-between h-full min-h-[600px] py-12 md:py-20 mt-16 md:mt-0 pointer-events-auto">
+<div class="w-full md:w-1/2 text-left flex flex-col items-start mt-12 md:mt-24">
+<h1 class="font-headline-lg-mobile md:font-headline-xl text-headline-lg-mobile md:text-headline-xl text-primary mb-6 max-w-2xl tracking-tight relative">
+                    Discover Serene Exclusivity
+                </h1>
+<p class="font-body-md md:font-body-lg text-body-md md:text-body-lg text-on-surface-variant mb-8 max-w-xl">
+                    Experience a new standard of modern luxury. Soft minimalist design meets impeccable service in the world's most captivating destinations.
+                </p>
+</div>
+<div class="w-full mt-auto pt-12">
+<!-- Search Availability Bar (Glassmorphism) -->
+<div class="glass-panel rounded-[32px] md:rounded-full p-4 md:p-3 w-full max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-center relative z-30 transform perspective-[1000px] hover:translate-z-4 transition-transform duration-500">
+<div class="w-full md:w-1/3 px-4 py-3 md:border-r md:border-b-0 border-b border-outline-variant/30 flex items-center gap-3 group focus-within:bg-white/30 rounded-2xl md:rounded-full transition-colors">
+<span class="material-symbols-outlined text-secondary">location_on</span>
+<div class="flex flex-col w-full text-left">
+<span class="font-label-sm text-label-sm text-secondary uppercase">Destination</span>
+<input class="bg-transparent border-none p-0 font-body-md text-primary focus:ring-0 placeholder-outline" placeholder="Where to?" type="text"/>
+</div>
+</div>
+<div class="w-full md:w-1/3 px-4 py-3 md:border-r md:border-b-0 border-b border-outline-variant/30 flex items-center gap-3 group focus-within:bg-white/30 rounded-2xl md:rounded-full transition-colors">
+<span class="material-symbols-outlined text-secondary">calendar_today</span>
+<div class="flex flex-col w-full text-left">
+<span class="font-label-sm text-label-sm text-secondary uppercase">Dates</span>
+<input class="bg-transparent border-none p-0 font-body-md text-primary focus:ring-0 placeholder-outline" placeholder="Add dates" type="text"/>
+</div>
+</div>
+<div class="w-full md:w-1/3 px-4 py-3 flex items-center gap-3 group focus-within:bg-white/30 rounded-2xl md:rounded-full transition-colors">
+<span class="material-symbols-outlined text-secondary">group</span>
+<div class="flex flex-col w-full text-left">
+<span class="font-label-sm text-label-sm text-secondary uppercase">Guests</span>
+<input class="bg-transparent border-none p-0 font-body-md text-primary focus:ring-0 placeholder-outline" placeholder="Add guests" type="text"/>
+</div>
+</div>
+<button class="w-full md:w-auto md:px-8 bg-primary text-on-primary p-4 md:py-4 rounded-2xl md:rounded-full flex items-center justify-center hover:shadow-[0_10px_20px_rgba(0,0,0,0.2)] transition-all duration-300 transform hover:scale-105 relative overflow-hidden flex-shrink-0">
+<div class="absolute inset-0 bg-white/20 transform -translate-x-full hover:animate-[shimmer_1s_forwards]"></div>
+<span class="material-symbols-outlined relative z-10 mr-2 md:mr-0 lg:mr-2">search</span>
+<span class="font-label-sm text-label-sm uppercase relative z-10 md:hidden lg:inline">Search</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Destinations -->
+<section class="py-24 px-margin-mobile md:px-margin-desktop w-full max-w-container-max mx-auto bg-surface-container-lowest relative">
+<!-- Decorative Section Blob -->
+<div class="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-gray-200/50 to-transparent rounded-full blur-[80px] pointer-events-none -z-10"></div>
+<div class="flex justify-between items-end mb-12 relative">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary mb-2 flex items-center gap-3">
+    Curated Retreats
+    <!-- 3D Map Pin SVG -->
+<svg class="w-8 h-8 opacity-80 transform -rotate-12 drop-shadow-md" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<path d="M50 90C50 90 20 60 20 40C20 23.4315 33.4315 10 50 10C66.5685 10 80 23.4315 80 40C80 60 50 90 50 90Z" fill="url(#paint0_linear)" stroke="url(#paint1_linear)" stroke-width="1.5"></path>
+<circle cx="50" cy="40" fill="white" fill-opacity="0.9" r="14"></circle>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="paint0_linear" x1="20" x2="80" y1="10" y2="90">
+<stop stop-color="#F3F4F6"></stop>
+<stop offset="1" stop-color="#9CA3AF"></stop>
+</lineargradient>
+<lineargradient gradientunits="userSpaceOnUse" id="paint1_linear" x1="20" x2="80" y1="10" y2="90">
+<stop stop-color="#FFFFFF"></stop>
+<stop offset="1" stop-color="#6B7280"></stop>
+</lineargradient>
+</defs>
+</svg>
+</h2>
+<p class="font-body-md text-body-md text-secondary">Handpicked locations for the modern traveler.</p>
+</div>
+<a class="hidden md:flex items-center gap-2 font-label-sm text-label-sm text-primary uppercase hover:text-secondary transition-colors" href="#">
+                    View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+<!-- Large Card -->
+<div class="md:col-span-2 md:row-span-2 rounded-[32px] overflow-hidden relative group cursor-pointer soft-shadow border border-gray-200/50">
+<img alt="Kyoto Hotel" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A serene, modern minimalist hotel suite overlooking a tranquil zen garden in Kyoto. The room features soft, light-toned wood, pristine white linens, and large floor-to-ceiling windows letting in soft, natural morning light. The color palette is cool and ethereal, emphasizing whites, light greys, and pale natural tones. The atmosphere is calm, exclusive, and perfectly embodies luxury soft minimalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhLZ-8TGbeiIFF6ROkGAw9FdEgOpk7Lts3pbwuC1Oa1lNYPjekVxEV_3iD46lqu4V7hCi1Bd-nxKhzbJnE2r7kC2g1bW7nZybi26rdGbyKDqSvqfLPGSixntaB-Yp7TleBYmV2eYHMC9CSmJ2aFNJkJAofAFl_KMog7kb55H3EUZMTkD-wXPa_rxdrGXPRhTmwKzvsKLqrVJp09k9yuTIopoitBaT0-W6CrIDg_mXCh6J07T0X3VcJL6uh7z0NEgASp91XVVeWgpMo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full z-10">
+<div class="flex justify-between items-end">
+<div>
+<div class="bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1 rounded-full inline-block mb-3 shadow-sm">
+<span class="font-label-sm text-label-sm text-white uppercase tracking-wider">New Property</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-white mb-1 drop-shadow-md">Lumière Kyoto</h3>
+<p class="font-body-md text-body-md text-white/90 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Japan
+                                </p>
+</div>
+<button class="glass-panel w-12 h-12 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Small Card 1 -->
+<div class="rounded-[32px] overflow-hidden relative group cursor-pointer soft-shadow border border-gray-200/50">
+<img alt="Paris Hotel" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A chic, modern minimalist hotel room in Paris with a soft silver and platinum color scheme. The space is illuminated by bright, cool natural light reflecting off subtle metallic surfaces and white furnishings. The aesthetic is clean, tech-forward elegance with a focus on negative space and pure geometric forms." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCp1iZ-AC9aAvGOE8s38F7E3MW46CehG4g5MkhQCtnefreAEGYY4hlnOGWQE0ByhGTkihuMmli-zKJe7rdxA5PJ6svb3UL6AuHRa1Y2NjU0HtErgwo_Rfp56u6tqMQDXyYgToXTxJGSxpo-5x26PNtbZdv6z9EM1nMuCV7bGc87sNZfL8qY9eOTyfygCT8NhbhwgG1wPYDXfylqCQD4IhtNa0BVirCc3Y4ykrGZ-igbsZ7VbMhmFgWZQZJNUUYfc6xh6W4g6kwMwRq"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6 w-full z-10">
+<h3 class="font-headline-md text-headline-md text-white mb-1 drop-shadow-md">Lumière Paris</h3>
+<p class="font-body-md text-body-md text-white/90">France</p>
+</div>
+</div>
+<!-- Small Card 2 -->
+<div class="rounded-[32px] overflow-hidden relative group cursor-pointer shadow-[0_10px_40px_-10px_rgba(0,0,0,0.06)] bg-gradient-to-br from-surface-container-low to-surface flex flex-col justify-center items-center p-8 text-center border border-white/60">
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiNjY2MiLz48L3N2Zz4=')] opacity-20 mask-image-linear-gradient"></div>
+<div class="w-16 h-16 rounded-full glass-panel flex items-center justify-center mb-4 text-primary relative z-10">
+<span class="material-symbols-outlined text-[32px]">diamond</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2 relative z-10">The Platinum Club</h3>
+<p class="font-body-md text-body-md text-secondary mb-6 relative z-10">Unlock exclusive rates and bespoke experiences.</p>
+<button class="font-label-sm text-label-sm uppercase text-primary border-b border-primary pb-1 hover:text-secondary hover:border-secondary transition-colors relative z-10">Join Now</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-high w-full py-12 border-t border-outline-variant/20 relative z-10">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop gap-8 max-w-container-max mx-auto">
+<div class="font-headline-lg text-headline-lg text-primary dark:text-on-primary">
+                LUMIÈRE HOTELS
+            </div>
+<nav class="flex flex-wrap justify-center gap-6 font-label-sm text-label-sm uppercase tracking-tighter">
+<a class="text-secondary dark:text-on-secondary-container hover:text-primary dark:hover:text-on-primary transition-opacity" href="#">Privacy Policy</a>
+<a class="text-secondary dark:text-on-secondary-container hover:text-primary dark:hover:text-on-primary transition-opacity" href="#">Terms of Service</a>
+<a class="text-secondary dark:text-on-secondary-container hover:text-primary dark:hover:text-on-primary transition-opacity" href="#">Press Kit</a>
+<a class="text-secondary dark:text-on-secondary-container hover:text-primary dark:hover:text-on-primary transition-opacity" href="#">Contact</a>
+</nav>
+<div class="font-label-sm text-label-sm uppercase tracking-tighter text-secondary dark:text-on-secondary-container text-center md:text-right">
+                © 2024 LUMIÈRE HOTELS. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+<script>
+    // Three.js Scene Setup
+    const container = document.getElementById('threejs-container');
+    const heroSection = document.getElementById('hero-section');
+    
+    if (container && heroSection) {
+        const scene = new THREE.Scene();
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, heroSection.clientWidth / heroSection.clientHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(heroSection.clientWidth, heroSection.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Group for composition
+        const compositionGroup = new THREE.Group();
+        scene.add(compositionGroup);
+
+        // Materials
+        const platinumMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xe5e7eb, // Platinum/Silver
+            metalness: 0.9,
+            roughness: 0.2,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.1,
+            reflectivity: 1.0
+        });
+
+        // Key Factory
+        function createKey() {
+            const keyGroup = new THREE.Group();
+            
+            // Head (Ring of the key)
+            const headGeom = new THREE.TorusGeometry(0.4, 0.1, 16, 100);
+            const head = new THREE.Mesh(headGeom, platinumMaterial);
+            head.position.y = 1.3;
+            keyGroup.add(head);
+
+            // Shaft
+            const shaftGeom = new THREE.CylinderGeometry(0.08, 0.08, 1.8, 16);
+            const shaft = new THREE.Mesh(shaftGeom, platinumMaterial);
+            shaft.position.y = 0.3;
+            keyGroup.add(shaft);
+
+            // Teeth
+            const tooth1Geom = new THREE.BoxGeometry(0.25, 0.15, 0.08);
+            const tooth1 = new THREE.Mesh(tooth1Geom, platinumMaterial);
+            tooth1.position.set(0.15, -0.2, 0);
+            keyGroup.add(tooth1);
+
+            const tooth2Geom = new THREE.BoxGeometry(0.35, 0.15, 0.08);
+            const tooth2 = new THREE.Mesh(tooth2Geom, platinumMaterial);
+            tooth2.position.set(0.2, -0.5, 0);
+            keyGroup.add(tooth2);
+
+            return keyGroup;
+        }
+
+        // Add 1 Key
+        const key = createKey();
+        key.rotation.z = -Math.PI / 4; // 45 degrees, ring head pointing top-right
+        compositionGroup.add(key);
+        
+        // Position group strategically on the right side
+        if (window.innerWidth > 768) {
+            compositionGroup.position.set(3, 0, -2);
+            compositionGroup.scale.set(1.5, 1.5, 1.5);
+        } else {
+            compositionGroup.position.set(0, 1, -3);
+            compositionGroup.scale.set(1.2, 1.2, 1.2);
+        }
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
+        
+        const pointLight = new THREE.PointLight(0xe0dfdf, 2, 10);
+        pointLight.position.set(-2, 2, 2);
+        scene.add(pointLight);
+
+        // Mouse Interaction
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX) * 0.001;
+            mouseY = (event.clientY - windowHalfY) * 0.001;
+        });
+
+        // Animation Loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Smooth mouse follow for group (parallax)
+            targetX = mouseX * 0.5;
+            targetY = mouseY * 0.5;
+            
+            compositionGroup.rotation.x += 0.05 * (targetY - compositionGroup.rotation.x);
+            compositionGroup.rotation.y += 0.05 * (targetX - compositionGroup.rotation.y);
+            
+            // Soft floating animation
+            compositionGroup.position.y = Math.sin(elapsedTime * 1.5) * 0.2;
+            
+            // Gentle swing for key
+            key.rotation.x = Math.sin(elapsedTime * 1.2) * 0.1;
+            key.rotation.y = Math.cos(elapsedTime * 0.8) * 0.1;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            if (heroSection && camera && renderer) {
+                camera.aspect = heroSection.clientWidth / heroSection.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(heroSection.clientWidth, heroSection.clientHeight);
+                
+                // Adjust position on resize
+                if (window.innerWidth > 768) {
+                    compositionGroup.position.set(3, 0, -2);
+                    compositionGroup.scale.set(1.5, 1.5, 1.5);
+                } else {
+                    compositionGroup.position.set(0, 1, -3);
+                    compositionGroup.scale.set(1.2, 1.2, 1.2);
+                }
+            }
+        });
+    }
+</script>
+</body></html>

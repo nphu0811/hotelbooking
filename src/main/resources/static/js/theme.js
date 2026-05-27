@@ -1,5 +1,5 @@
 (function () {
-    var storageKey = "hotelbooking-theme";
+    var storageKey = "lumiere-theme";
     var root = document.documentElement;
 
     function savedTheme() {
@@ -23,7 +23,7 @@
     }
 
     function setTheme(theme, persist) {
-        var nextTheme = theme === "light" ? "light" : "dark";
+        var nextTheme = theme === "dark" ? "dark" : "light";
         var isDark = nextTheme === "dark";
         root.dataset.theme = nextTheme;
 

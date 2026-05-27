@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Room Search - Lumière Hotels</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "secondary-fixed": "#e3e2e2",
+                "inverse-primary": "#c8c6c5",
+                "surface-container-highest": "#e1e3e4",
+                "on-primary-container": "#858383",
+                "background": "#f8f9fa",
+                "on-secondary-fixed-variant": "#464747",
+                "on-primary-fixed-variant": "#474746",
+                "surface-variant": "#e1e3e4",
+                "outline-variant": "#c4c7c7",
+                "tertiary-container": "#1a1c1c",
+                "secondary-container": "#e0dfdf",
+                "surface": "#f8f9fa",
+                "on-surface-variant": "#444748",
+                "tertiary": "#000000",
+                "on-tertiary": "#ffffff",
+                "on-primary-fixed": "#1c1b1b",
+                "secondary-fixed-dim": "#c6c6c6",
+                "on-tertiary-container": "#838484",
+                "primary": "#000000",
+                "error": "#ba1a1a",
+                "surface-dim": "#d9dadb",
+                "surface-container-low": "#f3f4f5",
+                "tertiary-fixed-dim": "#c6c6c6",
+                "on-surface": "#191c1d",
+                "error-container": "#ffdad6",
+                "surface-container": "#edeeef",
+                "on-error-container": "#93000a",
+                "on-secondary-container": "#626363",
+                "surface-container-high": "#e7e8e9",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#e5e2e1",
+                "on-secondary-fixed": "#1a1c1c",
+                "surface-tint": "#5f5e5e",
+                "secondary": "#5d5e5f",
+                "on-tertiary-fixed-variant": "#454747",
+                "on-tertiary-fixed": "#1a1c1c",
+                "primary-container": "#1c1b1b",
+                "primary-fixed-dim": "#c8c6c5",
+                "inverse-on-surface": "#f0f1f2",
+                "tertiary-fixed": "#e2e2e2",
+                "surface-container-lowest": "#ffffff",
+                "inverse-surface": "#2e3132",
+                "on-primary": "#ffffff",
+                "on-error": "#ffffff",
+                "outline": "#747878",
+                "on-secondary": "#ffffff",
+                "on-background": "#191c1d"
+        },
+        "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "gutter": "24px",
+                "container-max": "1280px",
+                "unit": "8px",
+                "margin-desktop": "80px",
+                "margin-mobile": "20px"
+        },
+        "fontFamily": {
+                "label-sm": [
+                        "Montserrat"
+                ],
+                "body-md": [
+                        "Montserrat"
+                ],
+                "body-lg": [
+                        "Montserrat"
+                ],
+                "headline-xl": [
+                        "Montserrat"
+                ],
+                "headline-md": [
+                        "Montserrat"
+                ],
+                "headline-lg": [
+                        "Montserrat"
+                ],
+                "headline-lg-mobile": [
+                        "Montserrat"
+                ]
+        },
+        "fontSize": {
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-xl": [
+                        "48px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "1.3",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "28px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { background-color: #F8F9FA; color: #191c1d; }
+        .glass-overlay {
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .ambient-shadow-card {
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.04);
+        }
+        /* Custom Checkbox */
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #747878;
+            border-radius: 9999px;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            background-color: transparent;
+        }
+        .custom-checkbox:checked {
+            background-color: #000000;
+            border-color: #000000;
+        }
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 3px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #000000;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e1e3e4;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased flex flex-col min-h-screen">
+<!-- TopNavBar (Shared Component) -->
+<nav class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-[0_4px_20px_0_rgba(1,3,6,0.04)] fixed top-0 w-full z-50">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-20">
+<!-- Brand -->
+<a class="font-headline-md text-headline-md tracking-tight text-primary dark:text-primary-fixed-dim" href="#">
+                LUMIÈRE HOTELS
+            </a>
+<!-- Desktop Navigation -->
+<ul class="hidden md:flex items-center space-x-8">
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary transition-colors duration-300" href="#">Destinations</a></li>
+<li><a class="text-primary border-b-2 border-primary pb-1 hover:text-secondary transition-colors duration-300 font-label-sm text-label-sm" href="#">Experiences</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary transition-colors duration-300" href="#">Residences</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary transition-colors duration-300" href="#">Offers</a></li>
+</ul>
+<!-- Right Actions -->
+<div class="flex items-center space-x-4">
+<button aria-label="Search" class="hidden md:flex items-center justify-center p-2 text-on-surface-variant hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-6 py-3 rounded-full active:scale-[0.98] transition-all duration-200 hover:bg-secondary">
+                    Book Now
+                </button>
+</div>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="flex-grow pt-[104px] pb-[120px] px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full flex flex-col md:flex-row gap-gutter">
+<!-- Sidebar Filters -->
+<aside class="w-full md:w-64 flex-shrink-0 mb-8 md:mb-0">
+<div class="sticky top-[104px]">
+<h2 class="font-headline-md text-headline-md text-primary mb-6">Refine Search</h2>
+<!-- Filter Section: Price -->
+<div class="mb-8 border-b border-surface-variant pb-6">
+<h3 class="font-label-sm text-label-sm text-on-surface mb-4">Price Range (Per Night)</h3>
+<div class="px-2">
+<input class="w-full" max="2000" min="200" type="range" value="800"/>
+<div class="flex justify-between mt-2 font-label-sm text-label-sm text-on-surface-variant">
+<span>$200</span>
+<span>$2000+</span>
+</div>
+</div>
+</div>
+<!-- Filter Section: Star Rating -->
+<div class="mb-8 border-b border-surface-variant pb-6">
+<h3 class="font-label-sm text-label-sm text-on-surface mb-4">Star Rating</h3>
+<div class="space-y-4">
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input checked="" class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">5 Stars</span>
+</label>
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input checked="" class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">4 Stars</span>
+</label>
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">3 Stars</span>
+</label>
+</div>
+</div>
+<!-- Filter Section: Amenities -->
+<div class="mb-8 border-b border-surface-variant pb-6">
+<h3 class="font-label-sm text-label-sm text-on-surface mb-4">Amenities</h3>
+<div class="space-y-4">
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">Ocean View</span>
+</label>
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input checked="" class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">Private Pool</span>
+</label>
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">Spa Access</span>
+</label>
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input checked="" class="custom-checkbox" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-primary transition-colors">Butler Service</span>
+</label>
+</div>
+</div>
+</div>
+</aside>
+<!-- Results Area -->
+<section class="flex-grow">
+<!-- Results Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<p class="font-body-md text-body-md text-on-surface-variant">Showing <span class="font-bold text-primary">24</span> exclusive properties</p>
+<div class="flex items-center space-x-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sort by:</span>
+<div class="relative">
+<select class="appearance-none bg-surface-container-lowest border border-outline-variant rounded-full px-5 py-2.5 pr-10 font-label-sm text-label-sm text-primary focus:outline-none focus:border-primary cursor-pointer">
+<option>Recommended</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Results Grid -->
+<div class="flex flex-col gap-8">
+<!-- Room Card 1 -->
+<article class="group bg-surface-container-lowest rounded-xl overflow-hidden ambient-shadow-card flex flex-col md:flex-row h-auto md:h-[320px] transition-shadow duration-300 hover:shadow-[0_12px_40px_0_rgba(0,0,0,0.08)]">
+<div class="w-full md:w-[400px] h-[240px] md:h-full relative overflow-hidden flex-shrink-0">
+<img alt="Luxury hotel room interior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A luxurious hotel suite interior featuring a large canopy bed with crisp white linens. Floor-to-ceiling windows reveal a stunning ocean view at sunset. The room is decorated in a minimalist, serene style with neutral tones, warm wood accents, and soft, ambient lighting creating a quiet luxury aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpUfYl1-1aH7t8s2m2E4eKr9wf_wAVQckUOns06YDHazRFGBCIcbBUbpUoq5QpPXvgNqKITgpjOKzIQjhR1HbFa9tVndMp8SCOUR2R79Y4EIMD14Cjlc_m_zIIvquDYNlJWxMYfO-XGEz_hiQ3Nei_5-WMAEi1HfVHasKOx0CIbS0zpSwM2qek1caUykA8gRKvj4Rni8S3L3_f9RBRM-pCvFl-KUVHJv27aCXyTXUQEcBhUfpFptUKV_vE-XRnzMBCz04Lz2iT0P-X"/>
+<div class="absolute top-6 left-6 bg-surface-container-highest/90 backdrop-blur-md px-3 py-1.5 rounded-full">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Available</span>
+</div>
+</div>
+<div class="p-6 md:p-8 flex flex-col justify-between flex-grow">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-lg text-headline-lg text-primary">The Sapphire Suite</h3>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] mr-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm">5.0</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4 max-w-2xl">An expansive suite offering panoramic ocean vistas, featuring a private infinity plunge pool and dedicated butler service. Designed for absolute serenity.</p>
+<div class="flex flex-wrap gap-4 mb-6">
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mr-2">pool</span>
+<span class="font-label-sm text-label-sm">Private Pool</span>
+</div>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mr-2">room_service</span>
+<span class="font-label-sm text-label-sm">Butler</span>
+</div>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mr-2">waves</span>
+<span class="font-label-sm text-label-sm">Ocean View</span>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-end border-t border-surface-variant pt-4">
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-1">From</span>
+<span class="font-headline-md text-headline-md text-primary">$1,250 <span class="font-body-md text-body-md text-on-surface-variant font-normal">/ night</span></span>
+</div>
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-8 py-3 rounded-full active:scale-[0.98] transition-all duration-200 hover:bg-secondary shadow-sm hover:shadow-md">
+                                Select Room
+                            </button>
+</div>
+</div>
+</article>
+<!-- Room Card 2 -->
+<article class="group bg-surface-container-lowest rounded-xl overflow-hidden ambient-shadow-card flex flex-col md:flex-row h-auto md:h-[320px] transition-shadow duration-300 hover:shadow-[0_12px_40px_0_rgba(0,0,0,0.08)]">
+<div class="w-full md:w-[400px] h-[240px] md:h-full relative overflow-hidden flex-shrink-0">
+<img alt="Modern minimalist resort room" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A highly modern, minimalist resort bedroom with light concrete walls and natural oak flooring. Large sliding glass doors open to a lush private garden setting. The bed is low-profile with crisp white linens. Lighting is natural and bright, evoking a sense of peaceful isolation and high-end exclusivity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVY4BU78By3R5mt2dDJoMKnGOAb0b84SW7rkwqCQCVLladcWIjw0li0cDFXxIN9mQBpjMoIGgGcKOhxlYBRvt1iD2LrY1_yvQUdAFCZOdbZ4o3eGP-R4C-V-3cTMjiJE1NP8IcAKo6LySKeQk2UOGoYQ_pvUCtXLW0BfXD-cCNfJDAq9uBv0Xkhi2LJ4rG-mCBibjzSgVi1rhXIAqk3yqdwNA8_pN8VIihLS7zYHW_v--9Mmo34ECxRl1UsTLe8eOQDj8kZkfVlYN7"/>
+</div>
+<div class="p-6 md:p-8 flex flex-col justify-between flex-grow">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-lg text-headline-lg text-primary">Botanical Pavilion</h3>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] mr-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm">4.9</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4 max-w-2xl">Nestled within our private gardens, this secluded pavilion features indoor-outdoor living spaces and an oversized soaking tub crafted from local stone.</p>
+<div class="flex flex-wrap gap-4 mb-6">
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mr-2">yard</span>
+<span class="font-label-sm text-label-sm">Private Garden</span>
+</div>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mr-2">hot_tub</span>
+<span class="font-label-sm text-label-sm">Soaking Tub</span>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-end border-t border-surface-variant pt-4">
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-1">From</span>
+<span class="font-headline-md text-headline-md text-primary">$850 <span class="font-body-md text-body-md text-on-surface-variant font-normal">/ night</span></span>
+</div>
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-8 py-3 rounded-full active:scale-[0.98] transition-all duration-200 hover:bg-secondary shadow-sm hover:shadow-md">
+                                Select Room
+                            </button>
+</div>
+</div>
+</article>
+<!-- Room Card 3 -->
+<article class="group bg-surface-container-lowest rounded-xl overflow-hidden ambient-shadow-card flex flex-col md:flex-row h-auto md:h-[320px] transition-shadow duration-300 hover:shadow-[0_12px_40px_0_rgba(0,0,0,0.08)]">
+<div class="w-full md:w-[400px] h-[240px] md:h-full relative overflow-hidden flex-shrink-0">
+<img alt="Luxury penthouse interior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A sprawling penthouse living area with double-height ceilings and sleek, modern furniture. Floor-to-ceiling glass walls showcase a dramatic city skyline at twilight. The color palette is sophisticated deep ink and cool greys with warm metallic accents. The overall mood is urban luxury and refined elegance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6UtHlZ4pvGqE1YYiajtDZSZXGdKYpnXjtDVrIxrxV3_q-jca3k9g_xYLXRedyS9a62c2lGr1_cvDtNqHxhN3L1SP3DlSUNgSIZEUiqNVqPlIttfAElgcS4s6I6zGtjGnrdX8BoXdMtp7rfGieHyO99_LtjPJBqgQ6zP5BpEQc8qHEUd9pkKYIb6L-WJUncTEQpqVfQx37XsU7O2MjPdmCxCvEsnxWYNoIQS9EJVpfV4DFptHnArbjStwzWtQBA48mOkeny-rq1S9c"/>
+<div class="absolute top-6 left-6 bg-surface-container-highest/90 backdrop-blur-md px-3 py-1.5 rounded-full">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Member-Only</span>
+</div>
+</div>
+<div class="p-6 md:p-8 flex flex-col justify-between flex-grow">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-lg text-headline-lg text-primary">The Grand Horizon Penthouse</h3>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] mr-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm">5.0</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4 max-w-2xl">The pinnacle of urban luxury. This two-story residence features a private terrace, dining area for ten, and exclusive access to the helipad.</p>
+<div class="flex flex-wrap gap-4 mb-6">
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mr-2">deck</span>
+<span class="font-label-sm text-label-sm">Private Terrace</span>
+</div>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mr-2">restaurant</span>
+<span class="font-label-sm text-label-sm">Dining Room</span>
+</div>
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mr-2">flight_takeoff</span>
+<span class="font-label-sm text-label-sm">Helipad Access</span>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-end border-t border-surface-variant pt-4">
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-1">From</span>
+<span class="font-headline-md text-headline-md text-primary">$3,500 <span class="font-body-md text-body-md text-on-surface-variant font-normal">/ night</span></span>
+</div>
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-8 py-3 rounded-full active:scale-[0.98] transition-all duration-200 hover:bg-secondary shadow-sm hover:shadow-md">
+                                Select Room
+                            </button>
+</div>
+</div>
+</article>
+</div>
+<!-- Pagination (Simplified) -->
+<div class="mt-12 flex justify-center items-center space-x-2">
+<button aria-label="Previous page" class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-primary text-on-primary font-label-sm text-label-sm flex items-center justify-center">1</button>
+<button class="w-10 h-10 rounded-full border border-outline-variant text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center hover:border-primary hover:text-primary transition-colors">2</button>
+<button class="w-10 h-10 rounded-full border border-outline-variant text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center hover:border-primary hover:text-primary transition-colors">3</button>
+<button aria-label="Next page" class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-surface-container-lowest w-full pt-[120px] pb-12 border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<!-- Brand Column -->
+<div class="col-span-1 md:col-span-2">
+<a class="font-headline-md text-headline-md text-primary block mb-4" href="#">
+                    LUMIÈRE HOTELS
+                </a>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm">
+                    Experience the pinnacle of quiet luxury. Architectural precision meets serene exclusivity across our global portfolio.
+                </p>
+</div>
+<!-- Links Column 1 -->
+<div class="flex flex-col space-y-3">
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-secondary transition-colors hover:opacity-80" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-secondary transition-colors hover:opacity-80" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-secondary transition-colors hover:opacity-80" href="#">Cookie Policy</a>
+</div>
+<!-- Links Column 2 -->
+<div class="flex flex-col space-y-3">
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-secondary transition-colors hover:opacity-80" href="#">Sitemap</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-secondary transition-colors hover:opacity-80" href="#">Contact Us</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-secondary transition-colors hover:opacity-80" href="#">Press Room</a>
+</div>
+</div>
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mt-12 pt-8 border-t border-surface-variant">
+<p class="font-label-sm text-label-sm text-on-surface-variant">
+                © 2024 Lumière Hotels &amp; Resorts. All rights reserved.
+            </p>
+</div>
+</footer>
+</body></html>

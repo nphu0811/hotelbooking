@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard - Lumière Hotels</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary": "#006a61",
+                        "on-tertiary-fixed-variant": "#004e61",
+                        "on-tertiary-fixed": "#001f28",
+                        "primary-fixed": "#e1e2ea",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-fixed": "#00201d",
+                        "surface-tint": "#5c5e65",
+                        "surface-container": "#edeeef",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#006f66",
+                        "tertiary-fixed-dim": "#6cd3f7",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#191c1d",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "outline": "#76777b",
+                        "inverse-on-surface": "#f0f1f2",
+                        "tertiary-fixed": "#b7eaff",
+                        "primary-container": "#1a1d23",
+                        "primary-fixed-dim": "#c4c6ce",
+                        "outline-variant": "#c6c6cb",
+                        "surface-variant": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed-variant": "#44474d",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-primary-container": "#82858c",
+                        "inverse-primary": "#c4c6ce",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary": "#000204",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#191c22",
+                        "on-tertiary-container": "#0590b1",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "primary": "#010306",
+                        "surface": "#f8f9fa",
+                        "on-surface-variant": "#45474b",
+                        "tertiary-container": "#00202a",
+                        "secondary-container": "#86f2e4"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "margin-mobile": "16px",
+                        "section-gap": "120px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px"
+                    },
+                    fontFamily: {
+                        "headline-sm": ["Playfair Display"],
+                        "label-sm": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "display-lg": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["Playfair Display"],
+                        "label-md": ["Manrope"]
+                    },
+                    fontSize: {
+                        "headline-sm": ["24px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 20px 0 rgba(1, 3, 6, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-white/10 dark:border-outline-variant/10 shadow-[0_4px_20px_0_rgba(1,3,6,0.04)] text-primary dark:text-primary-fixed-dim font-label-md text-label-md">
+<div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20">
+<div class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary dark:text-primary-fixed-dim">
+                LUMIÈRE HOTELS
+            </div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant dark:text-surface-variant font-label-md text-label-md hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300" href="#">Destinations</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-md text-label-md hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300" href="#">Experiences</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-md text-label-md hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300" href="#">Residences</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-md text-label-md hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300" href="#">Offers</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-[0.98] transition-all duration-200 bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md hover:bg-secondary">
+                    Book Now
+                </button>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A close-up portrait of a professional individual in a brightly lit, minimalist office environment. The lighting is soft and natural, emphasizing a modern, clean corporate aesthetic. The color palette is composed of crisp whites, soft grays, and subtle warm skin tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxKC_anKZPg8_QrEx1SemGdEj2ZKhdCzN7-A29lrngFCWmp3hX_E9eDN8fMNGMy-k3ZFWK5VAG7Wy1OJHP6Q6d9VjmuwxHVBBZaiDrAG7wnDNyJB6tKd1CYsjDEEvBIvxBt-vOqoN2oa4vPTiiGiO9YCesbYl1z1XylmEeLeBiy2Em_jFi6auf3KiBtJOzOll_xiOyr8ZpMA7nRoB0wWglvNm3hdPQnXWUeT6tn3MLQToNzKh_T64NLZfkMoK5IVhO6bpFQonb4Vif"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Layout -->
+<div class="flex flex-1 pt-20 max-w-container-max mx-auto w-full">
+<!-- Side Navigation -->
+<aside class="w-64 hidden lg:flex flex-col gap-2 p-margin-desktop pr-8 border-r border-outline-variant/20 min-h-[calc(100vh-80px)] fixed left-0 top-20 overflow-y-auto">
+<div class="mb-8">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-4">Admin Console</p>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary/10 text-secondary font-label-md text-label-md font-bold transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                Overview
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary font-label-md text-label-md transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                Revenue
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary font-label-md text-label-md transition-colors" href="#">
+<span class="material-symbols-outlined">book_online</span>
+                Bookings
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary font-label-md text-label-md transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+                Guests
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary font-label-md text-label-md transition-colors mt-auto" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop lg:ml-64 w-full overflow-x-hidden">
+<div class="mb-10">
+<h1 class="font-headline-lg text-headline-lg text-primary mb-2">Dashboard Overview</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Real-time metrics and recent activity across all properties.</p>
+</div>
+<!-- Key Metric Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-section-gap">
+<!-- Card 1 -->
+<div class="glass-card rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Total Revenue</p>
+<h3 class="font-headline-sm text-headline-sm text-primary">$1.24M</h3>
+</div>
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-sm">payments</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<span class="flex items-center text-secondary font-label-sm text-label-sm bg-secondary/10 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] mr-1">arrow_upward</span>
+                            12.5%
+                        </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">vs last month</span>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-12 opacity-50 group-hover:opacity-100 transition-opacity">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 30">
+<path d="M0 30 L10 25 L20 28 L30 15 L40 20 L50 10 L60 18 L70 5 L80 12 L90 2 L100 8 L100 30 Z" fill="rgba(0, 106, 97, 0.1)" stroke="none"></path>
+<path d="M0 30 L10 25 L20 28 L30 15 L40 20 L50 10 L60 18 L70 5 L80 12 L90 2 L100 8" fill="none" stroke="#006a61" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Occupancy Rate</p>
+<h3 class="font-headline-sm text-headline-sm text-primary">84.2%</h3>
+</div>
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-sm">hotel</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<span class="flex items-center text-secondary font-label-sm text-label-sm bg-secondary/10 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] mr-1">arrow_upward</span>
+                            4.8%
+                        </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">vs last month</span>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-12 opacity-50 group-hover:opacity-100 transition-opacity">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 30">
+<path d="M0 30 L10 20 L20 22 L30 18 L40 24 L50 12 L60 15 L70 8 L80 10 L90 4 L100 6 L100 30 Z" fill="rgba(0, 106, 97, 0.1)" stroke="none"></path>
+<path d="M0 30 L10 20 L20 22 L30 18 L40 24 L50 12 L60 15 L70 8 L80 10 L90 4 L100 6" fill="none" stroke="#006a61" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">New Bookings</p>
+<h3 class="font-headline-sm text-headline-sm text-primary">142</h3>
+</div>
+<div class="w-8 h-8 rounded-full bg-error/10 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-sm">event_available</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<span class="flex items-center text-error font-label-sm text-label-sm bg-error/10 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] mr-1">arrow_downward</span>
+                            2.1%
+                        </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">vs last month</span>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-12 opacity-50 group-hover:opacity-100 transition-opacity">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 30">
+<path d="M0 10 L10 8 L20 12 L30 15 L40 10 L50 18 L60 16 L70 20 L80 18 L90 25 L100 22 L100 30 Z" fill="rgba(186, 26, 26, 0.1)" stroke="none"></path>
+<path d="M0 10 L10 8 L20 12 L30 15 L40 10 L50 18 L60 16 L70 20 L80 18 L90 25 L100 22" fill="none" stroke="#ba1a1a" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-card rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Active Users</p>
+<h3 class="font-headline-sm text-headline-sm text-primary">890</h3>
+</div>
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-sm">people</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<span class="flex items-center text-secondary font-label-sm text-label-sm bg-secondary/10 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] mr-1">arrow_upward</span>
+                            18.4%
+                        </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">vs last month</span>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-12 opacity-50 group-hover:opacity-100 transition-opacity">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 30">
+<path d="M0 25 L10 22 L20 20 L30 18 L40 15 L50 20 L60 12 L70 8 L80 10 L90 5 L100 2 L100 30 Z" fill="rgba(0, 106, 97, 0.1)" stroke="none"></path>
+<path d="M0 25 L10 22 L20 20 L30 18 L40 15 L50 20 L60 12 L70 8 L80 10 L90 5 L100 2" fill="none" stroke="#006a61" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Main Charts & Feed Area -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Revenue Trends Chart -->
+<div class="lg:col-span-2 glass-card rounded-xl p-8">
+<div class="flex justify-between items-center mb-8">
+<h2 class="font-headline-sm text-headline-sm text-primary">Revenue Trends</h2>
+<select class="bg-transparent border-b border-outline-variant text-on-surface-variant font-label-md text-label-md py-1 focus:border-secondary focus:ring-0">
+<option>This Year</option>
+<option>Last Year</option>
+</select>
+</div>
+<div class="w-full h-64 relative">
+<!-- Stylized Line Chart Placeholder -->
+<div class="absolute inset-0 flex flex-col justify-between text-on-surface-variant/30 font-label-sm text-label-sm">
+<div class="border-b border-outline-variant/20 w-full pb-1">1.5M</div>
+<div class="border-b border-outline-variant/20 w-full pb-1">1.0M</div>
+<div class="border-b border-outline-variant/20 w-full pb-1">500K</div>
+<div class="border-b border-outline-variant/20 w-full pb-1">0</div>
+</div>
+<svg class="absolute inset-0 w-full h-full pt-6 pb-6" preserveaspectratio="none" viewbox="0 0 1000 200">
+<defs>
+<lineargradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="rgba(0, 106, 97, 0.4)"></stop>
+<stop offset="100%" stop-color="rgba(0, 106, 97, 0.0)"></stop>
+</lineargradient>
+</defs>
+<path d="M0 180 C 100 150, 200 190, 300 120 C 400 50, 500 140, 600 90 C 700 40, 800 80, 900 20 C 950 -10, 1000 30, 1000 30 L 1000 200 L 0 200 Z" fill="url(#chartGradient)"></path>
+<path d="M0 180 C 100 150, 200 190, 300 120 C 400 50, 500 140, 600 90 C 700 40, 800 80, 900 20 C 950 -10, 1000 30, 1000 30" fill="none" stroke="#006a61" stroke-linecap="round" stroke-width="4" vector-effect="non-scaling-stroke"></path>
+<!-- Data Points -->
+<circle cx="300" cy="120" fill="#ffffff" r="6" stroke="#006a61" stroke-width="3"></circle>
+<circle cx="600" cy="90" fill="#ffffff" r="6" stroke="#006a61" stroke-width="3"></circle>
+<circle cx="900" cy="20" fill="#ffffff" r="6" stroke="#006a61" stroke-width="3"></circle>
+</svg>
+<div class="absolute bottom-0 w-full flex justify-between text-on-surface-variant font-label-sm text-label-sm mt-4">
+<span>Q1</span>
+<span>Q2</span>
+<span>Q3</span>
+<span>Q4</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity Feed -->
+<div class="glass-card rounded-xl p-8 flex flex-col">
+<h2 class="font-headline-sm text-headline-sm text-primary mb-6">Recent Activity</h2>
+<div class="flex-1 flex flex-col gap-6 overflow-y-auto pr-2">
+<!-- Activity Item -->
+<div class="flex gap-4 relative">
+<div class="w-px h-full bg-outline-variant/30 absolute left-[15px] top-8"></div>
+<div class="w-8 h-8 rounded-full bg-surface flex items-center justify-center border border-outline-variant/30 z-10 shrink-0">
+<span class="material-symbols-outlined text-sm text-secondary">check_circle</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-primary">New booking confirmed</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Suite 402 • 3 nights • $1,450</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant/70 mt-1">10 mins ago</p>
+</div>
+</div>
+<!-- Activity Item -->
+<div class="flex gap-4 relative">
+<div class="w-px h-full bg-outline-variant/30 absolute left-[15px] top-8"></div>
+<div class="w-8 h-8 rounded-full bg-surface flex items-center justify-center border border-outline-variant/30 z-10 shrink-0">
+<span class="material-symbols-outlined text-sm text-on-surface-variant">person_add</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-primary">New member registration</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Sarah Jenkins upgraded to Platinum</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant/70 mt-1">45 mins ago</p>
+</div>
+</div>
+<!-- Activity Item -->
+<div class="flex gap-4 relative">
+<div class="w-px h-full bg-outline-variant/30 absolute left-[15px] top-8"></div>
+<div class="w-8 h-8 rounded-full bg-surface flex items-center justify-center border border-outline-variant/30 z-10 shrink-0">
+<span class="material-symbols-outlined text-sm text-error">warning</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-primary">Maintenance request</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">AC unit reported in Room 215</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant/70 mt-1">2 hours ago</p>
+</div>
+</div>
+<!-- Activity Item -->
+<div class="flex gap-4 relative">
+<div class="w-8 h-8 rounded-full bg-surface flex items-center justify-center border border-outline-variant/30 z-10 shrink-0">
+<span class="material-symbols-outlined text-sm text-secondary">reviews</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-primary">5-star review received</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">"Exceptional service and beautiful views."</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant/70 mt-1">3 hours ago</p>
+</div>
+</div>
+</div>
+<button class="mt-6 w-full py-3 border border-outline-variant rounded-lg font-label-md text-label-md text-primary hover:bg-surface-container transition-colors">
+                        View All Activity
+                    </button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

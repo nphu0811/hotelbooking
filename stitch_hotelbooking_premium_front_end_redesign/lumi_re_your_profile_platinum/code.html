@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Profile | Lumière Hotels</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "secondary-fixed": "#e3e2e2",
+                "inverse-primary": "#c8c6c5",
+                "surface-container-highest": "#e1e3e4",
+                "on-primary-container": "#858383",
+                "background": "#f8f9fa",
+                "on-secondary-fixed-variant": "#464747",
+                "on-primary-fixed-variant": "#474746",
+                "surface-variant": "#e1e3e4",
+                "outline-variant": "#c4c7c7",
+                "tertiary-container": "#1a1c1c",
+                "secondary-container": "#e0dfdf",
+                "surface": "#f8f9fa",
+                "on-surface-variant": "#444748",
+                "tertiary": "#000000",
+                "on-tertiary": "#ffffff",
+                "on-primary-fixed": "#1c1b1b",
+                "secondary-fixed-dim": "#c6c6c6",
+                "on-tertiary-container": "#838484",
+                "primary": "#000000",
+                "error": "#ba1a1a",
+                "surface-dim": "#d9dadb",
+                "surface-container-low": "#f3f4f5",
+                "tertiary-fixed-dim": "#c6c6c6",
+                "on-surface": "#191c1d",
+                "error-container": "#ffdad6",
+                "surface-container": "#edeeef",
+                "on-error-container": "#93000a",
+                "on-secondary-container": "#626363",
+                "surface-container-high": "#e7e8e9",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#e5e2e1",
+                "on-secondary-fixed": "#1a1c1c",
+                "surface-tint": "#5f5e5e",
+                "secondary": "#5d5e5f",
+                "on-tertiary-fixed-variant": "#454747",
+                "on-tertiary-fixed": "#1a1c1c",
+                "primary-container": "#1c1b1b",
+                "primary-fixed-dim": "#c8c6c5",
+                "inverse-on-surface": "#f0f1f2",
+                "tertiary-fixed": "#e2e2e2",
+                "surface-container-lowest": "#ffffff",
+                "inverse-surface": "#2e3132",
+                "on-primary": "#ffffff",
+                "on-error": "#ffffff",
+                "outline": "#747878",
+                "on-secondary": "#ffffff",
+                "on-background": "#191c1d"
+        },
+        "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "gutter": "24px",
+                "container-max": "1280px",
+                "unit": "8px",
+                "margin-desktop": "80px",
+                "margin-mobile": "20px",
+                "section-gap": "120px"
+        },
+        "fontFamily": {
+                "label-sm": [
+                        "Montserrat"
+                ],
+                "body-md": [
+                        "Montserrat"
+                ],
+                "body-lg": [
+                        "Montserrat"
+                ],
+                "headline-xl": [
+                        "Montserrat"
+                ],
+                "headline-md": [
+                        "Montserrat"
+                ],
+                "headline-lg": [
+                        "Montserrat"
+                ],
+                "headline-lg-mobile": [
+                        "Montserrat"
+                ]
+        },
+        "fontSize": {
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-xl": [
+                        "48px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "1.3",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "28px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.surface');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.outline-variant');
+            border-radius: theme('borderRadius.full');
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline');
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px 0 rgba(1, 3, 6, 0.04);
+        }
+        
+        .nav-underline-anim {
+            position: relative;
+        }
+        .nav-underline-anim::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: theme('colors.secondary');
+            transition: width 0.3s ease;
+        }
+        .nav-underline-anim:hover::after {
+            width: 100%;
+        }
+        
+        /* Floating label inputs */
+        .input-group {
+            position: relative;
+            margin-bottom: theme('spacing.gutter');
+        }
+        .input-group input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid theme('colors.outline-variant');
+            padding: theme('spacing.unit') 0;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-family: theme('fontFamily.body-md');
+            font-size: theme('fontSize.body-md')[0];
+            color: theme('colors.primary');
+        }
+        .input-group input:focus {
+            outline: none;
+            border-bottom: 1px solid theme('colors.secondary');
+        }
+        .input-group label {
+            position: absolute;
+            top: theme('spacing.unit');
+            left: 0;
+            font-family: theme('fontFamily.label-sm');
+            font-size: theme('fontSize.body-md')[0];
+            color: theme('colors.on-surface-variant');
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label {
+            top: -12px;
+            font-size: theme('fontSize.label-sm')[0];
+            color: theme('colors.secondary');
+        }
+    </style>
+</head>
+<body class="bg-surface text-primary antialiased min-h-screen flex flex-col font-body-md text-body-md">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-white/10 dark:border-outline-variant/10 shadow-[0_4px_20px_0_rgba(1,3,6,0.04)]">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-20">
+<div class="font-headline-md text-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed-dim">
+                LUMIÈRE HOTELS
+            </div>
+<nav class="hidden md:flex space-x-8 items-center">
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300 nav-underline-anim" href="#">Destinations</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300 nav-underline-anim" href="#">Experiences</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300 nav-underline-anim" href="#">Residences</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300 nav-underline-anim" href="#">Offers</a>
+<!-- Active State Example (Since this is a profile page, none of these main tabs are technically 'active' in the global sense, but we'll leave them inactive) -->
+</nav>
+<div class="flex items-center space-x-6">
+<button class="hidden md:flex items-center justify-center text-primary hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="hidden md:flex items-center justify-center text-primary hover:text-secondary transition-colors" title="User profile">
+<span class="material-symbols-outlined fill text-secondary">account_circle</span>
+</button>
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-6 py-3 rounded-full hover:bg-secondary transition-colors active:scale-[0.98] duration-200">
+                    Book Now
+                </button>
+<button class="md:hidden flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[104px] pb-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<!-- Page Header -->
+<div class="mb-12">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-xl md:text-headline-xl text-primary mb-2">Account Settings</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Manage your personal information, security preferences, and Lumière Club status.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Side Navigation (Settings specific) -->
+<aside class="lg:col-span-3 hidden lg:block">
+<div class="sticky top-[104px]">
+<nav class="flex flex-col space-y-2">
+<a class="px-6 py-4 bg-surface-container-high border-l-4 border-secondary text-primary font-label-sm text-label-sm transition-colors rounded-r-full" href="#">
+                            Personal Information
+                        </a>
+<a class="px-6 py-4 text-on-surface-variant hover:bg-surface-container-lowest hover:text-primary font-label-sm text-label-sm transition-colors rounded-r-full border-l-4 border-transparent" href="#">
+                            Security &amp; Login
+                        </a>
+<a class="px-6 py-4 text-on-surface-variant hover:bg-surface-container-lowest hover:text-primary font-label-sm text-label-sm transition-colors rounded-r-full border-l-4 border-transparent" href="#">
+                            Payment Methods
+                        </a>
+<a class="px-6 py-4 text-on-surface-variant hover:bg-surface-container-lowest hover:text-primary font-label-sm text-label-sm transition-colors rounded-r-full border-l-4 border-transparent" href="#">
+                            Lumière Club
+                        </a>
+<a class="px-6 py-4 text-on-surface-variant hover:bg-surface-container-lowest hover:text-primary font-label-sm text-label-sm transition-colors rounded-r-full border-l-4 border-transparent" href="#">
+                            Communication Preferences
+                        </a>
+</nav>
+</div>
+</aside>
+<!-- Settings Canvas -->
+<div class="lg:col-span-9 space-y-16">
+<!-- Profile Section -->
+<section class="glass-panel p-8 rounded-[2rem] relative overflow-hidden bg-surface-container-lowest">
+<h2 class="font-headline-md text-headline-md text-primary border-b border-surface-container-highest pb-4 mb-8">Personal Information</h2>
+<div class="flex flex-col md:flex-row gap-8 items-start mb-8">
+<div class="relative group">
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-surface-container shadow-[0_4px_20px_0_rgba(1,3,6,0.04)] relative">
+<img alt="Profile portrait" class="w-full h-full object-cover" data-alt="A high-quality, professional headshot of a person looking forward against a clean, minimal background. The lighting is soft and flattering, creating a premium, modern aesthetic consistent with a luxury brand light mode theme. The subject appears approachable yet sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYCrQHDxvylkEzUCCRPy46DkiiNU3JWZtOJS5id2MDHMKv3KJd9WYlDC-1Y8RbDlzluF0FukTbSwiGSeLp5Xm5Nb37-lklZMDQtDV3dRYupMTOtxYbEBwJTLApL-IZFcrJK4UQhqnFtKyOxVLIPw0asanJelrBYI_RZwApw8H3zHw7lL0oh5ebkOWzpwVjykvYwiDmuOBzcZ_wbVr2bwi1CAXk-SlMuRHOgwrAtPDdynSj6kfJkmhwsZukW2KXeug3ZXBAAPmyUBx6"/>
+<div class="absolute inset-0 bg-primary/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer backdrop-blur-sm">
+<span class="material-symbols-outlined text-on-primary">photo_camera</span>
+</div>
+</div>
+<button class="mt-4 text-secondary font-label-sm text-label-sm hover:text-primary transition-colors block text-center w-full">Change Photo</button>
+</div>
+<div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 w-full">
+<div class="input-group">
+<input id="firstName" required="" type="text" value="Alexander"/>
+<label for="firstName">First Name</label>
+</div>
+<div class="input-group">
+<input id="lastName" required="" type="text" value="Sterling"/>
+<label for="lastName">Last Name</label>
+</div>
+<div class="input-group md:col-span-2">
+<input id="email" required="" type="email" value="alexander.sterling@example.com"/>
+<label for="email">Email Address</label>
+</div>
+<div class="input-group md:col-span-2">
+<input id="phone" required="" type="tel" value="+1 (555) 019-2834"/>
+<label for="phone">Phone Number</label>
+</div>
+</div>
+</div>
+<div class="flex justify-end pt-4 border-t border-surface-container">
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-8 py-3 rounded-full hover:bg-secondary transition-colors active:scale-[0.98] duration-200">
+                            Save Changes
+                        </button>
+</div>
+</section>
+<!-- Lumière Club Section (Bento style) -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="glass-panel p-8 rounded-[2rem] flex flex-col justify-between relative overflow-hidden bg-surface-container-low">
+<!-- Decorative element -->
+<div class="absolute -bottom-10 -right-10 opacity-5">
+<span class="material-symbols-outlined" style="font-size: 200px;">diamond</span>
+</div>
+<div>
+<div class="flex items-center space-x-2 mb-2">
+<span class="material-symbols-outlined fill text-secondary">diamond</span>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Membership Status</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-1">Platinum Elite</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Member since 2019</p>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Current Points</span>
+<span class="font-headline-md text-headline-md text-primary">124,500</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[75%] rounded-full"></div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant text-right">25,500 points to Noir tier</p>
+</div>
+</div>
+<button class="mt-8 border border-primary text-primary font-label-sm text-label-sm px-6 py-3 rounded-full hover:bg-primary hover:text-on-primary transition-colors w-fit">
+                            View Benefits
+                        </button>
+</div>
+<!-- Payment Methods -->
+<div class="glass-panel p-8 rounded-[2rem] flex flex-col bg-surface-container-lowest">
+<h2 class="font-headline-md text-headline-md text-primary border-b border-surface-container-highest pb-4 mb-6">Preferred Payment</h2>
+<div class="space-y-4 flex-grow">
+<!-- Card Item -->
+<div class="flex items-center justify-between p-4 border border-outline-variant rounded-xl hover:border-secondary transition-colors cursor-pointer group">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-8 bg-surface-container-high rounded flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">credit_card</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-primary">•••• 4242</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Expires 12/25</p>
+</div>
+</div>
+<div class="flex items-center space-x-2">
+<span class="bg-secondary-container text-secondary font-label-sm text-label-sm px-3 py-1 rounded-full uppercase tracking-wider text-[10px]">Default</span>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">more_vert</span>
+</div>
+</div>
+<!-- Card Item -->
+<div class="flex items-center justify-between p-4 border border-outline-variant rounded-xl hover:border-secondary transition-colors cursor-pointer group">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-8 bg-surface-container-high rounded flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">account_balance</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-primary">•••• 8891</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Expires 08/26</p>
+</div>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">more_vert</span>
+</div>
+</div>
+</div>
+<button class="mt-6 flex items-center justify-center space-x-2 text-secondary font-label-sm text-label-sm hover:text-primary transition-colors py-3 border border-dashed border-secondary/50 rounded-full hover:border-primary">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Add New Method</span>
+</button>
+</div>
+</section>
+<!-- Security Section -->
+<section class="glass-panel p-8 rounded-[2rem] bg-surface-container-lowest">
+<h2 class="font-headline-md text-headline-md text-primary border-b border-surface-container-highest pb-4 mb-8">Security &amp; Privacy</h2>
+<div class="space-y-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between py-4 border-b border-surface-container">
+<div>
+<h3 class="font-label-sm text-label-sm text-primary mb-1">Password</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Last changed 3 months ago</p>
+</div>
+<button class="mt-2 md:mt-0 border border-primary text-primary font-label-sm text-label-sm px-6 py-2 rounded-full hover:bg-primary hover:text-on-primary transition-colors w-fit">
+                                Update
+                            </button>
+</div>
+<div class="flex flex-col md:flex-row md:items-center justify-between py-4 border-b border-surface-container">
+<div>
+<h3 class="font-label-sm text-label-sm text-primary mb-1">Two-Factor Authentication</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Add an extra layer of security to your account</p>
+</div>
+<!-- Toggle switch -->
+<div class="mt-2 md:mt-0">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-surface-container-highest after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<div class="flex flex-col md:flex-row md:items-center justify-between py-4">
+<div>
+<h3 class="font-label-sm text-label-sm text-error mb-1">Delete Account</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Permanently remove your account and data</p>
+</div>
+<button class="mt-2 md:mt-0 text-error font-label-sm text-label-sm px-6 py-2 hover:bg-error/10 rounded-full transition-colors w-fit">
+                                Deactivate
+                            </button>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-primary-container w-full pt-section-gap pb-12 border-t border-outline-variant dark:border-outline">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<!-- Brand Column -->
+<div class="col-span-1 md:col-span-4 mb-8">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">
+                    LUMIÈRE HOTELS
+                </div>
+</div>
+<!-- Links -->
+<div class="col-span-1 md:col-span-4 flex flex-wrap gap-x-8 gap-y-4 mb-8">
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Cookie Policy</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Sitemap</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Contact Us</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Press Room</a>
+</div>
+<!-- Copyright -->
+<div class="col-span-1 md:col-span-4 text-on-surface-variant dark:text-surface-variant font-body-md text-body-md text-sm opacity-80">
+                © 2024 Lumière Hotels &amp; Resorts. All rights reserved.
+            </div>
+</div>
+</footer>
+<script>
+        // Simple input label float logic ensuring they stay up if text is present on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('.input-group input');
+            inputs.forEach(input => {
+                if(input.value.trim() !== '') {
+                    // Trigger valid pseudo class logic by ensuring it's not empty
+                }
+            });
+        });
+    </script>
+</body></html>

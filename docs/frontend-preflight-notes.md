@@ -1,58 +1,54 @@
 # Frontend Preflight Notes
 
 ## Project Structure
-- Spring Boot application under `src/main/java/com/example/demo`.
-- Thymeleaf templates under `src/main/resources/templates`.
-- Static CSS/JS/assets under `src/main/resources/static`.
-- Database migrations under `src/main/resources/db/migration`.
-- Gradle build with wrapper: `gradlew.bat build`.
+- Spring Boot project with Gradle wrapper.
+- Main templates: `src/main/resources/templates`.
+- Static assets: `src/main/resources/static/css`, `src/main/resources/static/js`, `src/main/resources/static/favicon.svg`.
+- Redesign reference folder: `stitch_hotelbooking_premium_front_end_redesign`.
 
 ## Frontend Stack
-- Server-rendered Thymeleaf.
-- CSS bundle entry: `src/main/resources/static/css/app.css`.
-- JS modules: `theme.js`, `nav.js`, `auth-validation.js`, `home-ai.js`, `booking-hold.js`.
-- Spring Security and Thymeleaf Spring Security extras are used in shared nav.
+- Thymeleaf server-rendered HTML.
+- Plain CSS and vanilla JavaScript.
+- Spring Security form login and OAuth2 links.
+- No local UI verification used for final QA; local build only.
 
 ## Templates Found
 - Home: `home.html`.
-- Shared fragments: `fragments/layout.html`, `fragments/nav.html`.
+- Shared fragments: `fragments/nav.html`, `fragments/layout.html`.
 - Auth: `auth/login.html`, `auth/login-password.html`, `auth/login-otp.html`, `auth/register.html`, `auth/verification.html`.
 - Rooms: `rooms/search.html`, `rooms/detail.html`.
-- Bookings/payment: `bookings/checkout.html`, `bookings/detail.html`, `bookings/history.html`, `bookings/payment-result.html`, `bookings/mock-payment.html`.
+- Bookings/payment: `bookings/checkout.html`, `bookings/detail.html`, `bookings/history.html`, `bookings/mock-payment.html`, `bookings/payment-result.html`.
 - User: `profile.html`, `recommend.html`.
 - Admin: `admin/dashboard.html`, `admin/rooms.html`, `admin/bookings.html`, `admin/users.html`.
 - Error: `error.html`.
 
 ## Static Assets Found
-- CSS: tokens, base, layout, components, pages, animations, theme, responsive.
-- SVG placeholders: room placeholder/city/room SVG files and `favicon.svg`.
-- JS: theme toggle, nav/mobile menu, auth validation, AI recommendation, booking hold countdown.
+- CSS before refactor: `tokens.css`, `base.css`, `layout.css`, `components.css`, `pages.css`, `animations.css`, `theme.css`, `responsive.css`, `luxury.css`.
+- Active CSS after refactor: `app.css` importing `lumiere.css`.
+- JS: `theme.js`, `nav.js`, `home-ai.js`, `booking-hold.js`, `auth-validation.js`.
+- Favicon replaced with L/È platinum monogram.
 
 ## Auth Routes Found
-- `GET /login` renders OTP login entry.
-- `GET /login/password` renders password login.
-- `POST /login` is Spring Security password processing.
-- `POST /login/otp/request` requests OTP.
-- `POST /login/otp/verify` verifies OTP.
-- `GET /register` and `POST /register` handle registration.
-- `GET/POST /verification` handle account verification.
-- Preflight issue found: deployed `/login/otp` returned 404, so a GET route must be added.
+- Password login page: `/login/password`, posts to `/login` using `username` and `password`.
+- OTP request page: `/login`, `/login/otp`, `/login-otp`, posts to `/login/otp/request` using `identifier`.
+- OTP verify page: server renders `auth/login-otp.html`, posts to `/login/otp/verify` using `identifier` and `otp`.
+- Register page: `/register`, `/signup`.
+- Verification page: `/verification`.
 
 ## Header Navigation Behavior
-- Shared nav is in `fragments/nav.html`.
-- Public nav items are expected to preserve single-page scroll behavior for home sections.
-- Login/register/profile/admin/logout remain route-based actions.
-- Preflight issue found: deployed mobile nav displayed full links instead of a compact menu.
+- Existing deployed header used same-page hash scrolling for sections.
+- Redesign keeps hash navigation and smooth scroll with `nav.js`.
+- Section targets used: `#rooms`, `#hanoi`, `#ai-recommendation`, `#offers`.
+- Auth/admin/profile/book-now links remain route links.
 
 ## Railway Deployment Setup
-- Dockerfile builds with Gradle and runs the generated Spring Boot jar.
-- Production profile is set through `SPRING_PROFILES_ACTIVE=prod`.
-- Git remote: `https://github.com/nphu0811/hotelbooking.git`.
-- Current branch during preflight: `main`.
+- Remote: `https://github.com/nphu0811/hotelbooking.git`.
+- Branch at preflight: `main`.
+- Deployment target: `https://hotelbooking-production-57a9.up.railway.app`.
+- Dockerfile and Gradle build are present.
 
 ## Risk Areas
-- Existing worktree had unrelated backend/config changes before this redesign pass; they were not reverted.
-- `application*.properties` are modified locally and may contain deploy-sensitive configuration, so they must not be staged blindly.
-- Auth form action/name fields must remain aligned with Spring Security and `AuthController`.
-- Header anchors must work on Railway, not only locally.
-- CSP blocks inline scripts, so UI behavior must live in external JS.
+- Thymeleaf expressions in shared nav and home search forms.
+- Spring Security form field names and route separation.
+- CSP blocks external scripts/fonts, so redesign uses local CSS/JS only.
+- Final QA must be on Railway deployed URL, not local.

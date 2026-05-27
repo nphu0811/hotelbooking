@@ -1,86 +1,97 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Đăng ký - HotelBooking')}"></head>
+<head th:replace="~{fragments/layout :: head('Đăng ký - LUMIÈRE HOTEL')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="auth-page">
-    <form class="auth-panel" th:action="@{/register}" th:object="${registerForm}" method="post"
-          data-validate="register" novalidate>
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        <p class="page-kicker">New guest</p>
-        <h1>Tạo tài khoản</h1>
-        <p class="muted auth-copy">Lưu thông tin đặt phòng, theo dõi thanh toán và quản lý lịch sử lưu trú.</p>
-        <p class="alert" th:if="${error}" th:text="${error}"></p>
-
-        <label class="form-field">Họ tên
-            <input th:field="*{fullName}" minlength="2" maxlength="100"
-                   th:classappend="${#fields.hasErrors('fullName') ? 'is-invalid' : ''}"
-                   data-validate-field="fullName" required>
-            <span class="field-error" data-field-error="fullName"
-                  th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
-            <span class="field-error" data-field-error="fullName"
-                  th:unless="${#fields.hasErrors('fullName')}"></span>
-        </label>
-
-        <label class="form-field">Email
-            <input th:field="*{email}" type="email"
-                   th:classappend="${#fields.hasErrors('email') ? 'is-invalid' : ''}"
-                   data-validate-field="email" required>
-            <span class="field-error" data-field-error="email"
-                  th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-            <span class="field-error" data-field-error="email"
-                  th:unless="${#fields.hasErrors('email')}"></span>
-        </label>
-
-        <label class="form-field">Số điện thoại
-            <input th:field="*{phone}" type="tel" placeholder="0912345678"
-                   th:classappend="${#fields.hasErrors('phone') ? 'is-invalid' : ''}"
-                   data-validate-field="phone" required>
-            <span class="field-error" data-field-error="phone"
-                  th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
-            <span class="field-error" data-field-error="phone"
-                  th:unless="${#fields.hasErrors('phone')}"></span>
-        </label>
-
-        <label class="form-field">Mật khẩu
-            <input th:field="*{password}" type="password" autocomplete="new-password"
-                   minlength="8" th:classappend="${#fields.hasErrors('password') ? 'is-invalid' : ''}"
-                   data-validate-field="strongPassword" required>
-            <span class="field-error" data-field-error="password"
-                  th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-            <span class="field-error" data-field-error="password"
-                  th:unless="${#fields.hasErrors('password')}"></span>
-        </label>
-
-        <label class="form-field">Xác nhận mật khẩu
-            <input th:field="*{confirmPassword}" type="password" autocomplete="new-password"
-                   minlength="8" th:classappend="${#fields.hasErrors('confirmPassword') ? 'is-invalid' : ''}"
-                   data-validate-field="confirmPassword" data-match-field="password" required>
-            <span class="field-error" data-field-error="confirmPassword"
-                  th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
-            <span class="field-error" data-field-error="confirmPassword"
-                  th:unless="${#fields.hasErrors('confirmPassword')}"></span>
-        </label>
-
-        <button class="button" type="submit" aria-label="Register">Tạo tài khoản</button>
-
-        <div class="oauth-section">
-            <div class="auth-divider"><span>hoặc đăng ký bằng</span></div>
-            <div class="oauth-buttons">
-                <a th:href="@{/oauth2/authorization/google}" class="oauth-btn google-btn">
-                    <span class="oauth-icon">G</span> Google
-                </a>
-                <a th:href="@{/oauth2/authorization/facebook}" class="oauth-btn facebook-btn">
-                    <span class="oauth-icon">f</span> Facebook
-                </a>
+    <div class="auth-shell">
+        <aside class="auth-visual" aria-hidden="true">
+            <div class="auth-visual-content">
+                <p class="page-kicker">Join LUMIÈRE</p>
+                <h1>Your stays, kept elegantly simple.</h1>
+                <p>Create a profile for faster reservations, OTP verification and payment continuity.</p>
             </div>
-        </div>
+        </aside>
+        <section class="auth-form-area">
+            <form class="auth-panel" th:action="@{/register}" th:object="${registerForm}" method="post"
+                  data-validate="register" novalidate>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <p class="page-kicker">New guest</p>
+                <h1>Tạo tài khoản</h1>
+                <p class="muted auth-copy">Lưu thông tin đặt phòng, theo dõi thanh toán và quản lý lịch sử lưu trú.</p>
+                <p class="alert" th:if="${error}" th:text="${error}"></p>
 
-        <a class="auth-link" th:href="@{/login}">Đã có tài khoản? Đăng nhập</a>
-    </form>
+                <label class="form-field">Họ tên
+                    <input th:field="*{fullName}" minlength="2" maxlength="100"
+                           th:classappend="${#fields.hasErrors('fullName') ? 'is-invalid' : ''}"
+                           data-validate-field="fullName" required>
+                    <span class="field-error" data-field-error="fullName"
+                          th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+                    <span class="field-error" data-field-error="fullName"
+                          th:unless="${#fields.hasErrors('fullName')}"></span>
+                </label>
+
+                <label class="form-field">Email
+                    <input th:field="*{email}" type="email"
+                           th:classappend="${#fields.hasErrors('email') ? 'is-invalid' : ''}"
+                           data-validate-field="email" required>
+                    <span class="field-error" data-field-error="email"
+                          th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    <span class="field-error" data-field-error="email"
+                          th:unless="${#fields.hasErrors('email')}"></span>
+                </label>
+
+                <label class="form-field">Số điện thoại
+                    <input th:field="*{phone}" type="tel" placeholder="0912345678"
+                           th:classappend="${#fields.hasErrors('phone') ? 'is-invalid' : ''}"
+                           data-validate-field="phone" required>
+                    <span class="field-error" data-field-error="phone"
+                          th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                    <span class="field-error" data-field-error="phone"
+                          th:unless="${#fields.hasErrors('phone')}"></span>
+                </label>
+
+                <label class="form-field">Mật khẩu
+                    <input th:field="*{password}" type="password" autocomplete="new-password"
+                           minlength="8" th:classappend="${#fields.hasErrors('password') ? 'is-invalid' : ''}"
+                           data-validate-field="strongPassword" required>
+                    <span class="field-error" data-field-error="password"
+                          th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                    <span class="field-error" data-field-error="password"
+                          th:unless="${#fields.hasErrors('password')}"></span>
+                </label>
+
+                <label class="form-field">Xác nhận mật khẩu
+                    <input th:field="*{confirmPassword}" type="password" autocomplete="new-password"
+                           minlength="8" th:classappend="${#fields.hasErrors('confirmPassword') ? 'is-invalid' : ''}"
+                           data-validate-field="confirmPassword" data-match-field="password" required>
+                    <span class="field-error" data-field-error="confirmPassword"
+                          th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+                    <span class="field-error" data-field-error="confirmPassword"
+                          th:unless="${#fields.hasErrors('confirmPassword')}"></span>
+                </label>
+
+                <button class="button" type="submit" aria-label="Register">Tạo tài khoản</button>
+
+                <div class="oauth-section">
+                    <div class="auth-divider"><span>Hoặc đăng ký bằng</span></div>
+                    <div class="oauth-buttons">
+                        <a th:href="@{/oauth2/authorization/google}" class="oauth-btn google-btn">
+                            <span class="oauth-icon">G</span> Google
+                        </a>
+                        <a th:href="@{/oauth2/authorization/facebook}" class="oauth-btn facebook-btn">
+                            <span class="oauth-icon">f</span> Facebook
+                        </a>
+                    </div>
+                </div>
+
+                <a class="auth-link" th:href="@{/login/password}">Đã có tài khoản? Đăng nhập</a>
+            </form>
+        </section>
+    </div>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
-<script th:src="@{/js/auth-validation.js(v=2)}"></script>
+<script th:src="@{/js/auth-validation.js(v=3)}"></script>
 </body>
 </html>

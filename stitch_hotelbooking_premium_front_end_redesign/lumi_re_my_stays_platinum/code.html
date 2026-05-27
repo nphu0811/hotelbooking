@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumière Hotels - Booking History</title>
+<!-- Google Fonts: Montserrat -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "secondary-fixed": "#e3e2e2",
+                "inverse-primary": "#c8c6c5",
+                "surface-container-highest": "#e1e3e4",
+                "on-primary-container": "#858383",
+                "background": "#f8f9fa",
+                "on-secondary-fixed-variant": "#464747",
+                "on-primary-fixed-variant": "#474746",
+                "surface-variant": "#e1e3e4",
+                "outline-variant": "#c4c7c7",
+                "tertiary-container": "#1a1c1c",
+                "secondary-container": "#e0dfdf",
+                "surface": "#f8f9fa",
+                "on-surface-variant": "#444748",
+                "tertiary": "#000000",
+                "on-tertiary": "#ffffff",
+                "on-primary-fixed": "#1c1b1b",
+                "secondary-fixed-dim": "#c6c6c6",
+                "on-tertiary-container": "#838484",
+                "primary": "#000000",
+                "error": "#ba1a1a",
+                "surface-dim": "#d9dadb",
+                "surface-container-low": "#f3f4f5",
+                "tertiary-fixed-dim": "#c6c6c6",
+                "on-surface": "#191c1d",
+                "error-container": "#ffdad6",
+                "surface-container": "#edeeef",
+                "on-error-container": "#93000a",
+                "on-secondary-container": "#626363",
+                "surface-container-high": "#e7e8e9",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#e5e2e1",
+                "on-secondary-fixed": "#1a1c1c",
+                "surface-tint": "#5f5e5e",
+                "secondary": "#5d5e5f",
+                "on-tertiary-fixed-variant": "#454747",
+                "on-tertiary-fixed": "#1a1c1c",
+                "primary-container": "#1c1b1b",
+                "primary-fixed-dim": "#c8c6c5",
+                "inverse-on-surface": "#f0f1f2",
+                "tertiary-fixed": "#e2e2e2",
+                "surface-container-lowest": "#ffffff",
+                "inverse-surface": "#2e3132",
+                "on-primary": "#ffffff",
+                "on-error": "#ffffff",
+                "outline": "#747878",
+                "on-secondary": "#ffffff",
+                "on-background": "#191c1d"
+        },
+        "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "gutter": "24px",
+                "container-max": "1280px",
+                "unit": "8px",
+                "margin-desktop": "80px",
+                "margin-mobile": "20px"
+        },
+        "fontFamily": {
+                "label-sm": [
+                        "Montserrat"
+                ],
+                "body-md": [
+                        "Montserrat"
+                ],
+                "body-lg": [
+                        "Montserrat"
+                ],
+                "headline-xl": [
+                        "Montserrat"
+                ],
+                "headline-md": [
+                        "Montserrat"
+                ],
+                "headline-lg": [
+                        "Montserrat"
+                ],
+                "headline-lg-mobile": [
+                        "Montserrat"
+                ]
+        },
+        "fontSize": {
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-xl": [
+                        "48px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "1.3",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "28px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col pt-20">
+<!-- TopNavBar -->
+<nav class="bg-surface-container-lowest/90 backdrop-blur-xl fixed top-0 w-full z-50 shadow-[0_4px_20px_0_rgba(0,0,0,0.05)] border-b border-outline-variant/20 rounded-b-lg md:rounded-b-xl mx-auto md:w-[calc(100%-40px)] md:mt-4 md:left-[20px]">
+<div class="flex justify-between items-center w-full px-6 max-w-container-max mx-auto h-20">
+<!-- Brand -->
+<a class="font-headline-md text-headline-md font-bold tracking-tight text-primary uppercase" href="#">
+                LUMIÈRE HOTELS
+            </a>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex space-x-8 items-center h-full">
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors duration-300 uppercase tracking-widest" href="#">Destinations</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors duration-300 uppercase tracking-widest" href="#">Experiences</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors duration-300 uppercase tracking-widest" href="#">Residences</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors duration-300 uppercase tracking-widest" href="#">Offers</a>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-6">
+<button aria-label="Search" class="text-primary hover:text-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container-high cursor-pointer">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtYf6z6EeE5Kc8n1umGuq4GFy9zWOZ6f0OmA-7eEe68XFSyuhuHHDqHA1nMPOWKKBCzLiE8vSQ1SZwJDnzo1UZev06H74GoVaZTiQWILItaSzx87yYp0tIQclZ9ms5Zv_6De2QReRzqlN9CGoDdFHPi4LwMeU13X2GrJT4UvLwluucvBPnk3tpWS2KsXoJRjqSiVAjOXQ-4aaDE9l8uhkEN0zwtPTYmKXXtqF-iAVPoXxmJzZ_EvtQuYOGAEIo06S2SwML4PR6w8CY"/>
+</div>
+<button class="hidden md:block bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-widest px-8 py-3 rounded-full hover:bg-surface-tint transition-colors duration-300 shadow-md">
+                    Book Now
+                </button>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-margin-desktop mt-8">
+<!-- Header & Filters -->
+<div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/30">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-primary mb-4">Booking History</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Review your past stays and upcoming journeys.</p>
+</div>
+<div class="flex flex-col sm:flex-row gap-6 items-end">
+<!-- Search Input -->
+<div class="relative w-full sm:w-72">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" data-icon="search" style="font-size: 20px;">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full pl-12 pr-4 py-3 font-body-md text-body-md text-primary focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-on-surface-variant/70" placeholder="Search reservations..." type="text"/>
+</div>
+<!-- Filter Dropdown Placeholder -->
+<div class="relative">
+<select class="appearance-none bg-surface-container-low border border-outline-variant rounded-full pl-6 pr-12 py-3 font-label-sm text-label-sm text-primary focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer uppercase tracking-wider transition-all">
+<option value="all">All Status</option>
+<option value="active">Active</option>
+<option value="completed">Completed</option>
+<option value="cancelled">Cancelled</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" data-icon="expand_more" style="font-size: 20px;">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Booking List -->
+<div class="flex flex-col gap-8">
+<!-- Active Booking Card -->
+<article class="group bg-surface-container-lowest flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-md border border-outline-variant/30 hover:shadow-lg transition-shadow duration-300">
+<div class="md:w-[320px] h-[240px] md:h-auto overflow-hidden relative m-2 rounded-xl">
+<img alt="Hotel room" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 rounded-xl" data-alt="A serene, minimalist hotel room interior featuring a low-profile bed with pristine white linens. Large floor-to-ceiling windows look out onto a tranquil Japanese-style garden. The room is bathed in soft, high-key natural light, emphasizing natural wood textures and creating a serene, exclusive atmosphere consistent with a quiet luxury aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAujoDBMD9xbX3IFbwF7-V_vbODFQf9MKZIleyLTrIFJ8QYLWx9CAAJ2DU5hBmND3egESu_scGN2ZTRn04qshHniJcpMEEzTMSXnagmCApAc9nOBoJT26j0V13epnsC0TBx-t-tVIZzKudvc2PnnvZzKuDm5OrW-gR54eqH_bXHIHOOdLlSpoiA7u460WiTh20duMn9_Rt_0RwzWWabI6-tqiQEcXh228fEzrQsGzlUOaHNBir7w2DJhyWYS5DWoXX6hYxQBbHVmjtu"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-widest px-3 py-1.5 rounded-full shadow-sm">Active</div>
+</div>
+<div class="flex-1 p-8 flex flex-col md:flex-row justify-between md:items-center gap-8">
+<div class="space-y-6 flex-1">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-2">The Lumière Kyoto</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="location_on" style="font-size: 18px;">location_on</span>
+                                Kyoto, Japan
+                            </p>
+</div>
+<div class="flex gap-10 bg-surface-container p-4 rounded-xl">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Check-in</p>
+<p class="font-body-md text-body-md text-primary font-semibold">Oct 15, 2024</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Check-out</p>
+<p class="font-body-md text-body-md text-primary font-semibold">Oct 20, 2024</p>
+</div>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center md:pl-10 min-w-[160px] md:border-l border-outline-variant/30">
+<div class="text-left md:text-right mb-0 md:mb-6">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Total</p>
+<p class="font-headline-lg text-headline-lg text-primary font-bold">$4,250</p>
+</div>
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-8 py-3 rounded-full hover:bg-surface-tint transition-colors duration-300 uppercase tracking-widest shadow-sm">
+                            Details
+                        </button>
+</div>
+</div>
+</article>
+<!-- Completed Booking Card -->
+<article class="group bg-surface-container-lowest flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 hover:shadow-md transition-shadow duration-300">
+<div class="md:w-[320px] h-[240px] md:h-auto overflow-hidden relative m-2 rounded-xl">
+<img alt="Resort view" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 rounded-xl" data-alt="A striking architectural view of an overwater bungalow at a luxury resort. The structure features clean, modern lines against a backdrop of crystal-clear, bright turquoise water. The lighting is brilliant and sunny, reflecting off the minimalist surfaces, perfectly capturing a high-end, exclusive tropical getaway." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTDIkMJmuxRlMoZih320WCjYavKT56neuwacJARoDUf31hMAKLFlXagCaUT9BJmy-SVBYVNtPSVpakeGEyH69qpY-AD3oN4QQLp1jrIgzuS64iB6v3pV8JxPqa1Y4U-Ma82LcrolYnqLHmjmtL0BYIy98uIlUG1OcM-IALTOsis013RAhvTDBPD-ww5x74vImPfy-faXw65bIwO5g3ysJA_1CrMfrVq3KAeJtX3ZKtGw-HzJRCxgn7ffPIejWV6XTxm-zqTGZ1gRYT"/>
+<div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-300 rounded-xl"></div>
+<div class="absolute top-4 left-4 bg-surface-variant text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest px-3 py-1.5 rounded-full shadow-sm">Completed</div>
+</div>
+<div class="flex-1 p-8 flex flex-col md:flex-row justify-between md:items-center gap-8">
+<div class="space-y-6 flex-1 opacity-90">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary mb-2">Lumière Maldives</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="location_on" style="font-size: 18px;">location_on</span>
+                                North Malé Atoll, Maldives
+                            </p>
+</div>
+<div class="flex gap-10 bg-surface-container-low p-4 rounded-xl border border-outline-variant/20">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Check-in</p>
+<p class="font-body-md text-body-md text-primary">Jan 10, 2024</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Check-out</p>
+<p class="font-body-md text-body-md text-primary">Jan 15, 2024</p>
+</div>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center md:pl-10 min-w-[160px] md:border-l border-outline-variant/30 opacity-90">
+<div class="text-left md:text-right mb-0 md:mb-6">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Total</p>
+<p class="font-headline-md text-headline-md text-primary font-bold">$8,900</p>
+</div>
+<button class="bg-transparent border-2 border-outline-variant text-on-surface-variant font-label-sm text-label-sm px-8 py-2.5 rounded-full hover:border-primary hover:text-primary transition-colors duration-300 uppercase tracking-widest">
+                            Receipt
+                        </button>
+</div>
+</div>
+</article>
+<!-- Cancelled Booking Card -->
+<article class="group bg-surface-container-lowest flex flex-col md:flex-row rounded-2xl overflow-hidden border border-outline-variant/20 shadow-sm opacity-80">
+<div class="md:w-[320px] h-[240px] md:h-auto overflow-hidden relative grayscale m-2 rounded-xl">
+<img alt="Parisian balcony" class="w-full h-full object-cover rounded-xl" data-alt="A classic Parisian balcony overlooking a quiet courtyard. The image features wrought-iron details and pale stone architecture. The scene is slightly desaturated, presenting a muted, sophisticated light-mode aesthetic with soft shadows, evoking a sense of refined, quiet luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxKC_anKZPg8_QrEx1SemGdEj2ZKhdCzN7-A29lrngFCWmp3hX_E9eDN8fMNGMy-k3ZFWK5VAG7Wy1OJHP6Q6d9VjmuwxHVBBZaiDrAG7wnDNyJB6tKd1CYsjDEEvBIvxBt-vOqoN2oa4vPTiiGiO9YCesbYl1z1XylmEeLeBiy2Em_jFi6auf3KiBtJOzOll_xiOyr8ZpMA7nRoB0wWglvNm3hdPQnXWUeT6tn3MLQToNzKh_T64NLZfkMoK5IVhO6bpFQonb4Vif"/>
+<div class="absolute top-4 left-4 bg-error-container text-on-error-container font-label-sm text-label-sm uppercase tracking-widest px-3 py-1.5 rounded-full shadow-sm border border-error/20">Cancelled</div>
+</div>
+<div class="flex-1 p-8 flex flex-col md:flex-row justify-between md:items-center gap-8">
+<div class="space-y-6 flex-1">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface-variant mb-2">Lumière Paris</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="location_on" style="font-size: 18px;">location_on</span>
+                                Paris, France
+                            </p>
+</div>
+<div class="flex gap-10 bg-surface-container-low/50 p-4 rounded-xl border border-outline-variant/10">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Dates</p>
+<p class="font-body-md text-body-md text-on-surface-variant">May 5 - 8, 2024</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- Completed Booking Card 2 -->
+<article class="group bg-surface-container-lowest flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 hover:shadow-md transition-shadow duration-300">
+<div class="md:w-[320px] h-[240px] md:h-auto overflow-hidden relative m-2 rounded-xl">
+<img alt="Chalet view" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 rounded-xl" data-alt="A minimalist modern chalet interior with expansive glass windows showing a snow-covered mountain peak. The room features pale wood floors, a sleek dark fireplace, and a light-filled, airy atmosphere. The design emphasizes clean lines and high-contrast sophisticated luxury in a winter setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN9YS5vg5m3peIkljiUtvilRazcPy7rvWlbf9mwuKixudI7zc33GjCy_XtPrbZbFrUwOzmNKSN0TyyGN_ik5-8nokTxZWFQUd6KBru2yyy557MW0bRyDVn0DOs9tYEbANnzeuCinVrKA73Ls4c-KKzoKoeyk9JY2fCP2dYAbhxwXKub5tPgZwmlRjcE4gZg124l3gIubn_p6zYJJm8lJR7g0gddVPsaG3VTkdaz9mazcqbOzrh31HKsYoge-6sAuOHUeHB7npMRrHN"/>
+<div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-300 rounded-xl"></div>
+<div class="absolute top-4 left-4 bg-surface-variant text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest px-3 py-1.5 rounded-full shadow-sm">Completed</div>
+</div>
+<div class="flex-1 p-8 flex flex-col md:flex-row justify-between md:items-center gap-8">
+<div class="space-y-6 flex-1 opacity-90">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary mb-2">Lumière Aspen</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="location_on" style="font-size: 18px;">location_on</span>
+                                Aspen, Colorado
+                            </p>
+</div>
+<div class="flex gap-10 bg-surface-container-low p-4 rounded-xl border border-outline-variant/20">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Check-in</p>
+<p class="font-body-md text-body-md text-primary">Dec 20, 2023</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Check-out</p>
+<p class="font-body-md text-body-md text-primary">Dec 27, 2023</p>
+</div>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center md:pl-10 min-w-[160px] md:border-l border-outline-variant/30 opacity-90">
+<div class="text-left md:text-right mb-0 md:mb-6">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Total</p>
+<p class="font-headline-md text-headline-md text-primary font-bold">$12,500</p>
+</div>
+<button class="bg-transparent border-2 border-outline-variant text-on-surface-variant font-label-sm text-label-sm px-8 py-2.5 rounded-full hover:border-primary hover:text-primary transition-colors duration-300 uppercase tracking-widest">
+                            Receipt
+                        </button>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-highest w-full pt-20 pb-12 mt-auto rounded-t-2xl md:rounded-t-[3rem] shadow-[0_-4px_20px_0_rgba(0,0,0,0.02)] border-t border-outline-variant/30">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-2 mb-8 md:mb-0">
+<p class="font-headline-md text-headline-md font-bold text-primary mb-6 uppercase tracking-widest">LUMIÈRE HOTELS</p>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 max-w-md leading-relaxed">
+                    Defining quiet luxury through architectural precision, exceptional service, and serene environments across the globe.
+                </p>
+<p class="font-label-sm text-label-sm text-outline">
+                    © 2024 Lumière Hotels &amp; Resorts. All rights reserved.
+                </p>
+</div>
+<div class="col-span-1 flex flex-col gap-4 pt-2">
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors uppercase tracking-wider" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors uppercase tracking-wider" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors uppercase tracking-wider" href="#">Cookie Policy</a>
+</div>
+<div class="col-span-1 flex flex-col gap-4 pt-2">
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors uppercase tracking-wider" href="#">Sitemap</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors uppercase tracking-wider" href="#">Contact Us</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors uppercase tracking-wider" href="#">Press Room</a>
+</div>
+</div>
+</footer>
+</body></html>

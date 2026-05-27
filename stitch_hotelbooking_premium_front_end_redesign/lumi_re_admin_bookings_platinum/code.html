@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumière Hotels &amp; Resorts - Admin Bookings &amp; Users</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "secondary-fixed": "#e3e2e2",
+                "inverse-primary": "#c8c6c5",
+                "surface-container-highest": "#e1e3e4",
+                "on-primary-container": "#858383",
+                "background": "#f8f9fa",
+                "on-secondary-fixed-variant": "#464747",
+                "on-primary-fixed-variant": "#474746",
+                "surface-variant": "#e1e3e4",
+                "outline-variant": "#c4c7c7",
+                "tertiary-container": "#1a1c1c",
+                "secondary-container": "#e0dfdf",
+                "surface": "#f8f9fa",
+                "on-surface-variant": "#444748",
+                "tertiary": "#000000",
+                "on-tertiary": "#ffffff",
+                "on-primary-fixed": "#1c1b1b",
+                "secondary-fixed-dim": "#c6c6c6",
+                "on-tertiary-container": "#838484",
+                "primary": "#000000",
+                "error": "#ba1a1a",
+                "surface-dim": "#d9dadb",
+                "surface-container-low": "#f3f4f5",
+                "tertiary-fixed-dim": "#c6c6c6",
+                "on-surface": "#191c1d",
+                "error-container": "#ffdad6",
+                "surface-container": "#edeeef",
+                "on-error-container": "#93000a",
+                "on-secondary-container": "#626363",
+                "surface-container-high": "#e7e8e9",
+                "surface-bright": "#f8f9fa",
+                "primary-fixed": "#e5e2e1",
+                "on-secondary-fixed": "#1a1c1c",
+                "surface-tint": "#5f5e5e",
+                "secondary": "#5d5e5f",
+                "on-tertiary-fixed-variant": "#454747",
+                "on-tertiary-fixed": "#1a1c1c",
+                "primary-container": "#1c1b1b",
+                "primary-fixed-dim": "#c8c6c5",
+                "inverse-on-surface": "#f0f1f2",
+                "tertiary-fixed": "#e2e2e2",
+                "surface-container-lowest": "#ffffff",
+                "inverse-surface": "#2e3132",
+                "on-primary": "#ffffff",
+                "on-error": "#ffffff",
+                "outline": "#747878",
+                "on-secondary": "#ffffff",
+                "on-background": "#191c1d"
+        },
+        "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "gutter": "24px",
+                "container-max": "1280px",
+                "unit": "8px",
+                "margin-desktop": "80px",
+                "margin-mobile": "20px"
+        },
+        "fontFamily": {
+                "label-sm": [
+                        "Montserrat"
+                ],
+                "body-md": [
+                        "Montserrat"
+                ],
+                "body-lg": [
+                        "Montserrat"
+                ],
+                "headline-xl": [
+                        "Montserrat"
+                ],
+                "headline-md": [
+                        "Montserrat"
+                ],
+                "headline-lg": [
+                        "Montserrat"
+                ],
+                "headline-lg-mobile": [
+                        "Montserrat"
+                ]
+        },
+        "fontSize": {
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-xl": [
+                        "48px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "1.3",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "28px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .admin-table-row:nth-child(even) {
+            background-color: rgba(243, 244, 245, 0.5); /* surface-container-low tint */
+        }
+        /* Floating label form field logic */
+        .floating-input {
+            border-bottom: 1px solid #c4c7c7; /* outline-variant */
+        }
+        .floating-input:focus {
+            border-bottom: 2px solid #000000; /* primary */
+            outline: none;
+        }
+        .floating-input:focus + label,
+        .floating-input:not(:placeholder-shown) + label {
+            transform: translateY(-1.5rem) scale(0.85);
+            color: #000000; /* primary */
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col font-body-md">
+<!-- TopNavBar (Admin Context - Hidden or modified slightly if needed, but retaining brand) -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl border-b border-white/10 dark:border-outline-variant/10 shadow-[0_4px_20px_0_rgba(0,0,0,0.04)] h-20 transition-all duration-300" id="main-nav">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-full">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-primary uppercase">LUMIÈRE HOTELS</span>
+<span class="text-outline hidden md:inline font-label-sm text-label-sm ml-4 px-3 py-1.5 bg-surface-container-high rounded-full">Admin Portal</span>
+</div>
+<!-- Admin Navigation Cluster -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary transition-colors duration-300 uppercase" href="#">Dashboard</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary transition-colors duration-300 uppercase" href="#">Rooms</a>
+<a class="text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed pb-1 font-label-sm text-label-sm hover:text-primary transition-colors duration-300 uppercase" href="#">Bookings &amp; Users</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary transition-colors duration-300 uppercase" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-4">
+<button aria-label="Search" class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/30 hidden md:block">
+<img alt="Admin User" class="w-full h-full object-cover grayscale opacity-80" data-alt="A professional headshot of a mature administrative user, softly lit against a neutral grey background, conveying trust and competence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxKC_anKZPg8_QrEx1SemGdEj2ZKhdCzN7-A29lrngFCWmp3hX_E9eDN8fMNGMy-k3ZFWK5VAG7Wy1OJHP6Q6d9VjmuwxHVBBZaiDrAG7wnDNyJB6tKd1CYsjDEEvBIvxBt-vOqoN2oa4vPTiiGiO9YCesbYl1z1XylmEeLeBiy2Em_jFi6auf3KiBtJOzOll_xiOyr8ZpMA7nRoB0wWglvNm3hdPQnXWUeT6tn3MLQToNzKh_T64NLZfkMoK5IVhO6bpFQonb4Vif"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-32 pb-margin-desktop px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<!-- Page Header -->
+<div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-primary mb-2">Bookings Management</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Review and manage guest reservations, statuses, and user profiles.</p>
+</div>
+<div class="flex gap-4">
+<button class="bg-transparent border border-outline text-on-surface px-6 py-3 rounded-full hover:bg-surface-container-low transition-colors font-label-sm text-label-sm flex items-center gap-2 uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">download</span> Export
+                </button>
+<button class="bg-primary text-on-primary px-6 py-3 rounded-full hover:bg-primary/90 transition-colors shadow-sm font-label-sm text-label-sm flex items-center gap-2 uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">add</span> New Booking
+                </button>
+</div>
+</div>
+<!-- Filters & Search Toolbar (Glassmorphic Panel) -->
+<div class="glass-panel rounded-[2rem] p-6 mb-8 shadow-[0_4px_20px_0_rgba(0,0,0,0.04)] flex flex-col lg:flex-row gap-6 items-center justify-between">
+<div class="relative w-full lg:w-96">
+<input class="floating-input w-full bg-transparent pt-4 pb-2 px-0 text-on-surface focus:ring-0 border-x-0 border-t-0 font-body-md text-body-md peer" id="search-bookings" placeholder=" " type="text"/>
+<label class="absolute left-0 top-4 text-on-surface-variant font-body-md text-body-md transition-all duration-200 pointer-events-none" for="search-bookings">Search ID, Name, or Email</label>
+<span class="material-symbols-outlined absolute right-0 top-4 text-on-surface-variant">search</span>
+</div>
+<div class="flex flex-wrap gap-4 w-full lg:w-auto items-center">
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">Status:</span>
+<select class="bg-surface border border-outline-variant rounded-full py-2 px-4 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary appearance-none pr-10 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23444748%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_0.5rem_center] bg-[length:1.2em_1.2em]">
+<option>All Statuses</option>
+<option>Confirmed</option>
+<option>Pending</option>
+<option>Checked In</option>
+<option>Cancelled</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">Dates:</span>
+<input class="bg-surface border border-outline-variant rounded-full py-2 px-4 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary" type="date"/>
+</div>
+</div>
+</div>
+<!-- High-Density Data Table -->
+<div class="bg-surface-container-lowest rounded-[2rem] shadow-[0_4px_20px_0_rgba(0,0,0,0.04)] overflow-hidden border border-outline-variant/20">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/30">
+<th class="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider w-12 text-center">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</th>
+<th class="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Booking ID</th>
+<th class="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Guest Name</th>
+<th class="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Room Type</th>
+<th class="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Stay Dates</th>
+<th class="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Amount</th>
+<th class="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="p-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface">
+<!-- Row 1 -->
+<tr class="admin-table-row border-b border-outline-variant/10 hover:bg-surface-container transition-colors group">
+<td class="p-6 text-center">
+<input class="rounded border-outline-variant text-primary focus:ring-primary opacity-50 group-hover:opacity-100 transition-opacity" type="checkbox"/>
+</td>
+<td class="p-6 font-semibold">BKG-8492A</td>
+<td class="p-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-label-sm">EH</div>
+<div class="flex flex-col">
+<span class="font-semibold">Eleanor Harper</span>
+<span class="text-[14px] text-on-surface-variant">eleanor.h@example.com</span>
+</div>
+</div>
+</td>
+<td class="p-6">Ocean View Suite</td>
+<td class="p-6">
+<div class="flex flex-col">
+<span>Oct 12 - Oct 15</span>
+<span class="text-[14px] text-on-surface-variant">3 Nights</span>
+</div>
+</td>
+<td class="p-6">$1,850</td>
+<td class="p-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-surface-container-highest text-on-surface border border-outline-variant/50">Confirmed</span>
+</td>
+<td class="p-6 text-right">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors" title="More options">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="admin-table-row border-b border-outline-variant/10 hover:bg-surface-container transition-colors group">
+<td class="p-6 text-center">
+<input class="rounded border-outline-variant text-primary focus:ring-primary opacity-50 group-hover:opacity-100 transition-opacity" type="checkbox"/>
+</td>
+<td class="p-6 font-semibold">BKG-9103C</td>
+<td class="p-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-tint text-on-primary flex items-center justify-center font-label-sm text-label-sm">MR</div>
+<div class="flex flex-col">
+<span class="font-semibold">Marcus Reed</span>
+<span class="text-[14px] text-on-surface-variant">m.reed@company.com</span>
+</div>
+</div>
+</td>
+<td class="p-6">Penthouse Residence</td>
+<td class="p-6">
+<div class="flex flex-col">
+<span>Oct 14 - Oct 20</span>
+<span class="text-[14px] text-on-surface-variant">6 Nights</span>
+</div>
+</td>
+<td class="p-6">$8,400</td>
+<td class="p-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-surface-variant text-on-surface border border-outline-variant/50">Pending</span>
+</td>
+<td class="p-6 text-right">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors" title="More options">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="admin-table-row border-b border-outline-variant/10 hover:bg-surface-container transition-colors group">
+<td class="p-6 text-center">
+<input class="rounded border-outline-variant text-primary focus:ring-primary opacity-50 group-hover:opacity-100 transition-opacity" type="checkbox"/>
+</td>
+<td class="p-6 font-semibold">BKG-7721X</td>
+<td class="p-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-label-sm">SL</div>
+<div class="flex flex-col">
+<span class="font-semibold">Sophia Lin</span>
+<span class="text-[14px] text-on-surface-variant">sophia.l@example.com</span>
+</div>
+</div>
+</td>
+<td class="p-6">Garden Villa</td>
+<td class="p-6">
+<div class="flex flex-col">
+<span>Oct 10 - Oct 14</span>
+<span class="text-[14px] text-on-surface-variant">4 Nights</span>
+</div>
+</td>
+<td class="p-6">$3,200</td>
+<td class="p-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-surface-container-highest text-on-surface border border-outline-variant/50">Checked In</span>
+</td>
+<td class="p-6 text-right">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors" title="More options">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="admin-table-row border-b border-outline-variant/10 hover:bg-surface-container transition-colors group">
+<td class="p-6 text-center">
+<input class="rounded border-outline-variant text-primary focus:ring-primary opacity-50 group-hover:opacity-100 transition-opacity" type="checkbox"/>
+</td>
+<td class="p-6 font-semibold text-on-surface-variant">BKG-6544D</td>
+<td class="p-6 text-on-surface-variant">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-label-sm text-label-sm">JD</div>
+<div class="flex flex-col">
+<span class="font-semibold">James Davies</span>
+<span class="text-[14px]">j.davies@example.com</span>
+</div>
+</div>
+</td>
+<td class="p-6 text-on-surface-variant">Standard King</td>
+<td class="p-6 text-on-surface-variant">
+<div class="flex flex-col">
+<span>Oct 22 - Oct 24</span>
+<span class="text-[14px]">2 Nights</span>
+</div>
+</td>
+<td class="p-6 text-on-surface-variant">$850</td>
+<td class="p-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-error/10 text-error border border-error/20">Cancelled</span>
+</td>
+<td class="p-6 text-right">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors" title="More options">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="p-6 border-t border-outline-variant/20 flex flex-col sm:flex-row justify-between items-center gap-4 bg-surface-container-lowest">
+<span class="font-body-md text-body-md text-on-surface-variant">Showing 1 to 4 of 128 bookings</span>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-full border border-outline-variant/50 text-on-surface-variant hover:bg-surface-container-low transition-colors disabled:opacity-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm font-semibold">1</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-on-surface font-semibold">2</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-on-surface font-semibold">3</button>
+<span class="px-2 text-on-surface-variant">...</span>
+<button class="p-2 rounded-full border border-outline-variant/50 text-on-surface-variant hover:bg-surface-container-low transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (Minimal Admin Footer) -->
+<footer class="w-full py-8 border-t border-outline-variant/50 bg-surface-container-lowest mt-auto">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="font-headline-md text-headline-md text-primary uppercase">LUMIÈRE HOTELS</span>
+<span class="font-body-md text-[14px] text-on-surface-variant">© 2024 Lumière Hotels &amp; Resorts. All rights reserved.</span>
+<div class="flex gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors uppercase tracking-wider" href="#">Support</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors uppercase tracking-wider" href="#">Documentation</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple scroll effect for TopAppBar
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('main-nav');
+            if (window.scrollY > 10) {
+                nav.classList.add('shadow-sm');
+            } else {
+                nav.classList.remove('shadow-sm');
+            }
+        });
+    </script>
+</body></html>

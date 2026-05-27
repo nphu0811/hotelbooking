@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Hồ sơ cá nhân - HotelBooking')}"></head>
+<head th:replace="~{fragments/layout :: head('Hồ sơ cá nhân - LUMIÈRE HOTEL')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
-<main class="auth-page">
+<main class="page narrow">
     <section class="auth-panel profile-panel">
-        <p class="page-kicker">Thông tin tài khoản</p>
+        <p class="page-kicker">Guest profile</p>
         <h1>Hồ sơ của bạn</h1>
 
         <p class="alert" th:if="${error}" th:text="${error}"></p>
@@ -101,6 +101,6 @@
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
-<script th:src="@{/js/auth-validation.js(v=1)}"></script>
+<script th:src="@{/js/auth-validation.js(v=3)}"></script>
 </body>
 </html>

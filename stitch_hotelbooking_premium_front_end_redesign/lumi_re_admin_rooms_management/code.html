@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Room Management - Lumière Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#006a61",
+                        "on-tertiary-fixed-variant": "#004e61",
+                        "on-tertiary-fixed": "#001f28",
+                        "primary-fixed": "#e1e2ea",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-fixed": "#00201d",
+                        "surface-tint": "#5c5e65",
+                        "surface-container": "#edeeef",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#006f66",
+                        "tertiary-fixed-dim": "#6cd3f7",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#191c1d",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "outline": "#76777b",
+                        "inverse-on-surface": "#f0f1f2",
+                        "tertiary-fixed": "#b7eaff",
+                        "primary-container": "#1a1d23",
+                        "primary-fixed-dim": "#c4c6ce",
+                        "outline-variant": "#c6c6cb",
+                        "surface-variant": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed-variant": "#44474d",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-primary-container": "#82858c",
+                        "inverse-primary": "#c4c6ce",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary": "#000204",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#191c22",
+                        "on-tertiary-container": "#0590b1",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "primary": "#010306",
+                        "surface": "#f8f9fa",
+                        "on-surface-variant": "#45474b",
+                        "tertiary-container": "#00202a",
+                        "secondary-container": "#86f2e4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "section-gap": "120px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Playfair Display"],
+                        "label-sm": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "display-lg": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["Playfair Display"],
+                        "label-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #F8F9FA; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 20px 0 rgba(1, 3, 6, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col">
+<!-- TopNavBar (Admin Variation - No primary navigation links as it's a focused task) -->
+<header class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/10 dark:border-outline-variant/10 shadow-[0_4px_20px_0_rgba(1,3,6,0.04)]">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-20">
+<div class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary dark:text-primary-fixed-dim">
+                LUMIÈRE HOTELS <span class="font-body-md text-on-surface-variant ml-2 opacity-60">Admin</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface hover:text-secondary transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1xV-ZMi4lTExx1p6ciUVC8s0adPN3D2HpMPLqFOfmEO2_wbgbgo23ro4e_LeAxm20CLRfsyPF-by2sY_W9lsdZW4iShoUpxOLh160YPj6JgKnsJg2fp30emdgyDAQv7lQPaLYLcQf_VBi-CsCtDjCpsxCReVWIGj_wfoE8_aIFmcXfHlw-PLG_lZNGxAa-Z6oamUbj-3PS-XhSgbkBpec5I-U80nfSqXea-feymD5JV9kVQQLMyK08L6Vnyv6yDH63TzVUhwoYscI"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-32 pb-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<!-- Page Header & Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary mb-2">Room Management</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage inventory, adjust pricing, and monitor availability.</p>
+</div>
+<div class="flex flex-col sm:flex-row w-full md:w-auto gap-4 items-center">
+<!-- Search -->
+<div class="relative w-full sm:w-72">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-lowest border-b border-outline-variant focus:border-secondary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors rounded-t-DEFAULT" placeholder="Search by Room ID or Type..." type="text"/>
+</div>
+<!-- CTA -->
+<button class="w-full sm:w-auto bg-primary text-on-primary hover:bg-secondary px-8 py-3 rounded-DEFAULT font-label-md text-label-md transition-colors flex items-center justify-center gap-2 shadow-[0_4px_20px_0_rgba(1,3,6,0.04)]">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                    Add Room
+                </button>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="glass-panel rounded-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-surface-container-highest">
+<th class="p-4 pl-6 font-label-md text-label-md text-on-surface-variant font-semibold">Room ID</th>
+<th class="p-4 font-label-md text-label-md text-on-surface-variant font-semibold">Type</th>
+<th class="p-4 font-label-md text-label-md text-on-surface-variant font-semibold">Base Price</th>
+<th class="p-4 font-label-md text-label-md text-on-surface-variant font-semibold">Status</th>
+<th class="p-4 font-label-md text-label-md text-on-surface-variant font-semibold">Last Cleaned</th>
+<th class="p-4 pr-6 font-label-md text-label-md text-on-surface-variant font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-primary">
+<!-- Row 1 -->
+<tr class="border-b border-surface-container-highest hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-4 pl-6 font-medium">#101</td>
+<td class="p-4">Deluxe Ocean View</td>
+<td class="p-4">$450 / night</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded-sm bg-secondary/10 text-secondary font-label-sm text-label-sm uppercase tracking-wide">
+                                    Available
+                                </span>
+</td>
+<td class="p-4 text-on-surface-variant text-sm">Today, 10:30 AM</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-secondary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-lowest/30 border-b border-surface-container-highest hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-4 pl-6 font-medium">#102</td>
+<td class="p-4">Deluxe Ocean View</td>
+<td class="p-4">$450 / night</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded-sm bg-on-surface-variant/10 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wide">
+                                    Occupied
+                                </span>
+</td>
+<td class="p-4 text-on-surface-variant text-sm">Yesterday, 2:15 PM</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-secondary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-surface-container-highest hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-4 pl-6 font-medium">#201</td>
+<td class="p-4">Signature Suite</td>
+<td class="p-4">$850 / night</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded-sm bg-secondary/10 text-secondary font-label-sm text-label-sm uppercase tracking-wide">
+                                    Available
+                                </span>
+</td>
+<td class="p-4 text-on-surface-variant text-sm">Today, 9:00 AM</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-secondary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-lowest/30 border-b border-surface-container-highest hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-4 pl-6 font-medium">#202</td>
+<td class="p-4">Signature Suite</td>
+<td class="p-4">$850 / night</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-1 rounded-sm bg-error/10 text-error font-label-sm text-label-sm uppercase tracking-wide">
+                                    Maintenance
+                                </span>
+</td>
+<td class="p-4 text-on-surface-variant text-sm">N/A</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-secondary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="bg-surface-container-lowest p-4 border-t border-surface-container-highest flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Showing 1-4 of 124 rooms</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-sm border border-outline-variant text-on-surface-variant opacity-50 cursor-not-allowed">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-sm border border-outline-variant text-on-surface hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-primary-container w-full pt-section-gap pb-12 border-t border-outline-variant dark:border-outline">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1 mb-8 md:mb-0">
+<div class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim mb-4">LUMIÈRE HOTELS</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant">© 2024 Lumière Hotels &amp; Resorts. All rights reserved.</p>
+</div>
+<div class="col-span-1 md:col-span-3 flex flex-wrap gap-x-8 gap-y-4 md:justify-end items-center">
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Cookie Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Sitemap</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Contact Us</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Press Room</a>
+</div>
+</div>
+</footer>
+</body></html>

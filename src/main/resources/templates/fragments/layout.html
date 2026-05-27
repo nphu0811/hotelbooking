@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head(title)">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="${title}">HotelBooking</title>
-    <script th:src="@{/js/theme.js(v=5)}"></script>
-    <script th:src="@{/js/nav.js(v=3)}" defer></script>
-    <link rel="stylesheet" th:href="@{/css/app.css(v=10)}">
+    <title th:text="${title}">LUMIÈRE HOTEL</title>
+    <script th:src="@{/js/theme.js(v=6)}"></script>
+    <script th:src="@{/js/nav.js(v=4)}" defer></script>
+    <link rel="stylesheet" th:href="@{/css/app.css(v=11)}">
     <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
@@ -20,52 +20,52 @@
             <div class="footer-col footer-col-brand">
                 <a th:href="@{/}" class="footer-logo" aria-label="Về trang chủ">
                     <img class="brand-logo" th:src="@{/favicon.svg}" alt="" aria-hidden="true">
-                    <span>HotelBooking</span>
+                    <span>LUMIÈRE HOTEL</span>
                 </a>
-                <p class="footer-desc">Trải nghiệm đặt phòng khách sạn trực tuyến tinh gọn, bảo mật và tin cậy hàng đầu Việt Nam. Tích hợp công nghệ AI gợi ý phòng nghỉ thông minh tối ưu cho kỳ nghỉ của bạn.</p>
+                <p class="footer-desc">Một trải nghiệm đặt phòng yên tĩnh, chính xác và cao cấp cho những kỳ lưu trú được chọn lọc tại Việt Nam.</p>
                 <div class="footer-socials">
                     <a href="#" aria-label="Facebook">FB</a>
                     <a href="#" aria-label="Instagram">IG</a>
                     <a href="#" aria-label="LinkedIn">LI</a>
                 </div>
             </div>
-            
+
             <div class="footer-col">
-                <h4>Liên Kết Nhanh</h4>
+                <h4>Khám phá</h4>
                 <ul class="footer-links">
-                    <li><a th:href="@{/}">Trang Chủ</a></li>
-                    <li><a th:href="@{/rooms/search(checkIn=${T(java.time.LocalDate).now().plusDays(1)},checkOut=${T(java.time.LocalDate).now().plusDays(3)},guests=2)}">Tìm Phòng Trống</a></li>
-                    <li><a th:href="@{/recommend}">AI Gợi Ý Phòng</a></li>
-                    <li><a sec:authorize="isAuthenticated()" th:href="@{/account/bookings}">Lịch Sử Đặt Phòng</a></li>
+                    <li><a th:href="@{/#rooms}">Destinations</a></li>
+                    <li><a th:href="@{/#hanoi}">Suites</a></li>
+                    <li><a th:href="@{/#ai-recommendation}">Experience</a></li>
+                    <li><a th:href="@{/#offers}">Offers</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h4>Hỗ Trợ & Chính Sách</h4>
+                <h4>Tài khoản</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Trung Tâm Trợ Giúp</a></li>
-                    <li><a href="#">Chính Sách Hủy Phòng</a></li>
-                    <li><a href="#">Điều Khoản Sử Dụng</a></li>
-                    <li><a href="#">Chính Sách Bảo Mật</a></li>
+                    <li><a th:href="@{/login/password}">Đăng nhập mật khẩu</a></li>
+                    <li><a th:href="@{/login/otp}">Đăng nhập OTP</a></li>
+                    <li><a th:href="@{/register}">Đăng ký</a></li>
+                    <li><a sec:authorize="isAuthenticated()" th:href="@{/account/bookings}">Lịch sử đặt phòng</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h4>Thông Tin Liên Hệ</h4>
+                <h4>Liên hệ</h4>
                 <p class="footer-contact">
-                    <strong>Địa chỉ:</strong> 12 Tràng Thi, Hoàn Kiếm, Hà Nội, Việt Nam<br>
+                    <strong>Địa chỉ:</strong> 12 Tràng Thi, Hoàn Kiếm, Hà Nội<br>
                     <strong>Điện thoại:</strong> +84 (24) 3934 7888<br>
-                    <strong>Email:</strong> support@hotelbooking.vn<br>
-                    <strong>Giờ làm việc:</strong> 24/7 (Cả ngày lễ)
+                    <strong>Email:</strong> concierge@lumierehotel.vn<br>
+                    <strong>Hỗ trợ:</strong> 24/7
                 </p>
             </div>
         </div>
-        
+
         <div class="footer-divider"></div>
-        
+
         <div class="footer-bottom">
-            <p class="copyright">&copy; <span th:text="${T(java.time.LocalDate).now().getYear()}">2026</span> HotelBooking. Bảo lưu mọi quyền.</p>
-            <p class="attribution">Dữ liệu địa điểm được cung cấp và ghi nhận bản quyền từ OpenStreetMap contributors, Geoapify và Google Places API.</p>
+            <p class="copyright">&copy; <span th:text="${T(java.time.LocalDate).now().getYear()}">2026</span> LUMIÈRE HOTEL. All rights reserved.</p>
+            <p class="attribution">Dữ liệu địa điểm được cung cấp từ OpenStreetMap contributors, Geoapify và Google Places API.</p>
         </div>
     </div>
 </footer>

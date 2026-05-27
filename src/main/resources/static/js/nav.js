@@ -1,5 +1,5 @@
 (function () {
-    var sectionIds = ["home", "rooms", "ai-recommendation", "hanoi", "tphcm", "danang"];
+    var sectionIds = ["home", "rooms", "hanoi", "ai-recommendation", "offers", "tphcm", "danang"];
 
     function onReady(callback) {
         if (document.readyState === "loading") {

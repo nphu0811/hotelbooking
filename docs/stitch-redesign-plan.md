@@ -1,105 +1,94 @@
 # Stitch Redesign Plan
 
 ## Design Goal
-Create a modern premium hotel booking experience for Vietnamese travelers: polished, calm, responsive, and production-ready. The direction comes from MCP Stitch project `5571804125666173906`, whose generated design theme is "Modern Luxury Travel".
+Apply the downloaded Stitch folder direction only, not MCP Stitch: `Modern Platinum Luxury` for `LUMIÈRE HOTEL`.
+
+The target UI is light, white/silver/platinum, soft minimalist, with a black onyx CTA, pill search bar, rounded glass panels, and restrained motion.
 
 ## Global Design System
-- Palette: deep navy `#0B1F33`, slate, white, soft blue `#EAF4FF`, teal/cyan `#11B5C8`, restrained blue accent. Yellow is not a primary color.
-- Typography: Inter/system UI for body and UI controls; strong display type only for true hero contexts. Letter spacing remains `0`.
-- Spacing: 8px rhythm, larger section gaps, compact controls in dense admin areas.
-- Radius: controlled 8-16px card/panel radius; no bubbly oversized shapes for operational controls.
-- Shadow: navy-tinted ambient shadows, subtle lift on hover.
-- Buttons: navy-to-teal primary gradient, quiet white/glass secondary buttons, clear disabled/loading states.
-- Forms: visible labels, strong focus ring, validation messaging, no placeholder-only fields.
-- Cards: image-first room cards/rows with compact metadata.
-- Tables: dense admin tables, sticky-feeling header styling, row hover and status badges.
-- Badge/status: small uppercase chips for amenity/source/status.
-- Navigation/header: sticky glass topbar, desktop same-page scroll links, mobile drawer.
+- Brand: `LUMIÈRE HOTEL`.
+- Logo/favicon: silver-white L/È monogram on deep onyx.
+- Colors: white `#ffffff`, porcelain `#f8f9fa`, platinum `#e5e4e2`, silver `#c8c6c5`, onyx `#000000`.
+- Typography: Montserrat-style stack with local fallback because CSP blocks external font CDNs.
+- Shapes: pill inputs/buttons; 24-32px rounded cards to match Stitch folder.
+- Motion: subtle hover lift and floating key animation only.
+- No yellow as primary color.
 
 ## Header Redesign
-- Must preserve scroll-to-section behavior: public nav items scroll to home sections.
-- Desktop behavior: `Tìm phòng -> #rooms`, `Gợi ý AI -> #ai-recommendation`, city links to city sections.
-- Mobile behavior: hamburger opens/closes an animated drawer; links close drawer after click.
-- Active state: scroll spy marks current section with background and underline.
-- Sticky behavior: header backdrop/shadow strengthens after scroll; anchor scrolling offsets header height.
+- Must preserve scroll-to-section behavior: YES.
+- Desktop behavior: brand left, center nav, auth/book-now actions right.
+- Mobile behavior: compact hamburger panel with smooth open/close.
+- Active state: underline on current hash section.
+- Sticky behavior: sticky top header with light glass background.
 
 ## Auth Pages
 ### Password Login Page
-- Route: `/login/password`.
-- Action remains Spring Security `POST /login` with `username` and `password`.
-- Failure redirects back to password page.
-- Cross-link to OTP page.
+- Keep `/login/password`.
+- Keep form action `/login`.
+- Keep fields `username` and `password`.
+- Apply split image/form layout from Stitch login reference.
 
 ### OTP Login Page
-- Routes: `/login`, `/login/otp`, `/login-otp`.
-- OTP request posts to `/login/otp/request`.
-- OTP verification remains `auth/login-otp.html` after request and posts `/login/otp/verify`.
-- Cross-link to password page.
+- Keep `/login`, `/login/otp`, `/login-otp` request route.
+- Keep request form action `/login/otp/request` and field `identifier`.
+- Keep verify form action `/login/otp/verify` and fields `identifier`, `otp`.
+- Do not merge password and OTP into one page.
 
 ### Register Page
-- Preserve route/action and field names.
-- Match form styling, focus states and OAuth button style.
+- Keep `/register`.
+- Apply same auth shell and design tokens.
 
 ## Home Page
-- Hero has `#home`, premium hotel imagery and elevated search panel.
-- Featured rooms section has `#rooms` for header scroll.
-- AI recommendation section remains external-JS driven to avoid CSP violations.
-- City sections keep `#hanoi`, `#tphcm`, `#danang`.
+- Replace dark photo hero with Stitch-style platinum abstract hero.
+- Add CSS-built key visual inspired by the Stitch 3D key.
+- Use glass/pill search form.
+- Keep real Thymeleaf room data.
+- Keep section anchors for header scroll.
 
 ## Room Listing Page
-- Keep search action and query params.
-- Apply global toolbar, room row/card, chips and price/action styling.
+- Keep backend query parameters and search action.
+- Apply global white card/list/table styles.
 
 ## Room Detail Page
-- Preserve booking form action.
-- Use media-led layout and sticky reserve panel.
+- Keep booking form action and fields.
+- Apply global image, card, booking-box and chip styles.
 
 ## Booking/Payment Pages
-- Preserve booking/payment routes and provider form values.
-- Style hold countdown, summary cards, payment method cards and results consistently.
+- Keep payment provider form actions.
+- Apply global summary/payment card styles.
 
 ## User Pages
-- Profile and booking history use the same panel/form/table system.
-- Verification controls use compact status badges.
+- Profile inherits the same form and panel system.
+- Booking history inherits table/badge/button system.
 
 ## Admin Pages
-- Dashboard uses metric cards, compact operation panels and dense tables.
-- Room/booking/user management keeps actions/forms but improves scan hierarchy.
+- Keep admin routes and data.
+- Apply global glass panel, metric, table and status styles.
 
 ## Animation Plan
-- Hero intro with subtle entrance.
-- Header transition on scroll.
-- Smooth section scroll with header offset.
-- Search focus glow.
-- Room card hover lift and image zoom.
-- Button hover/press.
-- Form validation state.
-- Drawer slide/fade.
-- Admin card entrance and row hover.
-- Skeleton/empty state styles remain lightweight.
-- Respect reduced motion.
+- Header and mobile menu: smooth open/close.
+- Cards/buttons: gentle lift.
+- Hero key: slow floating motion.
+- Respect `prefers-reduced-motion`.
 
 ## Responsive Plan
-- 1440px: full desktop grid/topbar.
-- 1024px: compact topbar and stacked hero/search as needed.
-- 768px: hamburger drawer, stacked forms/cards.
-- 390px: single-column layout, full-width buttons, no text overflow.
+- 1440/1024: full header layout and two-column hero/auth where applicable.
+- 768: mobile nav panel, stacked hero/search.
+- 390: single column, pill search becomes stacked panel.
 
 ## Accessibility Plan
-- Visible focus states on all interactive controls.
-- Labels remain attached to inputs.
-- Header drawer uses `aria-expanded`, `aria-controls`, Escape close and outside-click close.
-- Links/buttons keep sufficient contrast.
-- Room images keep `alt`.
+- Keep semantic forms and labels.
+- Preserve visible focus states.
+- Keep navigation links real anchors/routes.
+- Avoid text overlap through fixed responsive breakpoints.
 
 ## Implementation Checklist
-- [x] Remove active `luxury.css` import and yellow primary token path.
-- [x] Update tokens to navy/teal system.
-- [x] Refactor nav hrefs to section anchors.
-- [x] Add active scroll spy and sticky state in external JS.
-- [x] Add `/login/otp` route and keep auth pages separate.
-- [x] Route password failures to password page.
-- [x] Bump cache versions for CSS/JS.
-- [ ] Build.
-- [ ] Push.
-- [ ] Railway deploy verification.
+- [x] Replace active CSS with `lumiere.css`.
+- [x] Rebrand nav/footer/title to LUMIÈRE HOTEL.
+- [x] Replace favicon with L/È monogram.
+- [x] Redesign home from Stitch folder.
+- [x] Redesign auth pages without merging login flows.
+- [x] Preserve Spring Security form names/actions.
+- [x] Build pass.
+- [ ] Commit/push.
+- [ ] Wait Railway deploy and verify deployed URL.
