@@ -5,6 +5,7 @@
 .\gradlew.bat clean build
 .\gradlew.bat build
 .\gradlew.bat build
+.\gradlew.bat build
 ```
 
 ## Build Result
@@ -18,7 +19,7 @@ PASS
 - Updated theme default to light so old dark local preference does not force the redesigned UI into the wrong visual mode.
 - Preserved Spring Security auth form actions and field names.
 - Rebuilt after final CSS/layout adjustments.
-- Made the home AI CSRF hidden input conditional with a safe fallback name so the homepage renders fully.
+- Removed the home AI hidden CSRF input entirely because Railway still rendered an error when evaluating `_csrf` on the public homepage. The JS fallback already handles a missing token.
 
 ## Final Build Status
 PASS
