@@ -97,7 +97,7 @@
         </div>
 
         <form id="ai-form" class="ai-form-container">
-            <input type="hidden" id="csrf-token" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" id="csrf-token" name="_csrf" th:if="${_csrf != null}" th:value="${_csrf.token}">
             <label for="ai-prompt" class="ai-input-label">Your preference
                 <textarea id="ai-prompt" rows="3" placeholder="Ví dụ: Tôi muốn một suite yên tĩnh ở Đà Lạt cho 2 người, có bồn tắm và ngân sách khoảng 2 triệu/đêm..." required></textarea>
             </label>
