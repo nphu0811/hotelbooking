@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Booking detail')}"></head>
+<head th:replace="~{fragments/layout :: head('Chi tiết đặt phòng')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page detail-layout">
@@ -34,7 +34,7 @@
         </form>
     </section>
     <aside class="booking-box" th:if="${booking.status.name() == 'CHECKED_OUT' and !booking.reviewed}">
-        <p class="page-kicker">Review</p>
+        <p class="page-kicker">Đánh giá</p>
         <h2>Đánh giá lưu trú</h2>
         <form th:action="@{/bookings/{id}/review(id=${booking.id})}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

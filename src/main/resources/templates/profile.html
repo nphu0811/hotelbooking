@@ -5,7 +5,7 @@
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page narrow">
     <section class="auth-panel profile-panel">
-        <p class="page-kicker">Guest profile</p>
+        <p class="page-kicker">Thông tin cá nhân</p>
         <h1>Hồ sơ của bạn</h1>
 
         <p class="alert" th:if="${error}" th:text="${error}"></p>
@@ -60,10 +60,10 @@
                     <strong>Email</strong>
                     <p th:text="${user.email}">email@example.com</p>
                 </div>
-                <span class="verify-badge verified" th:if="${user.emailVerified}">Verified</span>
+                <span class="verify-badge verified" th:if="${user.emailVerified}">Đã xác thực</span>
                 <form th:if="${!user.emailVerified}" th:action="@{/profile/verify-email/request}" method="post">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button class="verify-badge not-verified" type="submit">Not verified</button>
+                    <button class="verify-badge not-verified" type="submit">Chưa xác thực</button>
                 </form>
             </div>
             <form class="otp-inline" th:if="${showEmailOtp}" th:action="@{/profile/verify-email}" method="post"
@@ -81,10 +81,10 @@
                     <strong>Số điện thoại</strong>
                     <p th:text="${user.phone}">0912345678</p>
                 </div>
-                <span class="verify-badge verified" th:if="${user.phoneVerified}">Verified</span>
+                <span class="verify-badge verified" th:if="${user.phoneVerified}">Đã xác thực</span>
                 <form th:if="${!user.phoneVerified}" th:action="@{/profile/verify-phone/request}" method="post">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button class="verify-badge not-verified" type="submit">Not verified</button>
+                    <button class="verify-badge not-verified" type="submit">Chưa xác thực</button>
                 </form>
             </div>
             <form class="otp-inline" th:if="${showPhoneOtp}" th:action="@{/profile/verify-phone}" method="post"

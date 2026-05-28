@@ -107,9 +107,71 @@
         navAuth.insertBefore(btn, navAuth.firstChild);
     }
 
+    function initLanguageSelector() {
+        var langBtn = document.getElementById("lang-btn");
+        var modal = document.getElementById("language-modal");
+        var closeBtn = document.getElementById("modal-close-btn");
+        
+        if (!langBtn || !modal) return;
+        
+        langBtn.addEventListener("click", function() {
+            modal.removeAttribute("hidden");
+            modal.style.display = "flex";
+        });
+        
+        function closeModal() {
+            modal.setAttribute("hidden", "");
+            modal.style.display = "none";
+        }
+        
+        if (closeBtn) {
+            closeBtn.addEventListener("click", closeModal);
+        }
+        
+        modal.addEventListener("click", function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        var langItems = modal.querySelectorAll(".lang-item");
+        langItems.forEach(function(item) {
+            item.addEventListener("click", function() {
+                langItems.forEach(function(el) {
+                    el.classList.remove("active");
+                    var check = el.querySelector(".checkmark");
+                    if (check) check.style.visibility = "hidden";
+                });
+                
+                item.classList.add("active");
+                var check = item.querySelector(".checkmark");
+                if (check) check.style.visibility = "visible";
+                
+                var langCode = item.getAttribute("data-lang");
+                var matches = modal.querySelectorAll('.lang-item[data-lang="' + langCode + '"]');
+                matches.forEach(function(match) {
+                    match.classList.add("active");
+                    var check = match.querySelector(".checkmark");
+                    if (check) check.style.visibility = "visible";
+                });
+
+                var btnImg = langBtn.querySelector("img");
+                var clickedImg = item.querySelector("img");
+                if (btnImg && clickedImg) {
+                    btnImg.src = clickedImg.src;
+                    btnImg.alt = item.querySelector(".lang-name").textContent;
+                }
+                
+                setTimeout(closeModal, 300);
+            });
+        });
+    }
+
     function bindToggle() {
         injectThemeToggle();
         var toggle = document.querySelector("[data-theme-toggle]");
+
+        initLanguageSelector();
 
         if (!toggle) {
             return;

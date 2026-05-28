@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Checkout')}"></head>
+<head th:replace="~{fragments/layout :: head('Thanh toán')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page narrow checkout-panel">
     <header class="page-header">
-        <p class="page-kicker">Checkout</p>
+        <p class="page-kicker">Thanh toán</p>
         <h1>Xác nhận đặt phòng</h1>
         <p>Kiểm tra thông tin giữ chỗ và chọn phương thức thanh toán.</p>
     </header>
@@ -49,7 +49,7 @@
         <p class="alert" th:unless="${hasConfiguredPaymentMethod}">
             Chưa có cổng thanh toán khả dụng. Hãy cấu hình VNPAY hoặc MoMo trong biến môi trường trước khi thanh toán.
         </p>
-        <button class="button" type="submit" aria-label="Continue to payment" data-hold-action
+        <button class="button" type="submit" aria-label="Tiếp tục thanh toán" data-hold-action
                 th:disabled="${!hasConfiguredPaymentMethod}">
             Tiếp tục thanh toán
         </button>

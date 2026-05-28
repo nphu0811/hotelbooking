@@ -22,18 +22,18 @@
     </section>
 
     <div class="hero-search-wrap">
-        <form class="hero-search" th:action="@{/rooms/search}" method="get" aria-label="Search available rooms">
-            <label>Destination
-                <input name="q" placeholder="Where to?">
+        <form class="hero-search" th:action="@{/rooms/search}" method="get" aria-label="Tìm kiếm phòng trống">
+            <label>Điểm đến
+                <input name="q" placeholder="Bạn muốn đi đâu?">
             </label>
-            <label>Dates
+            <label>Ngày nhận / trả
                 <input type="date" name="checkIn" th:value="${checkIn}" required>
                 <input type="date" name="checkOut" th:value="${checkOut}" required>
             </label>
-            <label>Guests
+            <label>Số khách
                 <input type="number" name="guests" min="1" max="10" th:value="${guests}" required>
             </label>
-            <button class="button" type="submit">Search</button>
+            <button class="button" type="submit">Tìm kiếm</button>
         </form>
     </div>
 
@@ -41,25 +41,25 @@
         <div class="section-heading ai-heading">
             <div>
                 <p class="page-kicker">Gợi ý AI</p>
-                <h2>AI stay curation</h2>
-                <p>Describe the mood, destination and budget. LUMIÈRE will shortlist stays that fit your plan.</p>
+                <h2>Đề xuất kỳ nghỉ bằng AI</h2>
+                <p>Mô tả không khí, điểm đến và ngân sách của bạn. LUMIÈRE sẽ gợi ý danh sách các kỳ nghỉ phù hợp với kế hoạch của bạn.</p>
             </div>
         </div>
 
         <form id="ai-form" class="ai-form-container">
-            <label for="ai-prompt" class="ai-input-label">Your preference
+            <label for="ai-prompt" class="ai-input-label">Sở thích của bạn
                 <textarea id="ai-prompt" rows="3" placeholder="Ví dụ: Tôi muốn một suite yên tĩnh ở Đà Lạt cho 2 người, có bồn tắm và ngân sách khoảng 2 triệu/đêm..." required></textarea>
             </label>
             <div class="prompt-suggestions">
-                <span class="suggestion-label">Quick prompts:</span>
+                <span class="suggestion-label">Gợi ý nhanh:</span>
                 <div class="suggestion-chips">
-                    <button type="button" class="btn-suggest" data-suggest-prompt="Tìm phòng cho gia đình 4 người ở Đà Nẵng, phòng rộng, có hồ bơi và ăn sáng.">Family in Đà Nẵng</button>
-                    <button type="button" class="btn-suggest" data-suggest-prompt="Tôi cần phòng Deluxe ở trung tâm phố cổ Hà Nội cho chuyến công tác 2 người, yên tĩnh để làm việc.">Business in Hà Nội</button>
-                    <button type="button" class="btn-suggest" data-suggest-prompt="Kiếm phòng ấm cúng nhìn ra vườn thông ở Đà Lạt cho cặp đôi.">Couple in Đà Lạt</button>
+                    <button type="button" class="btn-suggest" data-suggest-prompt="Tìm phòng cho gia đình 4 người ở Đà Nẵng, phòng rộng, có hồ bơi và ăn sáng.">Gia đình ở Đà Nẵng</button>
+                    <button type="button" class="btn-suggest" data-suggest-prompt="Tôi cần phòng Deluxe ở trung tâm phố cổ Hà Nội cho chuyến công tác 2 người, yên tĩnh để làm việc.">Công tác ở Hà Nội</button>
+                    <button type="button" class="btn-suggest" data-suggest-prompt="Kiếm phòng ấm cúng nhìn ra vườn thông ở Đà Lạt cho cặp đôi.">Cặp đôi ở Đà Lạt</button>
                 </div>
             </div>
             <button class="button" type="submit">
-                <span>Curate with AI</span>
+                <span>Tìm kiếm bằng AI</span>
             </button>
         </form>
 
@@ -69,21 +69,21 @@
     <section id="popular-hotels" class="section">
         <div class="section-heading">
             <div>
-                <p class="page-kicker">Phổ Biến</p>
+                <h2>Phổ Biến</h2>
                 <p>Trải nghiệm lưu trú tinh tế, quy trình đặt phòng trực quan và các kỳ nghỉ được tuyển chọn tại những điểm đến hấp dẫn nhất Việt Nam.</p>
             </div>
-            <a class="button button-muted" th:href="@{/rooms/search(checkIn=${checkIn},checkOut=${checkOut},guests=${guests})}">View all</a>
+            <a class="button button-muted" th:href="@{/rooms/search(checkIn=${checkIn},checkOut=${checkOut},guests=${guests})}">Xem tất cả</a>
         </div>
 
         <div class="room-scroll-container" th:if="${rooms != null and !rooms.isEmpty()}">
             <article class="room-card" th:each="room : ${rooms.content}">
                 <img th:src="${room.primaryImageUrl != null ? room.primaryImageUrl : '/css/room-placeholder.svg'}" th:alt="${room.name}">
                 <div class="room-card-body">
-                    <p class="page-kicker" th:text="${room.roomType}">Suite</p>
-                    <h3 th:text="${room.name}">Room</h3>
-                    <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Hotel</p>
+                    <p class="page-kicker" th:text="${room.roomType}">Phòng</p>
+                    <h3 th:text="${room.name}">Phòng</h3>
+                    <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Khách sạn</p>
                     <p class="price" th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</p>
-                    <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}" aria-label="Detail">View suite</a>
+                    <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}" aria-label="Chi tiết">Xem chi tiết</a>
                 </div>
             </article>
         </div>
@@ -93,20 +93,20 @@
     <section id="hanoi" class="section border-top">
         <div class="section-heading">
             <div>
-                <p class="page-kicker">Hà Nội</p>
+                <h2>Hà Nội</h2>
                 <p>Trải nghiệm lưu trú tinh tế, quy trình đặt phòng trực quan và các kỳ nghỉ được tuyển chọn tại những điểm đến hấp dẫn nhất Việt Nam.</p>
             </div>
-            <a class="button button-muted" th:href="@{/rooms/search(q='Hà Nội',checkIn=${checkIn},checkOut=${checkOut},guests=1)}">Explore</a>
+            <a class="button button-muted" th:href="@{/rooms/search(q='Hà Nội',checkIn=${checkIn},checkOut=${checkOut},guests=1)}">Khám phá</a>
         </div>
 
         <div class="room-scroll-container" th:if="${hanoiRooms != null and !hanoiRooms.isEmpty()}">
             <article class="room-card" th:each="room : ${hanoiRooms.content}">
                 <img th:src="${room.primaryImageUrl != null ? room.primaryImageUrl : '/css/room-placeholder.svg'}" th:alt="${room.name}">
                 <div class="room-card-body">
-                    <h3 th:text="${room.name}">Room</h3>
-                    <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Hotel</p>
+                    <h3 th:text="${room.name}">Phòng</h3>
+                    <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Khách sạn</p>
                     <p class="price" th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</p>
-                    <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}" aria-label="Detail">View suite</a>
+                    <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}" aria-label="Chi tiết">Xem chi tiết</a>
                 </div>
             </article>
         </div>
@@ -116,20 +116,20 @@
     <section id="hcm" class="section border-top">
         <div class="section-heading">
             <div>
-                <p class="page-kicker">TP. HCM</p>
+                <h2>TP. HCM</h2>
                 <p>Trải nghiệm lưu trú tinh tế, quy trình đặt phòng trực quan và các kỳ nghỉ được tuyển chọn tại những điểm đến hấp dẫn nhất Việt Nam.</p>
             </div>
-            <a class="button button-muted" th:href="@{/rooms/search(q='TP. HCM',checkIn=${checkIn},checkOut=${checkOut},guests=1)}">Explore</a>
+            <a class="button button-muted" th:href="@{/rooms/search(q='TP. HCM',checkIn=${checkIn},checkOut=${checkOut},guests=1)}">Khám phá</a>
         </div>
 
         <div class="room-scroll-container" th:if="${hcmRooms != null and !hcmRooms.isEmpty()}">
             <article class="room-card" th:each="room : ${hcmRooms.content}">
                 <img th:src="${room.primaryImageUrl != null ? room.primaryImageUrl : '/css/room-placeholder.svg'}" th:alt="${room.name}">
                 <div class="room-card-body">
-                    <h3 th:text="${room.name}">Room</h3>
-                    <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Hotel</p>
+                    <h3 th:text="${room.name}">Phòng</h3>
+                    <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Khách sạn</p>
                     <p class="price" th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</p>
-                    <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}" aria-label="Detail">View suite</a>
+                    <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}" aria-label="Chi tiết">Xem chi tiết</a>
                 </div>
             </article>
         </div>
@@ -139,27 +139,25 @@
     <section id="danang" class="section border-top">
         <div class="section-heading">
             <div>
-                <p class="page-kicker">Đà Nẵng</p>
+                <h2>Đà Nẵng</h2>
                 <p>Trải nghiệm lưu trú tinh tế, quy trình đặt phòng trực quan và các kỳ nghỉ được tuyển chọn tại những điểm đến hấp dẫn nhất Việt Nam.</p>
             </div>
-            <a class="button button-muted" th:href="@{/rooms/search(q='Đà Nẵng',checkIn=${checkIn},checkOut=${checkOut},guests=1)}">Explore</a>
+            <a class="button button-muted" th:href="@{/rooms/search(q='Đà Nẵng',checkIn=${checkIn},checkOut=${checkOut},guests=1)}">Khám phá</a>
         </div>
 
         <div class="room-scroll-container" th:if="${danangRooms != null and !danangRooms.isEmpty()}">
             <article class="room-card" th:each="room : ${danangRooms.content}">
                 <img th:src="${room.primaryImageUrl != null ? room.primaryImageUrl : '/css/room-placeholder.svg'}" th:alt="${room.name}">
                 <div class="room-card-body">
-                    <h3 th:text="${room.name}">Room</h3>
-                    <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Hotel</p>
+                    <h3 th:text="${room.name}">Phòng</h3>
+                    <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.city}">Khách sạn</p>
                     <p class="price" th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</p>
-                    <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}" aria-label="Detail">View suite</a>
+                    <a class="button button-muted" th:href="@{/rooms/{id}(id=${room.id})}" aria-label="Chi tiết">Xem chi tiết</a>
                 </div>
             </article>
         </div>
         <p class="empty" th:if="${danangRooms == null or danangRooms.isEmpty()}">Chưa có phòng tại khu vực này.</p>
     </section>
-
-    
 </main>
 
 <div th:replace="~{fragments/layout :: footer}"></div>
