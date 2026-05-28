@@ -44,7 +44,18 @@
         }
     }
 
-    setTheme(savedTheme(), false);
+    function initialTheme() {
+        var saved = savedTheme();
+        if (saved) {
+            return saved;
+        }
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return "dark";
+        }
+        return "light";
+    }
+
+    setTheme(initialTheme(), false);
 
     function injectThemeToggle() {
         var navAuth = document.querySelector(".nav-auth");

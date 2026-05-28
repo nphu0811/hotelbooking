@@ -796,3 +796,190 @@
     flex-direction: column !important;
     gap: 8px !important;
 }
+
+/* ==========================================
+   MODERN PLATINUM LUXURY - DARK MODE OVERRIDES
+   ========================================== */
+:root[data-theme="dark"] {
+    background-color: #07111f !important;
+}
+
+:root[data-theme="dark"] body {
+    background-color: #07111f !important;
+    color: #eef6ff !important;
+}
+
+/* Page Headers & Muted Text */
+:root[data-theme="dark"] .page-header h1,
+:root[data-theme="dark"] .page-copy h1,
+:root[data-theme="dark"] .page .detail-copy h1,
+:root[data-theme="dark"] .page .booking-box h2,
+:root[data-theme="dark"] .auth-panel h1,
+:root[data-theme="dark"] .admin-dashboard .panel-title h2,
+:root[data-theme="dark"] .admin-dashboard .mini-list article strong {
+    color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .page-header p,
+:root[data-theme="dark"] .page-copy p,
+:root[data-theme="dark"] .page label,
+:root[data-theme="dark"] .auth-panel .muted,
+:root[data-theme="dark"] .auth-divider,
+:root[data-theme="dark"] .auth-terms,
+:root[data-theme="dark"] .checkout-panel .payment-method-copy small,
+:root[data-theme="dark"] .admin-dashboard .signal-row,
+:root[data-theme="dark"] .admin-dashboard .mini-list article span,
+:root[data-theme="dark"] .page td {
+    color: #94a3b8 !important;
+}
+
+/* Glassmorphism containers in Dark Mode */
+:root[data-theme="dark"] .page .summary,
+:root[data-theme="dark"] .page .hold-status,
+:root[data-theme="dark"] .page .ops-panel,
+:root[data-theme="dark"] .page .profile-panel,
+:root[data-theme="dark"] .page .metric-card,
+:root[data-theme="dark"] .page .table-wrap,
+:root[data-theme="dark"] .page .booking-box,
+:root[data-theme="dark"] .page .review,
+:root[data-theme="dark"] .page .admin-tile {
+    background: rgba(16, 26, 44, 0.6) !important;
+    backdrop-filter: blur(24px) saturate(1.1) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(1.1) !important;
+    border: 1px solid rgba(148, 163, 184, 0.15) !important;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3) !important;
+}
+
+:root[data-theme="dark"] .page .metric-card:hover,
+:root[data-theme="dark"] .page .ops-panel:hover,
+:root[data-theme="dark"] .page .summary:hover,
+:root[data-theme="dark"] .page .booking-box:hover,
+:root[data-theme="dark"] .page .review:hover,
+:root[data-theme="dark"] .page .admin-tile:hover {
+    border-color: rgba(148, 163, 184, 0.35) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(148, 163, 184, 0.2) !important;
+}
+
+/* Form Fields */
+:root[data-theme="dark"] .page input,
+:root[data-theme="dark"] .page select,
+:root[data-theme="dark"] .page textarea,
+:root[data-theme="dark"] .auth-page input,
+:root[data-theme="dark"] .auth-page select,
+:root[data-theme="dark"] .auth-page textarea {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+:root[data-theme="dark"] .page input:focus,
+:root[data-theme="dark"] .page select:focus,
+:root[data-theme="dark"] .page textarea:focus,
+:root[data-theme="dark"] .auth-page input:focus,
+:root[data-theme="dark"] .auth-page select:focus,
+:root[data-theme="dark"] .auth-page textarea:focus {
+    border-color: #ffffff !important;
+    background: rgba(15, 23, 42, 0.8) !important;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Muted / Outline button variants */
+:root[data-theme="dark"] .page .button-muted,
+:root[data-theme="dark"] .page .button-outline,
+:root[data-theme="dark"] .auth-page .button-muted,
+:root[data-theme="dark"] .auth-page .button-outline {
+    border-color: rgba(148, 163, 184, 0.4) !important;
+    color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .page .button-muted:hover,
+:root[data-theme="dark"] .page .button-outline:hover,
+:root[data-theme="dark"] .auth-page .button-muted:hover,
+:root[data-theme="dark"] .auth-page .button-outline:hover {
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #07111f !important;
+}
+
+/* Auth split visual side & cards */
+:root[data-theme="dark"] .auth-shell {
+    background: #07111f !important;
+}
+:root[data-theme="dark"] .auth-form-area {
+    background: #0b1424 !important;
+}
+:root[data-theme="dark"] .auth-link {
+    color: #ffffff !important;
+}
+:root[data-theme="dark"] .oauth-btn {
+    border-color: rgba(148, 163, 184, 0.2) !important;
+    background: rgba(15, 23, 42, 0.6) !important;
+    color: #ffffff !important;
+}
+:root[data-theme="dark"] .oauth-btn:hover {
+    background: #ffffff !important;
+    color: #07111f !important;
+    border-color: #ffffff !important;
+}
+
+/* Table styling */
+:root[data-theme="dark"] .page table {
+    background: rgba(16, 26, 44, 0.5) !important;
+}
+:root[data-theme="dark"] .page th {
+    background: rgba(30, 41, 59, 0.4) !important;
+    color: #ffffff !important;
+    border-bottom-color: rgba(148, 163, 184, 0.2) !important;
+}
+:root[data-theme="dark"] .page tbody tr:hover {
+    background: rgba(30, 41, 59, 0.25) !important;
+}
+
+/* Checkout styling */
+:root[data-theme="dark"] .checkout-panel .summary p {
+    border-bottom-color: rgba(148, 163, 184, 0.15) !important;
+}
+:root[data-theme="dark"] .checkout-panel .summary p strong {
+    color: #94a3b8 !important;
+}
+:root[data-theme="dark"] .checkout-panel .summary p span {
+    color: #ffffff !important;
+}
+:root[data-theme="dark"] .checkout-panel .payment-method-card {
+    border-color: rgba(148, 163, 184, 0.15) !important;
+    background: rgba(16, 26, 44, 0.5) !important;
+}
+:root[data-theme="dark"] .checkout-panel .payment-method-card:hover {
+    border-color: #ffffff !important;
+    background: rgba(16, 26, 44, 0.75) !important;
+}
+:root[data-theme="dark"] .checkout-panel .payment-method-copy strong {
+    color: #ffffff !important;
+}
+:root[data-theme="dark"] .checkout-panel .payment-method-brand {
+    background: #ffffff !important;
+    color: #07111f !important;
+}
+
+/* Admin elements */
+:root[data-theme="dark"] .admin-dashboard .metric-card strong {
+    color: #ffffff !important;
+}
+:root[data-theme="dark"] .admin-dashboard .panel-title a {
+    color: #ffffff !important;
+    border-bottom-color: #ffffff !important;
+}
+:root[data-theme="dark"] .admin-dashboard .panel-title a:hover {
+    color: #cbd5e1 !important;
+    border-bottom-color: #cbd5e1 !important;
+}
+:root[data-theme="dark"] .admin-dashboard .signal-meter {
+    background: rgba(148, 163, 184, 0.15) !important;
+}
+:root[data-theme="dark"] .admin-dashboard .signal-meter span {
+    background: #ffffff !important;
+}
+:root[data-theme="dark"] .admin-dashboard .signal-row strong {
+    color: #ffffff !important;
+}
