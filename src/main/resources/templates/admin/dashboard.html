@@ -1,129 +1,458 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Admin dashboard')}"></head>
-<body>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Admin Dashboard - LUMIÈRE HOTELS</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Global Project Styles (Imported to ensure standard elements like nav & footer render correctly) -->
+    <script th:src="@{/js/theme.js(v=6)}"></script>
+    <script th:src="@{/js/nav.js(v=4)}" defer></script>
+    <link rel="stylesheet" th:href="@{/css/app.css(v=11)}"/>
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary": "#006a61",
+                        "on-tertiary-fixed-variant": "#004e61",
+                        "on-tertiary-fixed": "#001f28",
+                        "primary-fixed": "#e1e2ea",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-fixed": "#00201d",
+                        "surface-tint": "#5c5e65",
+                        "surface-container": "#edeeef",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#006f66",
+                        "tertiary-fixed-dim": "#6cd3f7",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#191c1d",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "outline": "#76777b",
+                        "inverse-on-surface": "#f0f1f2",
+                        "tertiary-fixed": "#b7eaff",
+                        "primary-container": "#1a1d23",
+                        "primary-fixed-dim": "#c4c6ce",
+                        "outline-variant": "#c6c6cb",
+                        "surface-variant": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed-variant": "#44474d",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-primary-container": "#82858c",
+                        "inverse-primary": "#c4c6ce",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary": "#000204",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#191c22",
+                        "on-tertiary-container": "#0590b1",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "primary": "#010306",
+                        "surface": "#f8f9fa",
+                        "on-surface-variant": "#45474b",
+                        "tertiary-container": "#00202a",
+                        "secondary-container": "#86f2e4"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "margin-mobile": "16px",
+                        "section-gap": "120px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px"
+                    },
+                    fontFamily: {
+                        "headline-sm": ["Playfair Display"],
+                        "label-sm": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "display-lg": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["Playfair Display"],
+                        "label-md": ["Manrope"]
+                    },
+                    fontSize: {
+                        "headline-sm": ["24px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 20px 0 rgba(1, 3, 6, 0.04);
+        }
+        html.dark .glass-card {
+            background: rgba(16, 26, 44, 0.6) !important;
+            border: 1px solid rgba(148, 163, 184, 0.15) !important;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3) !important;
+        }
+        /* Override Tailwind defaults to match global redesign variables */
+        body {
+            font-family: var(--font-sans), 'Manrope', sans-serif;
+        }
+    </style>
+    <script>
+        // Sync project's data-theme with Tailwind CSS class-based dark mode
+        (function() {
+            const html = document.documentElement;
+            const syncTheme = () => {
+                const isDark = html.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    html.classList.add('dark');
+                    html.classList.remove('light');
+                } else {
+                    html.classList.remove('dark');
+                    html.classList.add('light');
+                }
+            };
+            syncTheme();
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'data-theme') {
+                        syncTheme();
+                    }
+                });
+            });
+            observer.observe(html, { attributes: true });
+        })();
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
 <div th:replace="~{fragments/nav :: nav}"></div>
-<main class="page admin-page admin-dashboard">
-    <header class="page-header admin-dashboard-header">
-        <div>
-            <p class="page-kicker">Operations center</p>
-            <h1>Admin dashboard</h1>
-            <p>Quan ly inventory, booking, revenue signal va chat luong data tu mot man hinh.</p>
-        </div>
-        <div class="admin-header-actions">
-            <a class="button button-muted button-small" th:href="@{/admin/rooms}">Rooms</a>
-            <a class="button button-muted button-small" th:href="@{/admin/bookings}">Bookings</a>
-            <a class="button button-small" th:href="@{/admin/users}">Users</a>
-        </div>
-    </header>
 
-    <section class="admin-metrics" aria-label="Key metrics">
-        <a class="metric-card" th:href="@{/admin/rooms}">
-            <span class="metric-label">Hotels</span>
-            <strong th:text="${stats.totalHotels}">0</strong>
-            <small><span th:text="${stats.googleHotels}">0</span> Google Places / <span th:text="${stats.overpassHotels}">0</span> OSM</small>
+<!-- Main Layout Wrapper -->
+<div class="flex flex-1 pt-20 max-w-container-max mx-auto w-full">
+    <!-- Side Navigation Sidebar -->
+    <aside class="w-64 hidden lg:flex flex-col gap-2 p-margin-desktop pr-8 border-r border-outline-variant/20 min-h-[calc(100vh-80px)] fixed left-0 top-20 overflow-y-auto">
+        <div class="mb-8">
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-4">Admin Console</p>
+        </div>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary/10 text-secondary font-label-md text-label-md font-bold transition-colors" th:href="@{/admin}">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+            Overview
         </a>
-        <a class="metric-card" th:href="@{/admin/rooms}">
-            <span class="metric-label">Rooms</span>
-            <strong th:text="${stats.totalRooms}">0</strong>
-            <small><span th:text="${stats.availableRooms}">0</span> available now</small>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary font-label-md text-label-md transition-colors" th:href="@{/admin/bookings}">
+            <span class="material-symbols-outlined">book_online</span>
+            Bookings
         </a>
-        <a class="metric-card" th:href="@{/admin/bookings}">
-            <span class="metric-label">Paid stays</span>
-            <strong th:text="${stats.paidBookings}">0</strong>
-            <small><span th:text="${stats.pendingBookings}">0</span> pending payment</small>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary font-label-md text-label-md transition-colors" th:href="@{/admin/rooms}">
+            <span class="material-symbols-outlined">hotel</span>
+            Rooms
         </a>
-        <a class="metric-card" th:href="@{/admin/users}">
-            <span class="metric-label">Active users</span>
-            <strong th:text="${stats.activeUsers}">0</strong>
-            <small><span th:text="${stats.emailVerifiedUsers}">0</span> email verified / <span th:text="${stats.phoneVerifiedUsers}">0</span> phone verified</small>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary font-label-md text-label-md transition-colors" th:href="@{/admin/users}">
+            <span class="material-symbols-outlined">group</span>
+            Guests
         </a>
-    </section>
+    </aside>
 
-    <section class="admin-analytics">
-        <div class="ops-panel">
-            <div class="panel-title">
-                <div>
-                    <p class="page-kicker">Revenue</p>
-                    <h2 th:text="${#numbers.formatDecimal(stats.revenue, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</h2>
-                </div>
-                <span class="badge">Confirmed pipeline</span>
-            </div>
-            <div class="signal-meter" th:style="'--signal:' + ${stats.occupancySignal} + '%'">
-                <span></span>
-            </div>
-            <div class="signal-row">
-                <span>Inventory utilization signal</span>
-                <strong th:text="${stats.occupancySignal + '%'}">0%</strong>
-            </div>
+    <!-- Main Dashboard Content Area -->
+    <main class="flex-1 p-margin-mobile md:p-margin-desktop lg:ml-64 w-full overflow-x-hidden">
+        <div class="mb-10">
+            <h1 class="font-headline-lg text-headline-lg text-primary mb-2">Dashboard Overview</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Real-time metrics and recent activity across all properties.</p>
         </div>
 
-        <div class="ops-panel">
-            <div class="panel-title">
-                <div>
-                    <p class="page-kicker">Data source</p>
-                    <h2>Hotel coverage</h2>
-                </div>
-            </div>
-            <div class="source-bars">
-                <div>
-                    <span>Google Places</span>
-                    <strong th:text="${stats.googleHotels}">0</strong>
-                </div>
-                <div>
-                    <span>OpenStreetMap</span>
-                    <strong th:text="${stats.overpassHotels}">0</strong>
-                </div>
-                <div>
-                    <span>Manual/other</span>
-                    <strong th:text="${stats.totalHotels - stats.googleHotels - stats.overpassHotels}">0</strong>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="admin-board">
-        <div class="ops-panel">
-            <div class="panel-title">
-                <div>
-                    <p class="page-kicker">Recent bookings</p>
-                    <h2>Operational queue</h2>
-                </div>
-                <a th:href="@{/admin/bookings}">View all</a>
-            </div>
-            <div class="mini-list">
-                <article th:each="booking : ${bookings.content}">
+        <!-- Key Metric Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-section-gap">
+            <!-- Card 1: Total Revenue -->
+            <div class="glass-card rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group">
+                <div class="flex justify-between items-start">
                     <div>
-                        <strong th:text="${booking.bookingCode}">HB-0001</strong>
-                        <span th:text="${booking.room.hotel.name + ' - ' + booking.room.name}">Hotel - Room</span>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Total Revenue</p>
+                        <h3 class="font-headline-sm text-headline-sm text-primary font-bold" th:text="${#numbers.formatDecimal(stats.revenue, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</h3>
                     </div>
-                    <span class="status-pill" th:text="${booking.status}">CONFIRMED</span>
-                </article>
-                <p class="empty" th:if="${bookings.empty}">No bookings yet.</p>
+                    <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+                        <span class="material-symbols-outlined text-sm">payments</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="flex items-center text-secondary font-label-sm text-label-sm bg-secondary/10 px-2 py-1 rounded">
+                        <span class="material-symbols-outlined text-[14px] mr-1">arrow_upward</span>
+                        Active
+                    </span>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">Confirmed bookings</span>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full h-12 opacity-50 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 30">
+                        <path d="M0 30 L10 25 L20 28 L30 15 L40 20 L50 10 L60 18 L70 5 L80 12 L90 2 L100 8 L100 30 Z" fill="rgba(0, 106, 97, 0.1)" stroke="none"></path>
+                        <path d="M0 30 L10 25 L20 28 L30 15 L40 20 L50 10 L60 18 L70 5 L80 12 L90 2 L100 8" fill="none" stroke="#006a61" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Card 2: Occupancy Rate -->
+            <div class="glass-card rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Occupancy Rate</p>
+                        <h3 class="font-headline-sm text-headline-sm text-primary font-bold" th:text="${stats.occupancySignal + '%'}">0%</h3>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+                        <span class="material-symbols-outlined text-sm">hotel</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="flex items-center text-secondary font-label-sm text-label-sm bg-secondary/10 px-2 py-1 rounded">
+                        <span class="material-symbols-outlined text-[14px] mr-1">arrow_upward</span>
+                        Live
+                    </span>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">Inventory usage</span>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full h-12 opacity-50 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 30">
+                        <path d="M0 30 L10 20 L20 22 L30 18 L40 24 L50 12 L60 15 L70 8 L80 10 L90 4 L100 6 L100 30 Z" fill="rgba(0, 106, 97, 0.1)" stroke="none"></path>
+                        <path d="M0 30 L10 20 L20 22 L30 18 L40 24 L50 12 L60 15 L70 8 L80 10 L90 4 L100 6" fill="none" stroke="#006a61" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Card 3: Paid Stays / Bookings -->
+            <div class="glass-card rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Paid Stays</p>
+                        <h3 class="font-headline-sm text-headline-sm text-primary font-bold" th:text="${stats.paidBookings}">0</h3>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-error/10 flex items-center justify-center text-error">
+                        <span class="material-symbols-outlined text-sm">event_available</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="flex items-center text-error font-label-sm text-label-sm bg-error/10 px-2 py-1 rounded" th:text="${stats.pendingBookings}">
+                        0
+                    </span>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">pending payment</span>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full h-12 opacity-50 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 30">
+                        <path d="M0 10 L10 8 L20 12 L30 15 L40 10 L50 18 L60 16 L70 20 L80 18 L90 25 L100 22 L100 30 Z" fill="rgba(186, 26, 26, 0.1)" stroke="none"></path>
+                        <path d="M0 10 L10 8 L20 12 L30 15 L40 10 L50 18 L60 16 L70 20 L80 18 L90 25 L100 22" fill="none" stroke="#ba1a1a" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Card 4: Active Users / Guests -->
+            <div class="glass-card rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Active Users</p>
+                        <h3 class="font-headline-sm text-headline-sm text-primary font-bold" th:text="${stats.activeUsers}">0</h3>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+                        <span class="material-symbols-outlined text-sm">people</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant" th:text="${stats.emailVerifiedUsers + ' email verified / ' + stats.phoneVerifiedUsers + ' phone verified'}">
+                        0 verified / 0 verified
+                    </span>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full h-12 opacity-50 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 30">
+                        <path d="M0 25 L10 22 L20 20 L30 18 L40 15 L50 20 L60 12 L70 8 L80 10 L90 5 L100 2 L100 30 Z" fill="rgba(0, 106, 97, 0.1)" stroke="none"></path>
+                        <path d="M0 25 L10 22 L20 20 L30 18 L40 15 L50 20 L60 12 L70 8 L80 10 L90 5 L100 2" fill="none" stroke="#006a61" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+                    </svg>
+                </div>
             </div>
         </div>
 
-        <div class="ops-panel">
-            <div class="panel-title">
+        <!-- Main Charts & Feed Bento Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+            <!-- Left Block: Revenue trends & statistics -->
+            <div class="lg:col-span-2 glass-card rounded-xl p-8 flex flex-col justify-between">
                 <div>
-                    <p class="page-kicker">Inventory</p>
-                    <h2>Rooms to manage</h2>
-                </div>
-                <a th:href="@{/admin/rooms}">View all</a>
-            </div>
-            <div class="mini-list">
-                <article th:each="room : ${rooms.content}">
-                    <div>
-                        <strong th:text="${room.name}">Standard Room</strong>
-                        <span th:text="${room.hotel != null ? room.hotel.name : 'No hotel'}">Hotel</span>
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="font-headline-sm text-headline-sm text-primary">Revenue Trends</h2>
+                        <select class="bg-transparent border-b border-outline-variant text-on-surface-variant font-label-md text-label-md py-1 focus:border-secondary focus:ring-0">
+                            <option>This Year</option>
+                            <option>Last Year</option>
+                        </select>
                     </div>
-                    <span class="status-pill" th:text="${room.status}">AVAILABLE</span>
-                </article>
-                <p class="empty" th:if="${rooms.empty}">No rooms yet. Import hotel data to create room templates.</p>
+                    <div class="w-full h-64 relative">
+                        <!-- Stylized Line Chart Placeholder -->
+                        <div class="absolute inset-0 flex flex-col justify-between text-on-surface-variant/30 font-label-sm text-label-sm">
+                            <div class="border-b border-outline-variant/20 w-full pb-1">1.5M</div>
+                            <div class="border-b border-outline-variant/20 w-full pb-1">1.0M</div>
+                            <div class="border-b border-outline-variant/20 w-full pb-1">500K</div>
+                            <div class="border-b border-outline-variant/20 w-full pb-1">0</div>
+                        </div>
+                        <svg class="absolute inset-0 w-full h-full pt-6 pb-6" preserveaspectratio="none" viewbox="0 0 1000 200">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+                                    <stop offset="0%" stop-color="rgba(0, 106, 97, 0.4)"></stop>
+                                    <stop offset="100%" stop-color="rgba(0, 106, 97, 0.0)"></stop>
+                                </linearGradient>
+                            </defs>
+                            <path d="M0 180 C 100 150, 200 190, 300 120 C 400 50, 500 140, 600 90 C 700 40, 800 80, 900 20 C 950 -10, 1000 30, 1000 30 L 1000 200 L 0 200 Z" fill="url(#chartGradient)"></path>
+                            <path d="M0 180 C 100 150, 200 190, 300 120 C 400 50, 500 140, 600 90 C 700 40, 800 80, 900 20 C 950 -10, 1000 30, 1000 30" fill="none" stroke="#006a61" stroke-linecap="round" stroke-width="4" vector-effect="non-scaling-stroke"></path>
+                            <!-- Data Points -->
+                            <circle cx="300" cy="120" fill="#ffffff" r="6" stroke="#006a61" stroke-width="3"></circle>
+                            <circle cx="600" cy="90" fill="#ffffff" r="6" stroke="#006a61" stroke-width="3"></circle>
+                            <circle cx="900" cy="20" fill="#ffffff" r="6" stroke="#006a61" stroke-width="3"></circle>
+                        </svg>
+                        <div class="absolute bottom-0 w-full flex justify-between text-on-surface-variant font-label-sm text-label-sm mt-4">
+                            <span>Q1</span>
+                            <span>Q2</span>
+                            <span>Q3</span>
+                            <span>Q4</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Utilization & Coverage subgrid -->
+                <div class="mt-8 pt-8 border-t border-outline-variant/20 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Inventory utilization meter -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-label-md text-label-md text-on-surface-variant">Inventory Utilization Signal</span>
+                            <strong class="font-label-md text-label-md text-primary font-bold" th:text="${stats.occupancySignal + '%'}">0%</strong>
+                        </div>
+                        <div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden">
+                            <div class="bg-secondary h-full rounded-full transition-all duration-500" th:style="'width: ' + ${stats.occupancySignal} + '%'"></div>
+                        </div>
+                        <p class="text-xs text-on-surface-variant mt-1">Ratio of paid stays relative to total rooms template.</p>
+                    </div>
+
+                    <!-- Hotel coverage / Data source statistics -->
+                    <div class="flex flex-col gap-2">
+                        <span class="font-label-md text-label-md text-on-surface-variant">Hotel Coverage (Data Sources)</span>
+                        <div class="flex flex-col gap-3 mt-1">
+                            <!-- Google -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-on-surface-variant">Google Places</span>
+                                    <span class="text-primary font-bold" th:text="${stats.googleHotels}">0</span>
+                                </div>
+                                <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-secondary h-full rounded-full" th:style="'width: ' + ${stats.totalHotels == 0 ? 0 : (stats.googleHotels * 100 / stats.totalHotels)} + '%'"></div>
+                                </div>
+                            </div>
+                            <!-- OSM -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-on-surface-variant">OpenStreetMap (OSM)</span>
+                                    <span class="text-primary font-bold" th:text="${stats.overpassHotels}">0</span>
+                                </div>
+                                <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-tertiary-fixed-dim h-full rounded-full" th:style="'width: ' + ${stats.totalHotels == 0 ? 0 : (stats.overpassHotels * 100 / stats.totalHotels)} + '%'"></div>
+                                </div>
+                            </div>
+                            <!-- Manual -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-on-surface-variant">Manual / Other</span>
+                                    <span class="text-primary font-bold" th:text="${stats.totalHotels - stats.googleHotels - stats.overpassHotels}">0</span>
+                                </div>
+                                <div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-outline h-full rounded-full" th:style="'width: ' + ${stats.totalHotels == 0 ? 0 : ((stats.totalHotels - stats.googleHotels - stats.overpassHotels) * 100 / stats.totalHotels)} + '%'"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Block: Operational Feed & Lists -->
+            <div class="lg:col-span-1 flex flex-col gap-gutter">
+                <!-- Recent Bookings Operational Queue -->
+                <div class="glass-card rounded-xl p-8 flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="font-headline-sm text-headline-sm text-primary">Recent Bookings</h2>
+                        <a class="font-label-md text-label-md text-secondary hover:underline" th:href="@{/admin/bookings}">View All</a>
+                    </div>
+                    <div class="flex flex-col gap-6 max-h-[320px] overflow-y-auto pr-2">
+                        <div th:each="booking : ${bookings.content}" class="flex gap-4 relative">
+                            <div class="w-px h-full bg-outline-variant/30 absolute left-[15px] top-8"></div>
+                            <div class="w-8 h-8 rounded-full bg-surface flex items-center justify-center border border-outline-variant/30 z-10 shrink-0">
+                                <span class="material-symbols-outlined text-sm" 
+                                      th:classappend="${booking.status.name() == 'CONFIRMED' ? 'text-secondary' : 
+                                                       (booking.status.name() == 'CHECKED_IN' ? 'text-on-tertiary-container' : 
+                                                       (booking.status.name() == 'CHECKED_OUT' ? 'text-outline' : 'text-error'))}"
+                                      th:text="${booking.status.name() == 'CONFIRMED' ? 'check_circle' : 
+                                                (booking.status.name() == 'CHECKED_IN' ? 'key' : 
+                                                (booking.status.name() == 'CHECKED_OUT' ? 'meeting_room' : 'cancel'))}">check_circle</span>
+                            </div>
+                            <div class="flex-grow min-w-0">
+                                <div class="flex justify-between items-start gap-2">
+                                    <p class="font-body-md text-body-md text-primary font-bold truncate" th:text="${booking.bookingCode}">HB-0001</p>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider shrink-0"
+                                          th:classappend="${booking.status.name() == 'CONFIRMED' ? 'bg-secondary/10 text-secondary' : 
+                                                           (booking.status.name() == 'CHECKED_IN' ? 'bg-on-tertiary-container/10 text-on-tertiary-container' : 
+                                                           (booking.status.name() == 'CHECKED_OUT' ? 'bg-outline/10 text-outline' : 'bg-error/10 text-error'))}"
+                                          th:text="${booking.status}">CONFIRMED</span>
+                                </div>
+                                <p class="font-label-sm text-label-sm text-on-surface-variant mt-1 truncate" th:text="${booking.room.hotel.name + ' - ' + booking.room.name}">Hotel - Room</p>
+                                <p class="font-label-sm text-label-sm text-on-surface-variant/70 mt-0.5 truncate" th:text="${booking.user.fullName + ' • ' + booking.checkIn + ' to ' + booking.checkOut}">Guest • Dates</p>
+                            </div>
+                        </div>
+                        <p class="text-on-surface-variant text-center py-4" th:if="${bookings.empty}">No recent bookings.</p>
+                    </div>
+                </div>
+
+                <!-- Rooms to Manage List -->
+                <div class="glass-card rounded-xl p-8 flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="font-headline-sm text-headline-sm text-primary">Rooms to Manage</h2>
+                        <a class="font-label-md text-label-md text-secondary hover:underline" th:href="@{/admin/rooms}">View All</a>
+                    </div>
+                    <div class="flex flex-col gap-4 max-h-[320px] overflow-y-auto pr-2">
+                        <div th:each="room : ${rooms.content}" class="flex justify-between items-center p-3 rounded-lg bg-surface-container-low hover:bg-surface-container-high transition-colors">
+                            <div class="min-w-0">
+                                <p class="font-body-md text-body-md text-primary font-bold truncate" th:text="${room.name}">Standard Room</p>
+                                <p class="font-label-sm text-label-sm text-on-surface-variant truncate" th:text="${room.hotel != null ? room.hotel.name : 'No hotel'}">Hotel Name</p>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide shrink-0"
+                                  th:classappend="${room.status.name() == 'AVAILABLE' ? 'bg-secondary/10 text-secondary' : 
+                                                   (room.status.name() == 'OCCUPIED' ? 'bg-outline/10 text-outline' : 'bg-error/10 text-error')}"
+                                  th:text="${room.status}">AVAILABLE</span>
+                        </div>
+                        <p class="text-on-surface-variant text-center py-4" th:if="${rooms.empty}">No rooms template found.</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
-</main>
+    </main>
+</div>
+
+<!-- Footer & Global Scripts -->
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
