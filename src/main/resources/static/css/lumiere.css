@@ -1,7 +1,5 @@
 :root,
-:root[data-theme="light"],
-:root[data-theme="dark"] {
-    color-scheme: light;
+:root[data-theme="light"] {
     --color-bg: #f8f9fa;
     --color-bg-soft: #f3f4f5;
     --color-surface: #ffffff;
@@ -1814,6 +1812,112 @@ tbody tr:hover {
     display: flex;
     justify-content: center;
     gap: var(--space-3);
+}
+
+/* ==========================================
+   LUMIERE BASE - DARK MODE OVERRIDES
+   (for hardcoded #ffffff and light backgrounds)
+   ========================================== */
+:root[data-theme="dark"] body {
+    background: var(--color-bg);
+}
+
+:root[data-theme="dark"] body::before {
+    opacity: 0.12;
+}
+
+:root[data-theme="dark"] .room-card,
+:root[data-theme="dark"] .room-row,
+:root[data-theme="dark"] .review,
+:root[data-theme="dark"] .admin-tile {
+    background: var(--color-surface);
+}
+
+:root[data-theme="dark"] .site-footer {
+    background: var(--color-bg-deep);
+}
+
+:root[data-theme="dark"] .auth-form-area {
+    background: var(--color-bg-soft);
+    box-shadow: none;
+}
+
+:root[data-theme="dark"] .error-card {
+    background: var(--color-surface);
+}
+
+:root[data-theme="dark"] .error-icon-container {
+    background: var(--color-bg-soft);
+}
+
+:root[data-theme="dark"] .error-card .error-alert {
+    background: rgba(224, 96, 96, 0.12);
+}
+
+:root[data-theme="dark"] .hero-search {
+    background: rgba(26, 26, 26, 0.6);
+    border-color: var(--color-border);
+}
+
+:root[data-theme="dark"] .topbar.is-scrolled {
+    background: rgba(15, 15, 15, 0.96);
+}
+
+:root[data-theme="dark"] .button-muted,
+:root[data-theme="dark"] .button-outline {
+    background: rgba(26, 26, 26, 0.76);
+    color: var(--color-text);
+}
+
+:root[data-theme="dark"] .nav-menu-toggle {
+    background: rgba(26, 26, 26, 0.82);
+    border-color: var(--color-border);
+}
+
+:root[data-theme="dark"] .payment-method-card {
+    background: rgba(26, 26, 26, 0.7);
+}
+
+:root[data-theme="dark"] .hold-status {
+    background: rgba(26, 26, 26, 0.72);
+}
+
+:root[data-theme="dark"] .oauth-btn {
+    background: rgba(26, 26, 26, 0.7);
+    border-color: var(--color-border);
+}
+
+:root[data-theme="dark"] .profile-fieldset {
+    background: var(--color-bg-soft);
+    border-color: var(--color-border);
+}
+
+:root[data-theme="dark"] .otp-inline {
+    background: var(--color-bg-soft);
+    border-color: var(--color-border);
+}
+
+:root[data-theme="dark"] .hero h1 {
+    color: var(--color-text);
+}
+
+:root[data-theme="dark"] .suggestion-chips .btn-suggest {
+    background: rgba(26, 26, 26, 0.6);
+    border-color: var(--color-border);
+    color: var(--color-text-soft);
+}
+
+:root[data-theme="dark"] .ai-recommendation-panel {
+    background: rgba(26, 26, 26, 0.7);
+    border-color: var(--color-border);
+}
+
+:root[data-theme="dark"] .ai-loader-container,
+:root[data-theme="dark"] .ai-empty-card,
+:root[data-theme="dark"] .ai-error-card,
+:root[data-theme="dark"] .ai-recommendation-reason {
+    background: rgba(26, 26, 26, 0.65);
+    border-color: var(--color-border);
 }
 
 @keyframes key-float {

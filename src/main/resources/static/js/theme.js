@@ -114,7 +114,9 @@
         
         if (!langBtn || !modal) return;
         
-        langBtn.addEventListener("click", function() {
+        langBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             modal.removeAttribute("hidden");
             modal.style.display = "flex";
         });
@@ -125,11 +127,20 @@
         }
         
         if (closeBtn) {
-            closeBtn.addEventListener("click", closeModal);
+            closeBtn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                closeModal();
+            });
         }
         
         modal.addEventListener("click", function(e) {
             if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape" && modal.style.display === "flex") {
                 closeModal();
             }
         });

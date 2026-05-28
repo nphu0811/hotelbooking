@@ -801,12 +801,13 @@
    MODERN PLATINUM LUXURY - DARK MODE OVERRIDES
    ========================================== */
 :root[data-theme="dark"] {
-    background-color: #07111f !important;
+    background-color: #0f0f0f !important;
 }
 
 :root[data-theme="dark"] body {
-    background-color: #07111f !important;
-    color: #eef6ff !important;
+    background-color: #0f0f0f !important;
+    background-image: none !important;
+    color: #f0ece4 !important;
 }
 
 /* Page Headers & Muted Text */
@@ -817,7 +818,7 @@
 :root[data-theme="dark"] .auth-panel h1,
 :root[data-theme="dark"] .admin-dashboard .panel-title h2,
 :root[data-theme="dark"] .admin-dashboard .mini-list article strong {
-    color: #ffffff !important;
+    color: #f0ece4 !important;
 }
 
 :root[data-theme="dark"] .page-header p,
@@ -830,7 +831,7 @@
 :root[data-theme="dark"] .admin-dashboard .signal-row,
 :root[data-theme="dark"] .admin-dashboard .mini-list article span,
 :root[data-theme="dark"] .page td {
-    color: #94a3b8 !important;
+    color: #8a8278 !important;
 }
 
 /* Glassmorphism containers in Dark Mode */
@@ -843,11 +844,26 @@
 :root[data-theme="dark"] .page .booking-box,
 :root[data-theme="dark"] .page .review,
 :root[data-theme="dark"] .page .admin-tile {
-    background: rgba(16, 26, 44, 0.6) !important;
+    background: rgba(26, 26, 26, 0.65) !important;
     backdrop-filter: blur(24px) saturate(1.1) !important;
     -webkit-backdrop-filter: blur(24px) saturate(1.1) !important;
-    border: 1px solid rgba(148, 163, 184, 0.15) !important;
-    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(138, 130, 120, 0.12) !important;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Specific Alerts & Successes in Dark Mode */
+:root[data-theme="dark"] .page .alert {
+    background: rgba(224, 96, 96, 0.15) !important;
+    border-color: rgba(224, 96, 96, 0.3) !important;
+    color: #fb7185 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+:root[data-theme="dark"] .page .success {
+    background: rgba(106, 191, 138, 0.15) !important;
+    border-color: rgba(106, 191, 138, 0.3) !important;
+    color: #6abf8a !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
 }
 
 :root[data-theme="dark"] .page .metric-card:hover,
@@ -856,8 +872,8 @@
 :root[data-theme="dark"] .page .booking-box:hover,
 :root[data-theme="dark"] .page .review:hover,
 :root[data-theme="dark"] .page .admin-tile:hover {
-    border-color: rgba(148, 163, 184, 0.35) !important;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(148, 163, 184, 0.2) !important;
+    border-color: rgba(201, 169, 110, 0.2) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(201, 169, 110, 0.1) !important;
 }
 
 /* Form Fields */
@@ -867,10 +883,10 @@
 :root[data-theme="dark"] .auth-page input,
 :root[data-theme="dark"] .auth-page select,
 :root[data-theme="dark"] .auth-page textarea {
-    background: rgba(15, 23, 42, 0.6) !important;
-    border: 1px solid rgba(148, 163, 184, 0.2) !important;
-    color: #ffffff !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    background: rgba(26, 26, 26, 0.7) !important;
+    border: 1px solid rgba(138, 130, 120, 0.18) !important;
+    color: #f0ece4 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
 }
 
 :root[data-theme="dark"] .page input:focus,
@@ -879,9 +895,9 @@
 :root[data-theme="dark"] .auth-page input:focus,
 :root[data-theme="dark"] .auth-page select:focus,
 :root[data-theme="dark"] .auth-page textarea:focus {
-    border-color: #ffffff !important;
-    background: rgba(15, 23, 42, 0.8) !important;
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08) !important;
+    border-color: #c9a96e !important;
+    background: rgba(26, 26, 26, 0.85) !important;
+    box-shadow: 0 0 0 4px rgba(201, 169, 110, 0.1) !important;
 }
 
 /* Muted / Outline button variants */
@@ -889,99 +905,99 @@
 :root[data-theme="dark"] .page .button-outline,
 :root[data-theme="dark"] .auth-page .button-muted,
 :root[data-theme="dark"] .auth-page .button-outline {
-    border-color: rgba(148, 163, 184, 0.4) !important;
-    color: #ffffff !important;
+    border-color: rgba(138, 130, 120, 0.35) !important;
+    color: #f0ece4 !important;
 }
 
 :root[data-theme="dark"] .page .button-muted:hover,
 :root[data-theme="dark"] .page .button-outline:hover,
 :root[data-theme="dark"] .auth-page .button-muted:hover,
 :root[data-theme="dark"] .auth-page .button-outline:hover {
-    background: #ffffff !important;
-    border-color: #ffffff !important;
-    color: #07111f !important;
+    background: #c9a96e !important;
+    border-color: #c9a96e !important;
+    color: #0f0f0f !important;
 }
 
 /* Auth split visual side & cards */
 :root[data-theme="dark"] .auth-shell {
-    background: #07111f !important;
+    background: #0f0f0f !important;
 }
 :root[data-theme="dark"] .auth-form-area {
-    background: #0b1424 !important;
+    background: #161616 !important;
 }
 :root[data-theme="dark"] .auth-link {
-    color: #ffffff !important;
+    color: #c9a96e !important;
 }
 :root[data-theme="dark"] .oauth-btn {
-    border-color: rgba(148, 163, 184, 0.2) !important;
-    background: rgba(15, 23, 42, 0.6) !important;
-    color: #ffffff !important;
+    border-color: rgba(138, 130, 120, 0.18) !important;
+    background: rgba(26, 26, 26, 0.7) !important;
+    color: #f0ece4 !important;
 }
 :root[data-theme="dark"] .oauth-btn:hover {
-    background: #ffffff !important;
-    color: #07111f !important;
-    border-color: #ffffff !important;
+    background: #c9a96e !important;
+    color: #0f0f0f !important;
+    border-color: #c9a96e !important;
 }
 
 /* Table styling */
 :root[data-theme="dark"] .page table {
-    background: rgba(16, 26, 44, 0.5) !important;
+    background: rgba(26, 26, 26, 0.55) !important;
 }
 :root[data-theme="dark"] .page th {
-    background: rgba(30, 41, 59, 0.4) !important;
-    color: #ffffff !important;
-    border-bottom-color: rgba(148, 163, 184, 0.2) !important;
+    background: rgba(34, 34, 34, 0.5) !important;
+    color: #f0ece4 !important;
+    border-bottom-color: rgba(138, 130, 120, 0.15) !important;
 }
 :root[data-theme="dark"] .page tbody tr:hover {
-    background: rgba(30, 41, 59, 0.25) !important;
+    background: rgba(201, 169, 110, 0.06) !important;
 }
 
 /* Checkout styling */
 :root[data-theme="dark"] .checkout-panel .summary p {
-    border-bottom-color: rgba(148, 163, 184, 0.15) !important;
+    border-bottom-color: rgba(138, 130, 120, 0.12) !important;
 }
 :root[data-theme="dark"] .checkout-panel .summary p strong {
-    color: #94a3b8 !important;
+    color: #8a8278 !important;
 }
 :root[data-theme="dark"] .checkout-panel .summary p span {
-    color: #ffffff !important;
+    color: #f0ece4 !important;
 }
 :root[data-theme="dark"] .checkout-panel .payment-method-card {
-    border-color: rgba(148, 163, 184, 0.15) !important;
-    background: rgba(16, 26, 44, 0.5) !important;
+    border-color: rgba(138, 130, 120, 0.12) !important;
+    background: rgba(26, 26, 26, 0.55) !important;
 }
 :root[data-theme="dark"] .checkout-panel .payment-method-card:hover {
-    border-color: #ffffff !important;
-    background: rgba(16, 26, 44, 0.75) !important;
+    border-color: #c9a96e !important;
+    background: rgba(26, 26, 26, 0.8) !important;
 }
 :root[data-theme="dark"] .checkout-panel .payment-method-copy strong {
-    color: #ffffff !important;
+    color: #f0ece4 !important;
 }
 :root[data-theme="dark"] .checkout-panel .payment-method-brand {
-    background: #ffffff !important;
-    color: #07111f !important;
+    background: #c9a96e !important;
+    color: #0f0f0f !important;
 }
 
 /* Admin elements */
 :root[data-theme="dark"] .admin-dashboard .metric-card strong {
-    color: #ffffff !important;
+    color: #f0ece4 !important;
 }
 :root[data-theme="dark"] .admin-dashboard .panel-title a {
-    color: #ffffff !important;
-    border-bottom-color: #ffffff !important;
+    color: #c9a96e !important;
+    border-bottom-color: #c9a96e !important;
 }
 :root[data-theme="dark"] .admin-dashboard .panel-title a:hover {
-    color: #cbd5e1 !important;
-    border-bottom-color: #cbd5e1 !important;
+    color: #d4b87a !important;
+    border-bottom-color: #d4b87a !important;
 }
 :root[data-theme="dark"] .admin-dashboard .signal-meter {
-    background: rgba(148, 163, 184, 0.15) !important;
+    background: rgba(138, 130, 120, 0.12) !important;
 }
 :root[data-theme="dark"] .admin-dashboard .signal-meter span {
-    background: #ffffff !important;
+    background: #c9a96e !important;
 }
 :root[data-theme="dark"] .admin-dashboard .signal-row strong {
-    color: #ffffff !important;
+    color: #f0ece4 !important;
 }
 
 /* ==========================================
@@ -1000,6 +1016,8 @@
     height: 34px;
     outline: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 10;
 }
 
 .lang-selector-btn:hover {
@@ -1016,19 +1034,19 @@
 }
 
 :root[data-theme="dark"] .lang-selector-btn {
-    border-color: rgba(96, 165, 250, 0.25);
-    background: rgba(15, 23, 42, 0.6);
+    border-color: rgba(201, 169, 110, 0.25);
+    background: rgba(26, 26, 26, 0.6);
 }
 
 :root[data-theme="dark"] .lang-selector-btn:hover {
-    border-color: #ffffff;
+    border-color: #c9a96e;
 }
 
 .modal-overlay {
     position: fixed;
     inset: 0;
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
@@ -1163,52 +1181,53 @@
 
 /* Dark mode styling for language selector modal */
 :root[data-theme="dark"] .modal-container {
-    background: #101a2c;
-    border-color: rgba(148, 163, 184, 0.15);
-    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    background: #1a1a1a;
+    border-color: rgba(138, 130, 120, 0.12);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
 }
 
 :root[data-theme="dark"] .modal-title {
-    color: #ffffff !important;
-    border-bottom-color: rgba(148, 163, 184, 0.2);
+    color: #f0ece4 !important;
+    border-bottom-color: rgba(138, 130, 120, 0.15);
 }
 
 :root[data-theme="dark"] .lang-section-title {
-    color: #ffffff !important;
+    color: #f0ece4 !important;
 }
 
 :root[data-theme="dark"] .lang-item {
-    border-color: rgba(148, 163, 184, 0.15);
-    background: rgba(15, 23, 42, 0.5);
+    border-color: rgba(138, 130, 120, 0.12);
+    background: rgba(22, 22, 22, 0.6);
 }
 
 :root[data-theme="dark"] .lang-item:hover {
-    border-color: #ffffff;
-    background: rgba(15, 23, 42, 0.8);
+    border-color: #c9a96e;
+    background: rgba(34, 34, 34, 0.8);
 }
 
 :root[data-theme="dark"] .lang-item.active {
-    border-color: #ffffff;
-    background: rgba(15, 23, 42, 0.8);
+    border-color: #c9a96e;
+    background: rgba(34, 34, 34, 0.8);
 }
 
 :root[data-theme="dark"] .lang-name {
-    color: #cbd5e1;
+    color: #b8b0a4;
 }
 
 :root[data-theme="dark"] .lang-item.active .lang-name {
-    color: #60a5fa;
+    color: #c9a96e;
 }
 
 :root[data-theme="dark"] .checkmark {
-    color: #60a5fa;
+    color: #c9a96e;
 }
 
 :root[data-theme="dark"] .modal-close {
-    color: #94a3b8;
+    color: #8a8278;
 }
 
 :root[data-theme="dark"] .modal-close:hover {
-    color: #ffffff;
-    background: rgba(255,255,255,0.08);
+    color: #f0ece4;
+    background: rgba(255,255,255,0.06);
 }
+
