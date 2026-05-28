@@ -201,8 +201,184 @@
         });
     }
 
+    function loadScript(src, callback) {
+        var s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.onload = callback;
+        s.onerror = function () {
+            console.warn("Failed to load CDN script: " + src);
+        };
+        document.head.appendChild(s);
+    }
+
+    function initThreeJsKey() {
+        var heroSection = document.querySelector(".home-shell .hero");
+        var keyStage = document.querySelector(".home-shell .hero-key-stage");
+        if (!heroSection || !keyStage) {
+            return;
+        }
+
+        // Dynamically load Three.js from a robust CDN
+        loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js", function () {
+            try {
+                if (typeof THREE === "undefined") {
+                    return;
+                }
+
+                // Create container overlay inside hero
+                var container = document.createElement("div");
+                container.id = "threejs-container";
+                heroSection.appendChild(container);
+
+                // Setup Scene
+                var scene = new THREE.Scene();
+
+                // Camera
+                var camera = new THREE.PerspectiveCamera(75, heroSection.clientWidth / heroSection.clientHeight, 0.1, 1000);
+                camera.position.z = 5;
+
+                // Renderer
+                var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setSize(heroSection.clientWidth, heroSection.clientHeight);
+                renderer.setPixelRatio(window.devicePixelRatio || 1);
+                container.appendChild(renderer.domElement);
+
+                // Group
+                var compositionGroup = new THREE.Group();
+                scene.add(compositionGroup);
+
+                // Materials - High-fidelity shiny Platinum/Silver
+                var platinumMaterial = new THREE.MeshPhysicalMaterial({
+                    color: 0xe5e7eb,
+                    metalness: 0.95,
+                    roughness: 0.15,
+                    clearcoat: 1.0,
+                    clearcoatRoughness: 0.05,
+                    reflectivity: 1.0
+                });
+
+                // Key Factory
+                function createKey() {
+                    var keyGroup = new THREE.Group();
+
+                    // Head (Torus Ring)
+                    var headGeom = new THREE.TorusGeometry(0.45, 0.11, 16, 100);
+                    var head = new THREE.Mesh(headGeom, platinumMaterial);
+                    head.position.y = 1.3;
+                    keyGroup.add(head);
+
+                    // Shaft (Cylinder)
+                    var shaftGeom = new THREE.CylinderGeometry(0.085, 0.085, 1.8, 16);
+                    var shaft = new THREE.Mesh(shaftGeom, platinumMaterial);
+                    shaft.position.y = 0.3;
+                    keyGroup.add(shaft);
+
+                    // Teeth (Boxes)
+                    var tooth1Geom = new THREE.BoxGeometry(0.26, 0.16, 0.08);
+                    var tooth1 = new THREE.Mesh(tooth1Geom, platinumMaterial);
+                    tooth1.position.set(0.16, -0.2, 0);
+                    keyGroup.add(tooth1);
+
+                    var tooth2Geom = new THREE.BoxGeometry(0.36, 0.16, 0.08);
+                    var tooth2 = new THREE.Mesh(tooth2Geom, platinumMaterial);
+                    tooth2.position.set(0.21, -0.5, 0);
+                    keyGroup.add(tooth2);
+
+                    return keyGroup;
+                }
+
+                // Add 1 Key
+                var key = createKey();
+                key.rotation.z = -Math.PI / 4;
+                compositionGroup.add(key);
+
+                // Position group strategically on the right side
+                function updateLayout() {
+                    if (window.innerWidth > 768) {
+                        compositionGroup.position.set(2.8, -0.1, -1.8);
+                        compositionGroup.scale.set(1.5, 1.5, 1.5);
+                    } else {
+                        compositionGroup.position.set(0, 0.8, -3.2);
+                        compositionGroup.scale.set(1.15, 1.15, 1.15);
+                    }
+                }
+                updateLayout();
+
+                // Lighting
+                var ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+                scene.add(ambientLight);
+
+                var directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
+                directionalLight.position.set(5, 5, 5);
+                scene.add(directionalLight);
+
+                var pointLight = new THREE.PointLight(0xe0dfdf, 2.5, 10);
+                pointLight.position.set(-2, 2, 2);
+                scene.add(pointLight);
+
+                // Mouse interaction coordinates
+                var mouseX = 0;
+                var mouseY = 0;
+                var targetX = 0;
+                var targetY = 0;
+                var windowHalfX = window.innerWidth / 2;
+                var windowHalfY = window.innerHeight / 2;
+
+                document.addEventListener("mousemove", function (event) {
+                    mouseX = (event.clientX - windowHalfX) * 0.001;
+                    mouseY = (event.clientY - windowHalfY) * 0.001;
+                });
+
+                // Clock for delta animation
+                var clock = new THREE.Clock();
+
+                // Animation loop
+                function animate() {
+                    requestAnimationFrame(animate);
+                    var elapsedTime = clock.getElapsedTime();
+
+                    // Parallax cursor tracking
+                    targetX = mouseX * 0.55;
+                    targetY = mouseY * 0.55;
+
+                    compositionGroup.rotation.x += 0.05 * (targetY - compositionGroup.rotation.x);
+                    compositionGroup.rotation.y += 0.05 * (targetX - compositionGroup.rotation.y);
+
+                    // Float y-axis bounciness
+                    compositionGroup.position.y = Math.sin(elapsedTime * 1.5) * 0.18;
+
+                    // Rotational key swings
+                    key.rotation.x = Math.sin(elapsedTime * 1.2) * 0.08;
+                    key.rotation.y = Math.cos(elapsedTime * 0.8) * 0.08;
+
+                    renderer.render(scene, camera);
+                }
+
+                animate();
+
+                // WebGL renderer compiles successfully, hide static fallback key stage safely
+                keyStage.classList.add("threejs-active");
+
+                // Handle resize event
+                window.addEventListener("resize", function () {
+                    if (heroSection && camera && renderer) {
+                        camera.aspect = heroSection.clientWidth / heroSection.clientHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(heroSection.clientWidth, heroSection.clientHeight);
+                        updateLayout();
+                    }
+                });
+
+            } catch (err) {
+                console.warn("WebGL is unsupported or failed, relying on CSS fallback key:", err);
+            }
+        });
+    }
+
     onReady(function () {
         bindSuggestions();
         bindHomeAiForm();
+        initThreeJsKey();
     });
 })();

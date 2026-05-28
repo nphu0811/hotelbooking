@@ -1,0 +1,798 @@
+/* ==========================================
+   MODERN PLATINUM LUXURY - GLOBAL SYSTEM STYLE
+   ========================================== */
+
+/* 1. Global Page Structure Overrides */
+.page {
+    padding-top: 120px !important;
+    padding-bottom: 96px !important;
+    animation: page-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes page-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Page Headers */
+.page-header {
+    margin-bottom: 48px !important;
+}
+
+.page-header h1 {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 38px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    color: #1A1A1A !important;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+}
+
+.page-header p {
+    font-size: 16px !important;
+    color: #5d5e5f !important;
+    line-height: 1.6 !important;
+}
+
+.page-kicker {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.15em !important;
+    text-transform: uppercase !important;
+    color: #747878 !important;
+    margin-bottom: 8px !important;
+}
+
+/* 2. Glassmorphism Tonal Container Layers */
+.page .summary,
+.page .hold-status,
+.page .ops-panel,
+.page .profile-panel,
+.page .metric-card,
+.page .table-wrap,
+.page .alert,
+.page .success,
+.page .booking-box,
+.page .review,
+.page .admin-tile {
+    background: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(24px) saturate(1.1) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(1.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    border-radius: 24px !important;
+    padding: 32px !important;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Hover effects for premium lift and ambient glow */
+.page .metric-card:hover,
+.page .ops-panel:hover,
+.page .summary:hover,
+.page .booking-box:hover,
+.page .review:hover,
+.page .admin-tile:hover {
+    transform: translateY(-4px) !important;
+    border-color: rgba(116, 120, 120, 0.3) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.8) !important;
+}
+
+/* 3. Luxury Form Overrides (Pills, Outlines, Smooth glows) */
+.page label {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    color: #626363 !important;
+    gap: 6px !important;
+    margin-bottom: 20px !important;
+}
+
+.page input,
+.page select,
+.page textarea,
+.auth-page input,
+.auth-page select,
+.auth-page textarea {
+    border-radius: 9999px !important;
+    border: 1px solid rgba(116, 120, 120, 0.2) !important;
+    background: rgba(255, 255, 255, 0.72) !important;
+    padding: 16px 24px !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    color: #1A1A1A !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    min-height: 52px !important;
+    outline: none !important;
+}
+
+.page textarea,
+.auth-page textarea {
+    border-radius: 20px !important;
+    min-height: 120px !important;
+    resize: vertical !important;
+}
+
+.page input:focus,
+.page select:focus,
+.page textarea:focus,
+.auth-page input:focus,
+.auth-page select:focus,
+.auth-page textarea:focus {
+    border-color: #1A1A1A !important;
+    background: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Premium Buttons Styling */
+.page button.button,
+.page a.button,
+.auth-page button.button,
+.auth-page a.button {
+    border-radius: 9999px !important;
+    padding: 14px 32px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    background: #1A1A1A !important;
+    border: 1px solid #1A1A1A !important;
+    color: #ffffff !important;
+    text-transform: uppercase !important;
+    min-height: 50px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    cursor: pointer !important;
+}
+
+.page button.button:hover,
+.page a.button:hover,
+.auth-page button.button:hover,
+.auth-page a.button:hover {
+    background: #333333 !important;
+    border-color: #333333 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18) !important;
+}
+
+.page button.button:active,
+.page a.button:active,
+.auth-page button.button:active,
+.auth-page a.button:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+/* Muted / Outline button variants */
+.page .button-muted,
+.page .button-outline,
+.auth-page .button-muted,
+.auth-page .button-outline {
+    background: transparent !important;
+    border: 1px solid rgba(116, 120, 120, 0.4) !important;
+    color: #1A1A1A !important;
+    box-shadow: none !important;
+}
+
+.page .button-muted:hover,
+.page .button-outline:hover,
+.auth-page .button-muted:hover,
+.auth-page .button-outline:hover {
+    background: #1A1A1A !important;
+    border-color: #1A1A1A !important;
+    color: #ffffff !important;
+}
+
+/* Small Button variants */
+.page .button-small,
+.auth-page .button-small {
+    min-height: 38px !important;
+    padding: 0 20px !important;
+    font-size: 11px !important;
+}
+
+/* 4. AuthSplit Redesign (Login / Register / Verification) */
+.auth-page {
+    padding: 0 !important;
+    min-height: 100vh !important;
+    display: flex !important;
+    align-items: stretch !important;
+}
+
+.auth-shell {
+    width: 100% !important;
+    min-height: 100vh !important;
+    display: grid !important;
+    grid-template-columns: 1.15fr 0.85fr !important;
+    background: #F8F9FA !important;
+    border: none !important;
+}
+
+.auth-visual {
+    background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1800&q=82') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    position: relative !important;
+    padding: 80px !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    min-height: 100vh !important;
+}
+
+.auth-visual::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.6) 100%) !important;
+    z-index: 1;
+}
+
+.auth-visual-content {
+    position: relative !important;
+    z-index: 2 !important;
+    color: #ffffff !important;
+    max-width: 540px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.auth-visual-content .page-kicker {
+    color: rgba(255, 255, 255, 0.7) !important;
+    letter-spacing: 0.25em !important;
+    font-size: 12px !important;
+}
+
+.auth-visual-content h1 {
+    color: #ffffff !important;
+    font-size: 52px !important;
+    font-weight: 700 !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.02em !important;
+    margin: 0 !important;
+}
+
+.auth-visual-content p:not(.page-kicker) {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 17px !important;
+    line-height: 1.65 !important;
+    margin: 0 !important;
+}
+
+.auth-form-area {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 80px !important;
+    background: #ffffff !important;
+    box-shadow: -12px 0 42px rgba(1, 3, 6, 0.02) !important;
+}
+
+.auth-panel {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    width: 100% !important;
+    max-width: 420px !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+
+.auth-panel h1 {
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    color: #1A1A1A !important;
+    margin-top: 8px !important;
+    margin-bottom: 4px !important;
+}
+
+.auth-panel .muted {
+    font-size: 15px !important;
+    color: #5d5e5f !important;
+}
+
+.auth-panel form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+.auth-panel .button {
+    width: 100% !important;
+}
+
+.auth-switch {
+    width: 100% !important;
+    margin-top: 4px !important;
+}
+
+.auth-divider {
+    color: #747878 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    margin: 24px 0 !important;
+}
+
+.oauth-buttons {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+}
+
+.oauth-btn {
+    border-radius: 9999px !important;
+    border: 1px solid rgba(116, 120, 120, 0.2) !important;
+    padding: 12px 24px !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 600 !important;
+    color: #1A1A1A !important;
+    font-size: 14px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.oauth-btn:hover {
+    background: #1A1A1A !important;
+    color: #ffffff !important;
+    border-color: #1A1A1A !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
+.auth-terms {
+    font-size: 12px !important;
+    line-height: 1.55 !important;
+    color: #747878 !important;
+    margin: 16px 0 0 !important;
+}
+
+.auth-link {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-decoration: underline !important;
+    text-underline-offset: 4px !important;
+    color: #1A1A1A !important;
+    align-self: center !important;
+}
+
+/* Captcha area */
+.captcha-hook {
+    border: 1px dashed rgba(116, 120, 120, 0.4) !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    background: rgba(116, 120, 120, 0.05) !important;
+    margin-bottom: 12px !important;
+}
+
+/* 5. Checkout & Reservation Countdowns */
+.checkout-panel .summary {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px 32px !important;
+    margin-bottom: 24px !important;
+}
+
+.checkout-panel .summary p {
+    display: flex !important;
+    justify-content: space-between !important;
+    border-bottom: 1px solid rgba(196, 199, 199, 0.2) !important;
+    padding-bottom: 12px !important;
+    margin: 0 !important;
+    font-size: 15px !important;
+}
+
+.checkout-panel .summary p strong {
+    color: #626363 !important;
+    font-weight: 600 !important;
+}
+
+.checkout-panel .summary p span {
+    color: #1A1A1A !important;
+    font-weight: 700 !important;
+}
+
+.checkout-panel .summary p span.price {
+    font-size: 18px !important;
+}
+
+/* Hold status timer widget */
+.checkout-panel .hold-status {
+    background: linear-gradient(135deg, #1A1A1A 0%, #2e3132 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 24px 32px !important;
+    border-radius: 20px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 32px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+}
+
+.checkout-panel .hold-status .page-kicker {
+    color: rgba(255, 255, 255, 0.6) !important;
+    margin: 0 !important;
+}
+
+.checkout-panel .hold-status strong[data-hold-countdown] {
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    color: #ffffff !important;
+    line-height: 1.1 !important;
+}
+
+.checkout-panel .hold-status small {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 12px !important;
+}
+
+.checkout-panel .hold-status .badge {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 8px 16px !important;
+    border-radius: 9999px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+}
+
+/* Payment selection options */
+.checkout-panel .payment-method-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    margin-bottom: 32px !important;
+}
+
+.checkout-panel .payment-method-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+    padding: 20px 24px !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(116, 120, 120, 0.15) !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    position: relative !important;
+}
+
+.checkout-panel .payment-method-card:hover {
+    border-color: #1A1A1A !important;
+    background: #ffffff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+.checkout-panel .payment-method-card input[type="radio"] {
+    accent-color: #1A1A1A !important;
+    width: 20px !important;
+    height: 20px !important;
+    margin: 0 !important;
+    min-height: auto !important;
+    cursor: pointer !important;
+}
+
+.checkout-panel .payment-method-brand {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    background: #1A1A1A !important;
+    color: #ffffff !important;
+    padding: 6px 12px !important;
+    border-radius: 9999px !important;
+}
+
+.checkout-panel .payment-method-copy {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+}
+
+.checkout-panel .payment-method-copy strong {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #1A1A1A !important;
+}
+
+.checkout-panel .payment-method-copy small {
+    font-size: 12px !important;
+    color: #5d5e5f !important;
+}
+
+.checkout-panel .payment-method-state {
+    margin-left: auto !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    color: #747878 !important;
+}
+
+.checkout-panel button[type="submit"] {
+    width: 100% !important;
+    min-height: 54px !important;
+}
+
+/* 6. Sleek Translucent Tables (Booking History) */
+.page .table-wrap {
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(196, 199, 199, 0.3) !important;
+}
+
+.page table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+}
+
+.page th {
+    background: rgba(196, 199, 199, 0.15) !important;
+    color: #1A1A1A !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    padding: 18px 24px !important;
+    border-bottom: 1px solid rgba(196, 199, 199, 0.25) !important;
+}
+
+.page td {
+    padding: 18px 24px !important;
+    font-size: 14px !important;
+    color: #444748 !important;
+    border-bottom: 1px solid rgba(196, 199, 199, 0.15) !important;
+}
+
+.page tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+.page tbody tr {
+    transition: background 0.3s ease !important;
+}
+
+.page tbody tr:hover {
+    background: rgba(255, 255, 255, 0.72) !important;
+}
+
+/* Status Badges */
+.page .badge,
+.page .status-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 28px !important;
+    padding: 0 12px !important;
+    border-radius: 9999px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    border: 1px solid rgba(116, 120, 120, 0.2) !important;
+    background: rgba(116, 120, 120, 0.08) !important;
+    color: #1A1A1A !important;
+}
+
+.page .badge.CONFIRMED,
+.page .badge.PAID,
+.page .status-pill.AVAILABLE {
+    border-color: rgba(0, 106, 97, 0.2) !important;
+    background: rgba(0, 106, 97, 0.08) !important;
+    color: #006a61 !important;
+}
+
+.page .badge.PENDING_PAYMENT,
+.page .badge.PENDING {
+    border-color: rgba(122, 106, 50, 0.2) !important;
+    background: rgba(122, 106, 50, 0.08) !important;
+    color: #7a6a32 !important;
+}
+
+.page .badge.CANCELLED,
+.page .badge.FAILED {
+    border-color: rgba(186, 26, 26, 0.2) !important;
+    background: rgba(186, 26, 26, 0.08) !important;
+    color: #ba1a1a !important;
+}
+
+/* 7. Admin Dashboard Bento Center */
+.admin-dashboard .admin-metrics {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 24px !important;
+    margin-top: 32px !important;
+    margin-bottom: 32px !important;
+}
+
+.admin-dashboard .metric-card {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 24px !important;
+    border-radius: 24px !important;
+    text-decoration: none !important;
+}
+
+.admin-dashboard .metric-card strong {
+    font-size: 38px !important;
+    font-weight: 700 !important;
+    color: #1A1A1A !important;
+    line-height: 1 !important;
+}
+
+.admin-dashboard .metric-card small {
+    font-size: 12px !important;
+    color: #747878 !important;
+    display: block !important;
+    margin-top: 4px !important;
+}
+
+.admin-dashboard .admin-analytics {
+    display: grid !important;
+    grid-template-columns: 1.15fr 0.85fr !important;
+    gap: 24px !important;
+    margin-bottom: 24px !important;
+}
+
+.admin-dashboard .admin-board {
+    display: grid !important;
+    grid-template-columns: 1.15fr 0.85fr !important;
+    gap: 24px !important;
+}
+
+.admin-dashboard .ops-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    padding: 32px !important;
+}
+
+.admin-dashboard .panel-title {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+}
+
+.admin-dashboard .panel-title h2 {
+    font-size: 26px !important;
+    font-weight: 600 !important;
+    color: #1A1A1A !important;
+    margin: 4px 0 0 !important;
+}
+
+.admin-dashboard .panel-title a {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    color: #1A1A1A !important;
+    border-bottom: 1px solid #1A1A1A !important;
+    padding-bottom: 2px !important;
+}
+
+.admin-dashboard .panel-title a:hover {
+    color: #5d5e5f !important;
+    border-color: #5d5e5f !important;
+}
+
+/* Revenue signal utilization meter */
+.admin-dashboard .signal-meter {
+    background: rgba(196, 199, 199, 0.25) !important;
+    height: 8px !important;
+    border-radius: 9999px !important;
+    overflow: hidden !important;
+    margin: 8px 0 !important;
+}
+
+.admin-dashboard .signal-meter span {
+    background: #1A1A1A !important;
+    height: 100% !important;
+    border-radius: 9999px !important;
+}
+
+.admin-dashboard .signal-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 14px !important;
+    color: #5d5e5f !important;
+}
+
+.admin-dashboard .signal-row strong {
+    color: #1A1A1A !important;
+    font-weight: 700 !important;
+}
+
+/* Mini Lists inside boards */
+.admin-dashboard .mini-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.admin-dashboard .mini-list article {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 16px 0 !important;
+    border-bottom: 1px solid rgba(196, 199, 199, 0.15) !important;
+}
+
+.admin-dashboard .mini-list article:last-child {
+    border-bottom: none !important;
+}
+
+.admin-dashboard .mini-list article strong {
+    font-size: 15px !important;
+    color: #1A1A1A !important;
+}
+
+.admin-dashboard .mini-list article span {
+    font-size: 13px !important;
+    color: #747878 !important;
+}
+
+/* 8. Room Details Page Styling (.rooms .detail-layout) */
+.page .detail-layout {
+    display: grid !important;
+    grid-template-columns: 1.25fr 0.75fr !important;
+    gap: 48px !important;
+    align-items: start !important;
+}
+
+.page .detail-main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 32px !important;
+}
+
+.page .detail-image,
+.page .room-row img {
+    border-radius: 24px !important;
+    overflow: hidden !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important;
+}
+
+.page .detail-copy h1 {
+    font-size: 36px !important;
+    font-weight: 700 !important;
+    color: #1A1A1A !important;
+}
+
+.page .booking-box {
+    position: sticky !important;
+    top: 110px !important;
+}
+
+.page .booking-box h2 {
+    font-size: 26px !important;
+    font-weight: 600 !important;
+    color: #1A1A1A !important;
+    margin-bottom: 24px !important;
+}
+
+.page .booking-box form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
