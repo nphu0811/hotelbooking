@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Dashboard Overview')}"></head>
+<head th:replace="~{fragments/layout :: head('Bảng điều khiển')}"></head>
 <body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col">
 <!-- Top Navigation Bar -->
 <div th:replace="~{fragments/nav :: nav}"></div>
@@ -10,51 +10,51 @@
     <!-- Header Area -->
     <header class="page-header">
         <div>
-            <p class="page-kicker">Stay operations</p>
-            <h1>Dashboard Overview</h1>
+            <p class="page-kicker">Vận hành lưu trú</p>
+            <h1>Bảng điều khiển</h1>
         </div>
-        <p>Real-time metrics and recent activity across all properties.</p>
+        <p>Chỉ số thời gian thực và hoạt động gần đây trên toàn hệ thống.</p>
     </header>
 
     <!-- Key Metrics Bento Center -->
     <div class="admin-metrics">
         <!-- Card 1: Total Revenue -->
         <div class="metric-card">
-            <p class="page-kicker">Total Revenue</p>
+            <p class="page-kicker">Tổng doanh thu</p>
             <strong th:text="${#numbers.formatDecimal(stats.revenue, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</strong>
             <div class="signal-row" style="margin-top: auto; display: flex; align-items: center; justify-content: space-between;">
-                <span class="badge CONFIRMED">Active</span>
-                <small class="text-on-surface-variant text-xs">Confirmed bookings</small>
+                <span class="badge CONFIRMED">Đang hoạt động</span>
+                <small class="text-on-surface-variant text-xs">Đặt phòng đã xác nhận</small>
             </div>
         </div>
 
         <!-- Card 2: Occupancy Rate -->
         <div class="metric-card">
-            <p class="page-kicker">Occupancy Rate</p>
+            <p class="page-kicker">Tỷ lệ lấp đầy</p>
             <strong th:text="${stats.occupancySignal + '%'}">0%</strong>
             <div class="signal-row" style="margin-top: auto; display: flex; align-items: center; justify-content: space-between;">
-                <span class="badge CONFIRMED">Live</span>
-                <small class="text-on-surface-variant text-xs">Inventory usage</small>
+                <span class="badge CONFIRMED">Trực tiếp</span>
+                <small class="text-on-surface-variant text-xs">Mức sử dụng kho phòng</small>
             </div>
         </div>
 
         <!-- Card 3: Paid Stays -->
         <div class="metric-card">
-            <p class="page-kicker">Paid Stays</p>
+            <p class="page-kicker">Lưu trú đã thanh toán</p>
             <strong th:text="${stats.paidBookings}">0</strong>
             <div class="signal-row" style="margin-top: auto; display: flex; align-items: center; justify-content: space-between;">
-                <span class="badge PENDING" th:text="${stats.pendingBookings + ' pending'}">0 pending</span>
-                <small class="text-on-surface-variant text-xs">payment</small>
+                <span class="badge PENDING" th:text="${stats.pendingBookings + ' chờ xử lý'}">0 chờ xử lý</span>
+                <small class="text-on-surface-variant text-xs">thanh toán</small>
             </div>
         </div>
 
         <!-- Card 4: Active Users -->
         <div class="metric-card">
-            <p class="page-kicker">Active Users</p>
+            <p class="page-kicker">Người dùng hoạt động</p>
             <strong th:text="${stats.activeUsers}">0</strong>
             <div class="signal-row" style="margin-top: auto; display: flex; align-items: center; justify-content: space-between;">
-                <span class="badge CONFIRMED">Verified</span>
-                <small class="text-on-surface-variant text-xs" th:text="${stats.emailVerifiedUsers + ' email / ' + stats.phoneVerifiedUsers + ' phone'}">0 email / 0 phone</small>
+                <span class="badge CONFIRMED">Đã xác minh</span>
+                <small class="text-on-surface-variant text-xs" th:text="${stats.emailVerifiedUsers + ' email / ' + stats.phoneVerifiedUsers + ' SĐT'}">0 email / 0 SĐT</small>
             </div>
         </div>
     </div>
@@ -64,8 +64,8 @@
         <!-- Left: Revenue Trends Chart -->
         <div class="ops-panel">
             <div class="panel-title">
-                <h2>Revenue Trends</h2>
-                <span class="page-kicker">This Year</span>
+                <h2>Xu hướng doanh thu</h2>
+                <span class="page-kicker">Năm nay</span>
             </div>
             <div class="chart-container" style="height: 260px; position: relative; margin-top: 16px;">
                 <!-- Beautiful Stylized Line Chart SVG from the mockup -->
@@ -101,25 +101,25 @@
         <!-- Right: Inventory Utilization & Coverage stats -->
         <div class="ops-panel">
             <div class="panel-title">
-                <h2>Stay Utilization</h2>
-                <span class="page-kicker">Inventory</span>
+                <h2>Mức sử dụng phòng</h2>
+                <span class="page-kicker">Kho hàng</span>
             </div>
             
             <!-- Inventory Utilization meter -->
             <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
                 <div class="signal-row">
-                    <span>Utilization Signal</span>
+                    <span>Tín hiệu lấp đầy</span>
                     <strong th:text="${stats.occupancySignal + '%'}">0%</strong>
                 </div>
                 <div class="signal-meter">
                     <span th:style="'width: ' + ${stats.occupancySignal} + '%; display: block; height: 100%;'"></span>
                 </div>
-                <p style="font-size: 12px; color: #747878; line-height: 1.5; margin: 0;">Ratio of confirmed paid stays relative to total available hotel rooms.</p>
+                <p style="font-size: 12px; color: #747878; line-height: 1.5; margin: 0;">Tỷ lệ lưu trú đã thanh toán so với tổng số phòng khách sạn.</p>
             </div>
 
             <!-- Hotel Coverage / Data Sources -->
             <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px; border-top: 1px solid rgba(196,199,199,0.15); padding-top: 16px;">
-                <p class="page-kicker" style="margin-top: 16px; margin-bottom: 4px;">Hotel Data Coverage</p>
+                <p class="page-kicker" style="margin-top: 16px; margin-bottom: 4px;">Nguồn dữ liệu khách sạn</p>
                 <!-- Google -->
                 <div>
                     <div class="signal-row" style="font-size: 12px; margin-bottom: 4px;">
@@ -143,7 +143,7 @@
                 <!-- Manual -->
                 <div>
                     <div class="signal-row" style="font-size: 12px; margin-bottom: 4px;">
-                        <span>Manual / Private</span>
+                        <span>Thủ công / nội bộ</span>
                         <strong th:text="${stats.totalHotels - stats.googleHotels - stats.overpassHotels}">0</strong>
                     </div>
                     <div class="signal-meter" style="height: 6px;">
@@ -159,30 +159,27 @@
         <!-- Left: Recent Bookings Queue -->
         <div class="ops-panel">
             <div class="panel-title">
-                <h2>Recent Bookings Queue</h2>
-                <a th:href="@{/admin/bookings}">Manage All</a>
+                <h2>Đặt phòng gần đây</h2>
+                <a th:href="@{/admin/bookings}">Xem tất cả</a>
             </div>
             <div class="mini-list" style="margin-top: 12px;">
                 <article th:each="booking : ${bookings.content}">
                     <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1;">
                         <strong th:text="${booking.bookingCode}">HB-0001</strong>
                         <span style="font-size: 13px; color: #5d5e5f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${booking.room.hotel.name + ' • ' + booking.room.name}">Hotel • Room</span>
-                        <span style="font-size: 11px; color: #747878;" th:text="${booking.user.fullName + ' • ' + booking.checkIn + ' to ' + booking.checkOut}">Guest • Dates</span>
+                        <span style="font-size: 11px; color: #747878;" th:text="${booking.user.fullName + ' • ' + booking.checkIn + ' đến ' + booking.checkOut}">Khách · Ngày</span>
                     </div>
-                    <span class="badge" th:classappend="${booking.status.name() == 'CONFIRMED' ? 'CONFIRMED' : 
-                                                       (booking.status.name() == 'CHECKED_IN' ? 'CONFIRMED' : 
-                                                       (booking.status.name() == 'CHECKED_OUT' ? '' : 'CANCELLED'))}"
-                          th:text="${booking.status}">CONFIRMED</span>
+                    <span th:replace="~{fragments/i18n :: bookingStatus(${booking.status})}">Trạng thái</span>
                 </article>
-                <p style="text-align: center; color: #747878; padding: 24px 0; font-size: 14px;" th:if="${bookings.empty}">No recent bookings found.</p>
+                <p style="text-align: center; color: #747878; padding: 24px 0; font-size: 14px;" th:if="${bookings.empty}">Chưa có đặt phòng gần đây.</p>
             </div>
         </div>
 
         <!-- Right: Hotels to Manage -->
         <div class="ops-panel">
             <div class="panel-title">
-                <h2>Hotel Inventory</h2>
-                <a th:href="@{/admin/hotels}">Manage Hotels</a>
+                <h2>Kho khách sạn</h2>
+                <a th:href="@{/admin/hotels}">Quản lý khách sạn</a>
             </div>
             <div class="mini-list" style="margin-top: 12px;">
                 <article th:each="hotel : ${hotels.content}">
@@ -191,10 +188,9 @@
                         <span style="font-size: 13px; color: #5d5e5f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                               th:text="${hotel.city + ' — ' + hotel.address}">City</span>
                     </div>
-                    <span class="status-pill" th:classappend="${hotel.deleted ? 'CANCELLED' : 'AVAILABLE'}"
-                          th:text="${hotel.status}">ACTIVE</span>
+                    <span th:replace="~{fragments/i18n :: hotelStatus(${hotel.status})}">Đang hoạt động</span>
                 </article>
-                <p style="text-align: center; color: #747878; padding: 24px 0; font-size: 14px;" th:if="${hotels.empty}">No hotel records found.</p>
+                <p style="text-align: center; color: #747878; padding: 24px 0; font-size: 14px;" th:if="${hotels.empty}">Chưa có khách sạn nào.</p>
             </div>
         </div>
     </div>

@@ -6,7 +6,7 @@
 <main class="page admin-page">
     <header class="page-header">
         <div>
-            <p class="page-kicker">Access control</p>
+            <p class="page-kicker">Phân quyền</p>
             <h1>Quản lý người dùng</h1>
         </div>
     </header>
@@ -17,32 +17,32 @@
                 <th>Họ tên</th>
                 <th>Email</th>
                 <th>Số điện thoại</th>
-                <th>Email verified</th>
-                <th>Phone verified</th>
+                <th>Email đã xác minh</th>
+                <th>SĐT đã xác minh</th>
                 <th>Trạng thái</th>
-                <th>Role</th>
+                <th>Vai trò</th>
                 <th>Hành động</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="user : ${users.content}">
-                <td th:text="${user.fullName}">User</td>
+                <td th:text="${user.fullName}">Người dùng</td>
                 <td th:text="${user.email}">email</td>
                 <td th:text="${user.phone}">phone</td>
                 <td>
-                    <span class="verify-badge verified" th:if="${user.emailVerified}">Verified</span>
-                    <span class="verify-badge not-verified static" th:unless="${user.emailVerified}">Not verified</span>
+                    <span class="verify-badge verified" th:if="${user.emailVerified}">Đã xác minh</span>
+                    <span class="verify-badge not-verified static" th:unless="${user.emailVerified}">Chưa xác minh</span>
                 </td>
                 <td>
-                    <span class="verify-badge verified" th:if="${user.phoneVerified}">Verified</span>
-                    <span class="verify-badge not-verified static" th:unless="${user.phoneVerified}">Not verified</span>
+                    <span class="verify-badge verified" th:if="${user.phoneVerified}">Đã xác minh</span>
+                    <span class="verify-badge not-verified static" th:unless="${user.phoneVerified}">Chưa xác minh</span>
                 </td>
-                <td><span class="badge" th:text="${user.status}">Status</span></td>
+                <td><span th:replace="~{fragments/i18n :: userStatus(${user.status})}">Trạng thái</span></td>
                 <td><span th:each="role : ${user.roles}" th:text="${role.code + ' '}">USER</span></td>
                 <td class="actions">
                     <form th:if="${user.status.name() != 'LOCKED'}" th:action="@{/admin/users/{id}/lock(id=${user.id})}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <input type="hidden" name="reason" value="Admin lock">
+                        <input type="hidden" name="reason" value="Khóa bởi quản trị viên">
                         <button class="button button-small button-danger" type="submit">Khóa</button>
                     </form>
                     <form th:if="${user.status.name() == 'LOCKED'}" th:action="@{/admin/users/{id}/unlock(id=${user.id})}" method="post">

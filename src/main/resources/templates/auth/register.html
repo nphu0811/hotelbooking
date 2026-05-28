@@ -7,16 +7,16 @@
     <div class="auth-shell">
         <aside class="auth-visual" aria-hidden="true">
             <div class="auth-visual-content">
-                <p class="page-kicker">Join LUMIÈRE</p>
-                <h1>Your stays, kept elegantly simple.</h1>
-                <p>Create a profile for faster reservations, OTP verification and payment continuity.</p>
+                <p class="page-kicker">Tham gia LUMIÈRE</p>
+                <h1>Kỳ nghỉ của bạn, gọn gàng và tinh tế.</h1>
+                <p>Tạo hồ sơ để đặt phòng nhanh hơn, xác minh OTP và thanh toán liền mạch.</p>
             </div>
         </aside>
         <section class="auth-form-area">
             <form class="auth-panel" th:action="@{/register}" th:object="${registerForm}" method="post"
                   data-validate="register" novalidate>
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                <p class="page-kicker">New guest</p>
+                <p class="page-kicker">Khách mới</p>
                 <h1>Tạo tài khoản</h1>
                 <p class="muted auth-copy">Lưu thông tin đặt phòng, theo dõi thanh toán và quản lý lịch sử lưu trú.</p>
                 <p class="alert" th:if="${error}" th:text="${error}"></p>
@@ -71,7 +71,7 @@
                           th:unless="${#fields.hasErrors('confirmPassword')}"></span>
                 </label>
 
-                <button class="button" type="submit" aria-label="Register">Tạo tài khoản</button>
+                <button class="button" type="submit" aria-label="Tạo tài khoản">Tạo tài khoản</button>
 
                 <div class="oauth-section">
                     <div class="auth-divider"><span>Hoặc đăng ký bằng</span></div>

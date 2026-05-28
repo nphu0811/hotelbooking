@@ -1,29 +1,29 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Mock payment')}"></head>
+<head th:replace="~{fragments/layout :: head('Thanh toán thử')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page narrow payment-panel">
     <header class="page-header">
-        <p class="page-kicker">Sandbox gateway</p>
-        <h1>Cong thanh toan mock</h1>
-        <p class="muted">Local/dev/test only. This page never moves real money.</p>
+        <p class="page-kicker">Cổng thử nghiệm</p>
+        <h1>Thanh toán mô phỏng</h1>
+        <p class="muted">Chỉ dùng môi trường local/dev/test. Trang này không xử lý tiền thật.</p>
     </header>
     <div class="summary">
-        <p><strong>Order ID:</strong> <span th:text="${orderId}">order</span></p>
+        <p><strong>Mã đơn:</strong> <span th:text="${orderId}">Mã</span></p>
     </div>
     <div class="mock-actions">
         <form th:action="@{/payments/mock/callback}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             <input type="hidden" name="orderId" th:value="${orderId}">
-            <input type="hidden" name="success" value="true">
-            <button class="button" type="submit">Mark paid</button>
+            <input type="hidden" name="result" value="SUCCESS">
+            <button class="button" type="submit">Giả lập thành công</button>
         </form>
         <form th:action="@{/payments/mock/callback}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             <input type="hidden" name="orderId" th:value="${orderId}">
-            <input type="hidden" name="success" value="false">
-            <button class="button button-danger" type="submit">Mark failed</button>
+            <input type="hidden" name="result" value="FAILED">
+            <button class="button button-muted" type="submit">Giả lập thất bại</button>
         </form>
     </div>
 </main>

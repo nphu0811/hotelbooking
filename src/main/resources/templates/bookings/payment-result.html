@@ -1,21 +1,21 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Payment result')}"></head>
+<head th:replace="~{fragments/layout :: head('Kết quả thanh toán')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page narrow payment-panel">
     <header class="page-header">
-        <p class="page-kicker">Payment result</p>
+        <p class="page-kicker">Kết quả thanh toán</p>
         <h1>Kết quả thanh toán</h1>
     </header>
     <p class="alert" th:if="${error}" th:text="${error}"></p>
     <div class="summary" th:if="${payment}">
-        <p><strong>Order ID:</strong> <span th:text="${payment.orderId}">order</span></p>
-        <p><strong>Trạng thái payment:</strong> <span class="badge" th:text="${payment.status}">status</span></p>
-        <p><strong>Trạng thái booking:</strong> <span class="badge" th:text="${booking.status}">status</span></p>
-        <p><strong>Mã booking:</strong> <span th:text="${booking.bookingCode}">code</span></p>
+        <p><strong>Mã đơn:</strong> <span th:text="${payment.orderId}">Mã</span></p>
+        <p><strong>Trạng thái thanh toán:</strong> <span class="badge" th:text="${payment.status}">Trạng thái</span></p>
+        <p><strong>Trạng thái đặt phòng:</strong> <span th:replace="~{fragments/i18n :: bookingStatus(${booking.status})}">Trạng thái</span></p>
+        <p><strong>Mã đặt phòng:</strong> <span th:text="${booking.bookingCode}">Mã</span></p>
     </div>
-        <a class="button" th:href="@{/account/bookings}" aria-label="history">Xem lịch sử đặt phòng</a>
+        <a class="button" th:href="@{/account/bookings}" aria-label="Lịch sử đặt phòng">Xem lịch sử đặt phòng</a>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>

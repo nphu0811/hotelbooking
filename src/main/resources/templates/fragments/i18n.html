@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<span th:fragment="hotelStatus(code)" class="badge" th:switch="${code}">
+    <th:block th:case="'ACTIVE'">Đang hoạt động</th:block>
+    <th:block th:case="'DISABLED'">Đã tắt</th:block>
+    <th:block th:case="*" th:text="${code}">Trạng thái</th:block>
+</span>
+
+<span th:fragment="roomStatus(status)" class="badge" th:switch="${status.name()}">
+    <th:block th:case="'AVAILABLE'">Còn phòng</th:block>
+    <th:block th:case="'MAINTENANCE'">Bảo trì</th:block>
+    <th:block th:case="*" th:text="${status}">Trạng thái</th:block>
+</span>
+
+<th:block th:fragment="roomStatusLabel(status)" th:switch="${status.name()}">
+    <th:block th:case="'AVAILABLE'">Còn phòng</th:block>
+    <th:block th:case="'MAINTENANCE'">Bảo trì</th:block>
+    <th:block th:case="*" th:text="${status}">Trạng thái</th:block>
+</th:block>
+
+<span th:fragment="bookingStatus(status)" class="badge" th:switch="${status.name()}">
+    <th:block th:case="'PENDING_PAYMENT'">Chờ thanh toán</th:block>
+    <th:block th:case="'CONFIRMED'">Đã xác nhận</th:block>
+    <th:block th:case="'CHECKED_IN'">Đã nhận phòng</th:block>
+    <th:block th:case="'CHECKED_OUT'">Đã trả phòng</th:block>
+    <th:block th:case="'CANCELLED'">Đã hủy</th:block>
+    <th:block th:case="'EXPIRED'">Hết hạn</th:block>
+    <th:block th:case="'REFUNDED'">Đã hoàn tiền</th:block>
+    <th:block th:case="*" th:text="${status}">Trạng thái</th:block>
+</span>
+
+<span th:fragment="userStatus(status)" class="badge" th:switch="${status.name()}">
+    <th:block th:case="'PENDING_VERIFICATION'">Chờ xác minh</th:block>
+    <th:block th:case="'ACTIVE'">Đang hoạt động</th:block>
+    <th:block th:case="'LOCKED'">Đã khóa</th:block>
+    <th:block th:case="*" th:text="${status}">Trạng thái</th:block>
+</span>
+</body>
+</html>

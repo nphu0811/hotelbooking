@@ -3,68 +3,99 @@
 <head th:replace="~{fragments/layout :: head('Quản lý phòng')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
-<main class="page admin-page">
+<main class="page admin-page admin-dashboard">
     <header class="page-header">
         <div>
-            <p class="page-kicker">Admin / Khách sạn / Phòng</p>
+            <p class="page-kicker">Quản trị / Khách sạn / Phòng</p>
             <h1 th:text="${'Quản lý phòng — ' + hotel.name}">Quản lý phòng</h1>
             <p class="muted">
                 <a th:href="@{/admin/hotels}">Khách sạn</a>
                 <span> / </span>
-                <span th:text="${hotel.name}">Hotel</span>
+                <span th:text="${hotel.name}">Tên khách sạn</span>
                 <span> / Phòng</span>
             </p>
         </div>
         <a class="button button-muted" th:href="@{/admin/hotels}">← Danh sách khách sạn</a>
     </header>
+
     <p class="alert" th:if="${error}" th:text="${error}"></p>
     <p class="success" th:if="${param.created}">Đã tạo phòng.</p>
     <p class="success" th:if="${param.updated}">Đã cập nhật phòng.</p>
     <p class="success" th:if="${param.deleted}">Đã xóa phòng.</p>
 
-    <section class="premium-panel">
-        <h2>Thêm phòng</h2>
-        <form class="toolbar" th:action="@{/admin/hotels/{hotelId}/rooms(hotelId=${hotel.id})}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <input name="name" placeholder="Tên phòng" required>
-            <input name="roomType" placeholder="Loại phòng" required>
-            <input name="capacity" type="number" min="1" max="20" value="2" required>
-            <input name="pricePerNight" type="number" min="1" placeholder="Giá/đêm" required>
-            <button class="button" type="submit">Tạo phòng</button>
-        </form>
-    </section>
+    <div class="admin-board">
+        <section class="ops-panel">
+            <div class="panel-title">
+                <h2>Thêm phòng mới</h2>
+            </div>
+            <form th:action="@{/admin/hotels/{hotelId}/rooms(hotelId=${hotel.id})}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div class="form-grid">
+                    <label>Tên phòng
+                        <input name="name" placeholder="Ví dụ: Phòng Deluxe" required>
+                    </label>
+                    <label>Loại phòng
+                        <input name="roomType" placeholder="Ví dụ: Deluxe" required>
+                    </label>
+                    <label>Sức chứa
+                        <input name="capacity" type="number" min="1" max="20" value="2" required>
+                    </label>
+                    <label>Giá mỗi đêm (VND)
+                        <input name="pricePerNight" type="number" min="1" placeholder="1500000" required>
+                    </label>
+                </div>
+                <button class="button" type="submit" style="margin-top: 16px;">Tạo phòng</button>
+            </form>
+        </section>
 
-    <div class="table-wrap">
-        <table>
-            <thead><tr><th>Phòng</th><th>Loại</th><th>Giá</th><th>Trạng thái</th><th>Cập nhật</th></tr></thead>
-            <tbody>
-            <tr th:each="room : ${rooms.content}">
-                <td th:text="${room.name}">Room</td>
-                <td th:text="${room.roomType}">Type</td>
-                <td th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT')}">0</td>
-                <td><span class="badge" th:text="${room.status}">Status</span></td>
-                <td>
-                    <form class="inline-form"
-                          th:action="@{/admin/hotels/{hotelId}/rooms/{roomId}(hotelId=${hotel.id},roomId=${room.id})}"
-                          method="post">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <input type="number" name="price" th:value="${room.pricePerNight}">
-                        <select name="status">
-                            <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}"
-                                    th:selected="${status == room.status}">AVAILABLE</option>
-                        </select>
-                        <button class="button button-small" type="submit">Lưu</button>
-                    </form>
-                    <form class="inline-form"
-                          th:action="@{/admin/hotels/{hotelId}/rooms/{roomId}/delete(hotelId=${hotel.id},roomId=${room.id})}"
-                          method="post" onsubmit="return confirm('Xóa phòng này?');">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <button class="button button-small button-muted" type="submit">Xóa</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <section class="ops-panel">
+            <div class="panel-title">
+                <h2>Danh sách phòng</h2>
+                <span class="page-kicker" th:text="${rooms.totalElements + ' phòng'}">0 phòng</span>
+            </div>
+
+            <p class="empty" th:if="${rooms.empty}">Chưa có phòng nào cho khách sạn này.</p>
+
+            <div class="mini-list" th:if="${!rooms.empty}">
+                <article th:each="room : ${rooms.content}">
+                    <div>
+                        <strong th:text="${room.name}">Tên phòng</strong>
+                        <span th:text="${room.roomType + ' · ' + room.capacity + ' khách'}">Loại · Sức chứa</span>
+                        <span class="muted"
+                              th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0 VND</span>
+                    </div>
+                    <span th:replace="~{fragments/i18n :: roomStatus(${room.status})}">Còn phòng</span>
+                    <div class="actions" style="flex-direction: column; align-items: flex-end; min-width: 220px;">
+                        <form th:action="@{/admin/hotels/{hotelId}/rooms/{roomId}(hotelId=${hotel.id},roomId=${room.id})}"
+                              method="post"
+                              style="width: 100%;">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <label>Giá / đêm
+                                    <input type="number" name="price" th:value="${room.pricePerNight}" min="1">
+                                </label>
+                                <label>Trạng thái
+                                    <select name="status">
+                                        <option th:each="s : ${statuses}"
+                                                th:value="${s}"
+                                                th:selected="${s == room.status}"
+                                                th:text="${s.name() == 'AVAILABLE' ? 'Còn phòng' : 'Bảo trì'}">Còn phòng</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <button class="button button-small" type="submit" style="margin-top: 8px; width: 100%;">Lưu thay đổi</button>
+                        </form>
+                        <form th:action="@{/admin/hotels/{hotelId}/rooms/{roomId}/delete(hotelId=${hotel.id},roomId=${room.id})}"
+                              method="post"
+                              onsubmit="return confirm('Xóa phòng này?');"
+                              style="margin-top: 8px; width: 100%;">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <button class="button button-small button-muted" type="submit" style="width: 100%;">Xóa phòng</button>
+                        </form>
+                    </div>
+                </article>
+            </div>
+        </section>
     </div>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
