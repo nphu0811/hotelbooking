@@ -18,7 +18,6 @@
             <a th:href="@{/#hcm}">TP. HCM</a>
             <a th:href="@{/#danang}">Đà Nẵng</a>
             <a sec:authorize="isAuthenticated()" th:href="@{/account/bookings}">Lịch sử</a>
-            <a th:href="@{/hotels}">Khách sạn</a>
             <a sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" th:href="@{/admin}">Quản trị</a>
         </div>
         <div class="nav-auth">
