@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/layout :: head(${room.name})}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
@@ -44,8 +44,16 @@
         <p class="page-kicker">Đặt phòng</p>
         <p class="price" th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</p>
         <p th:if="${room.status.name() == 'MAINTENANCE'}" class="alert">Phòng đang bảo trì, chưa nhận đặt mới.</p>
-        <form th:if="${room.status.name() == 'AVAILABLE'}" th:action="@{/bookings}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <div sec:authorize="isAnonymous()" th:if="${room.status.name() == 'AVAILABLE'}">
+            <p class="muted">Đăng nhập để đặt phòng và thanh toán.</p>
+            <a class="button" th:href="@{/login/password}">Đăng nhập</a>
+            <a class="button button-muted" th:href="@{/register}">Đăng ký</a>
+        </div>
+        <form sec:authorize="isAuthenticated()"
+              th:if="${room.status.name() == 'AVAILABLE'}"
+              action="/bookings"
+              method="post">
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             <input type="hidden" name="roomId" th:value="${room.id}">
             <label>Nhận phòng
                 <input type="date" name="checkIn" th:value="${checkIn}" required>

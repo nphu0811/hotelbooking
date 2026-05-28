@@ -19,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -97,6 +98,10 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> {
+                    // Eager CSRF attributes so Thymeleaf th:action on public pages works (Spring Security 6.4+ deferred tokens).
+                    CsrfTokenRequestAttributeHandler csrfHandler = new CsrfTokenRequestAttributeHandler();
+                    csrfHandler.setCsrfRequestAttributeName("_csrf");
+                    csrf.csrfTokenRequestHandler(csrfHandler);
                     csrf.ignoringRequestMatchers(paymentEndpoint("/webhook"));
                     if (e2eFixtureEnabled) {
                         csrf.ignoringRequestMatchers(pathStartsWith("/__e2e__"));
