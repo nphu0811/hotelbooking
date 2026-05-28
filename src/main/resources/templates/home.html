@@ -5,6 +5,7 @@
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="home-shell">
     <section id="home" class="hero">
+        <div id="threejs-container"></div>
         <div class="hero-inner">
             <div class="hero-copy">
                 <p class="eyebrow">LUMIÈRE HOTEL</p>
@@ -163,5 +164,7 @@
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
 <script th:src="@{/js/home-ai.js(v=2)}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script th:src="@{/js/home-key-3d.js(v=1)}"></script>
 </body>
 </html>
