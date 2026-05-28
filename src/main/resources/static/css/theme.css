@@ -39,84 +39,176 @@
     --shadow-glow: 0 0 0 1px rgba(34, 211, 238, 0.2), 0 24px 70px rgba(37, 99, 235, 0.22);
 }
 
+/* High-Fidelity Custom Light/Dark Mode Switch (Sun & Moon) */
 .theme-toggle {
     flex: 0 0 auto;
-    display: inline-grid;
-    place-items: center;
-    min-width: 70px;
-    min-height: 38px;
-    padding: 0 4px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-full);
-    background: rgba(255, 255, 255, 0.72);
-    box-shadow: var(--shadow-sm);
-    color: var(--color-text-soft);
+    position: relative;
+    display: inline-block;
+    width: 68px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid rgba(196, 199, 199, 0.4);
+    border-radius: 9999px;
     cursor: pointer;
-    transition: background var(--duration-normal) var(--ease-out),
-        border-color var(--duration-normal) var(--ease-out),
-        box-shadow var(--duration-normal) var(--ease-out),
-        transform var(--duration-normal) var(--ease-out);
+    overflow: hidden;
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background: linear-gradient(to bottom, #7bb0ff 0%, #a8caff 100%);
+    transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .theme-toggle:hover {
-    transform: translateY(-2px);
-    border-color: rgba(6, 182, 212, 0.32);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
+/* Track container */
 .theme-toggle-track {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    width: 58px;
-    height: 30px;
-    border-radius: var(--radius-full);
-}
-
-.theme-toggle-symbol {
-    z-index: 1;
-    display: grid;
-    place-items: center;
-    font-size: 14px;
-    line-height: 1;
-    color: var(--color-text-muted);
-}
-
-.theme-toggle-sun {
-    color: #0f766e;
-}
-
-.theme-toggle-moon {
-    color: #64748b;
-}
-
-.theme-toggle-thumb {
     position: absolute;
-    left: 3px;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Stars background (Visible only in Dark mode) */
+.theme-toggle-stars {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(-15px);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.star {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+    animation: pulse-star 2s infinite ease-in-out;
+}
+
+.star-1 { width: 2px; height: 2px; top: 8px; left: 16px; }
+.star-2 { width: 3px; height: 3px; top: 18px; left: 24px; animation-delay: 0.4s; }
+.star-3 { width: 1.5px; height: 1.5px; top: 6px; left: 34px; animation-delay: 0.8s; }
+.star-4 { width: 2px; height: 2px; top: 22px; left: 38px; animation-delay: 1.2s; }
+.star-5 { width: 2.5px; height: 2.5px; top: 12px; left: 44px; animation-delay: 1.6s; }
+
+@keyframes pulse-star {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Clouds background (Visible only in Light mode) */
+.theme-toggle-clouds {
+    position: absolute;
+    inset: 0;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+}
+
+.cloud-1 {
     width: 24px;
     height: 24px;
-    border-radius: var(--radius-full);
-    background: var(--color-surface-strong);
-    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
-    transition: transform var(--duration-normal) var(--ease-spring),
-        background var(--duration-normal) var(--ease-out);
+    bottom: -8px;
+    right: 18px;
 }
 
+.cloud-2 {
+    width: 28px;
+    height: 28px;
+    bottom: -10px;
+    right: 4px;
+}
+
+.cloud-3 {
+    width: 18px;
+    height: 18px;
+    bottom: -4px;
+    right: 32px;
+}
+
+/* Thumb (Sun/Moon Knob) */
+.theme-toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #ffd633; /* Golden Sun color */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15), 0 0 0 4px rgba(255, 214, 51, 0.2);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                background 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Craters inside Moon (Visible only in Dark mode) */
+.crater {
+    position: absolute;
+    background: #9ca3af;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.crater-1 {
+    width: 6px;
+    height: 6px;
+    top: 5px;
+    left: 8px;
+}
+
+.crater-2 {
+    width: 4px;
+    height: 4px;
+    top: 14px;
+    left: 6px;
+}
+
+.crater-3 {
+    width: 5px;
+    height: 5px;
+    top: 12px;
+    left: 15px;
+}
+
+/* --- Dark Mode Active States --- */
 :root[data-theme="dark"] .theme-toggle {
-    background: rgba(15, 23, 42, 0.76);
+    background: linear-gradient(to bottom, #111827 0%, #1f2937 100%);
+    border-color: rgba(96, 165, 250, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Slide and switch elements in Dark Mode */
+:root[data-theme="dark"] .theme-toggle-stars {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+:root[data-theme="dark"] .theme-toggle-clouds {
+    opacity: 0;
+    transform: translateY(15px);
 }
 
 :root[data-theme="dark"] .theme-toggle-thumb {
-    transform: translateX(28px);
+    transform: translateX(34px);
+    background: #e5e7eb; /* Silver-grey Moon color */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25), 0 0 0 4px rgba(229, 231, 235, 0.15);
 }
 
-:root[data-theme="dark"] .theme-toggle-sun {
-    color: #67e8f9;
-}
-
-:root[data-theme="dark"] .theme-toggle-moon {
-    color: #bfdbfe;
+:root[data-theme="dark"] .crater {
+    opacity: 1;
+    transform: scale(1);
 }
 
 :root[data-theme="dark"] body::before {
