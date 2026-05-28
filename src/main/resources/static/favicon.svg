@@ -1,20 +1,59 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Lumiere Hotel monogram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Lumière Hotel monogram">
   <defs>
-    <linearGradient id="bg" x1="10" y1="6" x2="56" y2="60" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#2e3132"/>
-      <stop offset="0.45" stop-color="#050505"/>
-      <stop offset="1" stop-color="#5f5e5e"/>
+    <!-- Premium Onyx base gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1A1A1A"/>
+      <stop offset="0.5" stop-color="#000000"/>
+      <stop offset="1" stop-color="#2e3132"/>
     </linearGradient>
-    <linearGradient id="silver" x1="14" y1="10" x2="52" y2="54" gradientUnits="userSpaceOnUse">
+    <!-- Brushed platinum shimmer -->
+    <linearGradient id="platinum" x1="12" y1="8" x2="52" y2="56" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.28" stop-color="#e5e4e2"/>
-      <stop offset="0.62" stop-color="#bfc2c3"/>
+      <stop offset="0.2" stop-color="#E5E4E2"/>
+      <stop offset="0.5" stop-color="#C0C0C0"/>
+      <stop offset="0.8" stop-color="#D1D1D1"/>
       <stop offset="1" stop-color="#ffffff"/>
     </linearGradient>
+    <!-- Ambient inner glow -->
+    <radialGradient id="glow" cx="32" cy="28" r="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Soft drop shadow filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
   </defs>
-  <rect width="64" height="64" rx="18" fill="url(#bg)"/>
-  <path d="M22 13v36h23" fill="none" stroke="url(#silver)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M34 18h13M33 27h11M34 36h13" fill="none" stroke="url(#silver)" stroke-width="5" stroke-linecap="round"/>
-  <path d="M37 9h12M34 5h9" fill="none" stroke="url(#silver)" stroke-width="4" stroke-linecap="round"/>
-  <rect x="7" y="7" width="50" height="50" rx="14" fill="none" stroke="#ffffff" stroke-opacity="0.18"/>
+
+  <!-- Base rounded square -->
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+
+  <!-- Subtle inner ambient glow -->
+  <rect width="64" height="64" rx="16" fill="url(#glow)"/>
+
+  <!-- Elegant "L" monogram – clean geometric strokes -->
+  <g filter="url(#shadow)">
+    <!-- Vertical stem of L -->
+    <line x1="21" y1="15" x2="21" y2="49" stroke="url(#platinum)" stroke-width="5.5" stroke-linecap="round"/>
+    <!-- Horizontal base of L -->
+    <line x1="21" y1="49" x2="43" y2="49" stroke="url(#platinum)" stroke-width="5.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Decorative accent: lumière light rays -->
+  <g opacity="0.6">
+    <line x1="30" y1="15" x2="44" y2="15" stroke="url(#platinum)" stroke-width="2" stroke-linecap="round"/>
+    <line x1="30" y1="22" x2="40" y2="22" stroke="url(#platinum)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="30" y1="29" x2="37" y2="29" stroke="url(#platinum)" stroke-width="1.2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Diamond sparkle accent -->
+  <g transform="translate(47, 12)" opacity="0.85">
+    <line x1="0" y1="-4" x2="0" y2="4" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-4" y1="0" x2="4" y2="0" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-2.5" y1="-2.5" x2="2.5" y2="2.5" stroke="#ffffff" stroke-width="1" stroke-linecap="round"/>
+    <line x1="2.5" y1="-2.5" x2="-2.5" y2="2.5" stroke="#ffffff" stroke-width="1" stroke-linecap="round"/>
+  </g>
+
+  <!-- Thin silver inset border for depth -->
+  <rect x="3" y="3" width="58" height="58" rx="14" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="0.75"/>
 </svg>
