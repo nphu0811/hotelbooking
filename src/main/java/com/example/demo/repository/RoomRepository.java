@@ -20,11 +20,67 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RoomRepository extends JpaRepository<Room, UUID> {
-    boolean existsByHotel(Hotel hotel);
+    @EntityGraph(attributePaths = {"images"})
+    Optional<Room> findFirstByHotelOrderByCreatedAtAsc(Hotel hotel);
+
+    @EntityGraph(attributePaths = {"images"})
+    Optional<Room> findFirstByHotelAndDeletedFalseOrderByCreatedAtAsc(Hotel hotel);
+
+    long countByHotelAndDeletedFalse(Hotel hotel);
+
+    @Query("""
+            select min(r.pricePerNight) from Room r
+            where r.hotel = :hotel
+              and r.deleted = false
+              and r.status = com.example.demo.entity.RoomStatus.AVAILABLE
+            """)
+    BigDecimal minAvailablePriceByHotel(@Param("hotel") Hotel hotel);
 
     long countByDeletedFalse();
 
     long countByStatusAndDeletedFalse(RoomStatus status);
+
+    @EntityGraph(attributePaths = {"hotel", "images", "amenities"})
+    @Query("""
+            select distinct r from Room r
+            where r.hotel.id = :hotelId
+              and r.deleted = false
+            order by r.createdAt asc
+            """)
+    List<Room> findActiveByHotelId(@Param("hotelId") UUID hotelId);
+
+    @EntityGraph(attributePaths = {"hotel", "images", "amenities"})
+    @Query("""
+            select distinct r from Room r
+            where r.hotel.id = :hotelId
+              and r.deleted = false
+              and r.status = com.example.demo.entity.RoomStatus.AVAILABLE
+            order by r.pricePerNight asc, r.createdAt asc
+            """)
+    List<Room> findAvailableByHotelId(@Param("hotelId") UUID hotelId);
+
+    @EntityGraph(attributePaths = {"hotel", "images", "amenities"})
+    @Query("""
+            select r from Room r
+            where r.hotel.id = :hotelId
+              and r.id = :roomId
+              and r.deleted = false
+            """)
+    Optional<Room> findActiveByHotelIdAndId(@Param("hotelId") UUID hotelId,
+                                           @Param("roomId") UUID roomId);
+
+    @EntityGraph(attributePaths = {"hotel", "images", "amenities"})
+    @Query(value = """
+            select distinct r from Room r
+            where r.hotel.id = :hotelId
+              and r.deleted = false
+            """,
+            countQuery = """
+            select count(r) from Room r
+            where r.hotel.id = :hotelId
+              and r.deleted = false
+            """)
+    Page<Room> findActivePageByHotelId(@Param("hotelId") UUID hotelId, Pageable pageable);
 
     @EntityGraph(attributePaths = {"hotel", "images", "amenities"})
     @Query("""

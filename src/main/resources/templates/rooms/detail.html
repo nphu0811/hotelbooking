@@ -7,6 +7,9 @@
     <section class="detail-main">
         <img class="detail-image" th:src="${room.primaryImageUrl != null ? room.primaryImageUrl : '/css/room-placeholder.svg'}" th:alt="${room.name}">
         <div class="detail-copy">
+            <p class="page-kicker" th:if="${hotelCard != null}">
+                <a th:href="@{/hotels/{id}(id=${hotelCard.id})}" th:text="${hotelCard.name}">Khách sạn</a>
+            </p>
             <p class="page-kicker" th:text="${room.roomType}">Room type</p>
             <h1 th:text="${room.name}">Room</h1>
             <p class="muted" th:text="${room.hotel.name + ' - ' + room.hotel.address}">Hotel</p>

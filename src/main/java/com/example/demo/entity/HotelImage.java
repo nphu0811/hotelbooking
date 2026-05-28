@@ -31,7 +31,7 @@ public class HotelImage {
     @Column(nullable = false, length = 40)
     private String source;
 
-    @Column(length = 120)
+    @Column(length = 500)
     private String sourceExternalId;
 
     @Column(length = 500)

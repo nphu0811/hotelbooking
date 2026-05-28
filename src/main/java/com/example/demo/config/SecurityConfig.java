@@ -103,7 +103,7 @@ public class SecurityConfig {
                     }
                 })
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/", "/rooms/**", "/login", "/login/password", "/login/otp", "/login/otp/**", "/login-otp", "/login/oauth-mock", "/login/oauth2/**", "/register", "/signup", "/verify/**", "/error",
+                    auth.requestMatchers("/", "/hotels/**", "/rooms/**", "/login", "/login/password", "/login/otp", "/login/otp/**", "/login-otp", "/login/oauth-mock", "/login/oauth2/**", "/register", "/signup", "/verify/**", "/error",
                             "/actuator/health", "/actuator/health/**", "/css/**", "/js/**", "/favicon.svg").permitAll();
                     auth.requestMatchers(paymentEndpoint("/webhook"), paymentEndpoint("/return")).permitAll();
                     if (h2ConsoleEnabled) {
@@ -146,7 +146,8 @@ public class SecurityConfig {
                                     "base-uri 'self'; " +
                                     "form-action 'self'; " +
                                     "frame-ancestors 'none'; " +
-                                    "img-src 'self' data: https:; " +
+                                    "frame-src https://www.google.com https://maps.google.com; " +
+                                    "img-src 'self' data: https: https://maps.googleapis.com; " +
                                     "style-src 'self' 'unsafe-inline'; " +
                                     "script-src 'self'"));
                     headers.httpStrictTransportSecurity(hsts -> hsts

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Quản lý khách sạn')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="page admin-page">
+    <header class="page-header">
+        <div>
+            <p class="page-kicker">Inventory</p>
+            <h1>Quản lý khách sạn</h1>
+        </div>
+        <a class="button button-muted" th:href="@{/admin}">← Dashboard</a>
+    </header>
+    <p class="alert" th:if="${error}" th:text="${error}"></p>
+    <p class="success" th:if="${param.created}">Đã tạo khách sạn.</p>
+    <p class="success" th:if="${param.updated}">Đã cập nhật khách sạn.</p>
+    <p class="success" th:if="${param.deleted}">Đã tắt khách sạn.</p>
+
+    <section class="premium-panel">
+        <h2>Thêm khách sạn</h2>
+        <form class="toolbar" th:action="@{/admin/hotels}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input name="name" placeholder="Tên khách sạn" required>
+            <input name="city" placeholder="Thành phố" required>
+            <input name="province" placeholder="Tỉnh/thành" required>
+            <input name="address" placeholder="Địa chỉ" required>
+            <input name="starRating" type="number" min="1" max="5" placeholder="Sao">
+            <button class="button" type="submit">Tạo</button>
+        </form>
+    </section>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr><th>Tên</th><th>Thành phố</th><th>Địa chỉ</th><th>Phòng</th><th>Trạng thái</th><th>Thao tác</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="h : ${hotels.content}">
+                <td th:text="${h.name}">Hotel</td>
+                <td th:text="${h.city}">City</td>
+                <td th:text="${h.address}">Address</td>
+                <td th:text="${roomCounts[h.id]}">0</td>
+                <td><span class="badge" th:text="${h.status}">ACTIVE</span></td>
+                <td>
+                    <a class="button button-small button-muted"
+                       th:href="@{/admin/hotels/{id}/rooms(id=${h.id})}">Xem phòng</a>
+                    <form class="inline-form" th:action="@{/admin/hotels/{id}(id=${h.id})}" method="post" th:if="${!h.deleted}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <input name="name" th:value="${h.name}" placeholder="Tên">
+                        <input name="city" th:value="${h.city}" placeholder="Thành phố">
+                        <button class="button button-small" type="submit">Lưu</button>
+                    </form>
+                    <form class="inline-form" th:action="@{/admin/hotels/{id}/delete(id=${h.id})}" method="post"
+                          th:if="${!h.deleted}" onsubmit="return confirm('Tắt khách sạn này?');">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button class="button button-small button-muted" type="submit">Tắt</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

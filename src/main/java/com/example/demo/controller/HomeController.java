@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.BusinessException;
+import com.example.demo.service.HotelService;
 import com.example.demo.service.RoomService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -14,10 +15,14 @@ import java.time.LocalDate;
 
 @Controller
 public class HomeController {
+    private static final int FEATURED_SIZE = 12;
+
+    private final HotelService hotelService;
     private final RoomService roomService;
     private final Clock clock;
 
-    public HomeController(RoomService roomService, Clock clock) {
+    public HomeController(HotelService hotelService, RoomService roomService, Clock clock) {
+        this.hotelService = hotelService;
         this.roomService = roomService;
         this.clock = clock;
     }
@@ -29,13 +34,12 @@ public class HomeController {
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
         model.addAttribute("guests", 2);
-        
-        // Fetch rooms for carousels
-        model.addAttribute("rooms", roomService.search("", checkIn, checkOut, 1, null, null, "rating", 0));
-        model.addAttribute("hanoiRooms", roomService.search("Hà Nội", checkIn, checkOut, 1, null, null, "rating", 0));
-        model.addAttribute("hcmRooms", roomService.search("Hồ Chí Minh", checkIn, checkOut, 1, null, null, "rating", 0));
-        model.addAttribute("danangRooms", roomService.search("Đà Nẵng", checkIn, checkOut, 1, null, null, "rating", 0));
-        
+
+        model.addAttribute("hotels", hotelService.featuredHotels(FEATURED_SIZE));
+        model.addAttribute("hanoiHotels", hotelService.searchHotels("hanoi", "", null, 0));
+        model.addAttribute("hcmHotels", hotelService.searchHotels("ho chi minh", "", null, 0));
+        model.addAttribute("danangHotels", hotelService.searchHotels("da nang", "", null, 0));
+
         return "home";
     }
 

@@ -1,15 +1,19 @@
 package com.example.demo.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -61,11 +65,14 @@ public class Hotel {
     @Column(length = 40)
     private String source;
 
-    @Column(length = 120)
+    @Column(length = 500)
     private String sourceExternalId;
 
     @Column(length = 1000)
     private String sourceUrl;
+
+    @Column(length = 1000)
+    private String thumbnailUrl;
 
     @Column(nullable = false)
     private int dataQualityScore = 0;
@@ -76,6 +83,9 @@ public class Hotel {
 
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted = false;
+
+    @OneToMany(mappedBy = "hotel", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Room> rooms = new ArrayList<>();
 
     @Column(nullable = false)
     private Instant createdAt = Instant.now();
@@ -90,6 +100,10 @@ public class Hotel {
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -250,5 +264,35 @@ public class Hotel {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    /** Template-friendly status: ACTIVE or DISABLED */
+    public String getStatus() {
+        return deleted ? "DISABLED" : "ACTIVE";
+    }
+
+    /** Alias for starRating for template consistency */
+    public Integer getRating() {
+        return starRating;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }

@@ -178,23 +178,23 @@
             </div>
         </div>
 
-        <!-- Right: Rooms to Manage -->
+        <!-- Right: Hotels to Manage -->
         <div class="ops-panel">
             <div class="panel-title">
-                <h2>Inventory Status</h2>
-                <a th:href="@{/admin/rooms}">Manage Rooms</a>
+                <h2>Hotel Inventory</h2>
+                <a th:href="@{/admin/hotels}">Manage Hotels</a>
             </div>
             <div class="mini-list" style="margin-top: 12px;">
-                <article th:each="room : ${rooms.content}">
+                <article th:each="hotel : ${hotels.content}">
                     <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1;">
-                        <strong th:text="${room.name}">Standard Room</strong>
-                        <span style="font-size: 13px; color: #5d5e5f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${room.hotel != null ? room.hotel.name : 'Unassigned'}">Hotel Name</span>
+                        <strong th:text="${hotel.name}">Hotel</strong>
+                        <span style="font-size: 13px; color: #5d5e5f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                              th:text="${hotel.city + ' — ' + hotel.address}">City</span>
                     </div>
-                    <span class="status-pill" th:classappend="${room.status.name() == 'AVAILABLE' ? 'AVAILABLE' : 
-                                                             (room.status.name() == 'OCCUPIED' ? '' : 'CANCELLED')}"
-                          th:text="${room.status}">AVAILABLE</span>
+                    <span class="status-pill" th:classappend="${hotel.deleted ? 'CANCELLED' : 'AVAILABLE'}"
+                          th:text="${hotel.status}">ACTIVE</span>
                 </article>
-                <p style="text-align: center; color: #747878; padding: 24px 0; font-size: 14px;" th:if="${rooms.empty}">No room records found.</p>
+                <p style="text-align: center; color: #747878; padding: 24px 0; font-size: 14px;" th:if="${hotels.empty}">No hotel records found.</p>
             </div>
         </div>
     </div>

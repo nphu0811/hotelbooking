@@ -25,40 +25,29 @@ public class DeduplicationService {
         if (record.latitude() == null || record.longitude() == null || record.name() == null) {
             return Optional.empty();
         }
+        BigDecimal minLat = record.latitude().subtract(COORDINATE_WINDOW);
+        BigDecimal maxLat = record.latitude().add(COORDINATE_WINDOW);
+        BigDecimal minLng = record.longitude().subtract(COORDINATE_WINDOW);
+        BigDecimal maxLng = record.longitude().add(COORDINATE_WINDOW);
         if (record.source().equalsIgnoreCase("geoapify")) {
             Optional<Hotel> osmHotel = hotelRepository.findNearbyByNameAndSource(
                     record.name(),
                     "OVERPASS",
-                    record.latitude().subtract(COORDINATE_WINDOW),
-                    record.latitude().add(COORDINATE_WINDOW),
-                    record.longitude().subtract(COORDINATE_WINDOW),
-                    record.longitude().add(COORDINATE_WINDOW)
+                    minLat,
+                    maxLat,
+                    minLng,
+                    maxLng
             );
             if (osmHotel.isPresent()) {
                 return osmHotel;
             }
-            Optional<Hotel> nearby = hotelRepository.findNearbyByName(
-                    record.name(),
-                    record.latitude().subtract(COORDINATE_WINDOW),
-                    record.latitude().add(COORDINATE_WINDOW),
-                    record.longitude().subtract(COORDINATE_WINDOW),
-                    record.longitude().add(COORDINATE_WINDOW)
-            );
-            if (nearby.isPresent() && isOpenStreetMapSource(nearby.get())) {
-                return nearby;
-            }
         }
         return hotelRepository.findNearbyByName(
                 record.name(),
-                record.latitude().subtract(COORDINATE_WINDOW),
-                record.latitude().add(COORDINATE_WINDOW),
-                record.longitude().subtract(COORDINATE_WINDOW),
-                record.longitude().add(COORDINATE_WINDOW)
+                minLat,
+                maxLat,
+                minLng,
+                maxLng
         );
-    }
-
-    private boolean isOpenStreetMapSource(Hotel hotel) {
-        String source = hotel.getSource();
-        return source != null && (source.equalsIgnoreCase("OVERPASS") || source.equalsIgnoreCase("OSM"));
     }
 }

@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.BookingStatus;
 import com.example.demo.entity.EmailEventType;
+import com.example.demo.entity.Hotel;
 import com.example.demo.entity.Room;
 import com.example.demo.entity.RoomStatus;
 import com.example.demo.entity.User;
@@ -50,6 +51,187 @@ public class AdminService {
 
     public Page<Room> rooms(Pageable pageable) {
         return roomRepository.findAll(pageable);
+    }
+
+    public Page<Hotel> hotels(Pageable pageable) {
+        return hotelRepository.findAll(pageable);
+    }
+
+    public Page<Room> roomsForHotel(UUID hotelId, Pageable pageable) {
+        requireHotel(hotelId);
+        return roomRepository.findActivePageByHotelId(hotelId, pageable);
+    }
+
+    public Hotel requireHotel(UUID hotelId) {
+        return hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new BusinessException("Không tìm thấy khách sạn"));
+    }
+
+    public long roomCountForHotel(UUID hotelId) {
+        Hotel hotel = requireHotel(hotelId);
+        return roomRepository.countByHotelAndDeletedFalse(hotel);
+    }
+
+    @Transactional
+    public Hotel createHotel(User actor, String name, String city, String province, String address,
+                             String description, Integer starRating) {
+        validateHotelFields(name, city, province, address);
+        Hotel hotel = new Hotel();
+        hotel.setName(name.trim());
+        hotel.setSlug(slug(name));
+        hotel.setCity(city.trim());
+        hotel.setProvince(province.trim());
+        hotel.setAddress(address.trim());
+        hotel.setAddressLine(address.trim());
+        hotel.setDescription(description == null ? "" : description.trim());
+        hotel.setStarRating(starRating);
+        hotel.setSource("MANUAL");
+        Hotel saved = hotelRepository.save(hotel);
+        auditService.record(actor, "CREATE_HOTEL", "HOTEL", saved.getId());
+        return saved;
+    }
+
+    @Transactional
+    public Hotel updateHotel(User actor, UUID hotelId, String name, String city, String province,
+                             String address, String description, Integer starRating) {
+        Hotel hotel = requireHotel(hotelId);
+        if (name != null && !name.isBlank()) {
+            hotel.setName(name.trim());
+            hotel.setSlug(slug(name));
+        }
+        if (city != null && !city.isBlank()) {
+            hotel.setCity(city.trim());
+        }
+        if (province != null && !province.isBlank()) {
+            hotel.setProvince(province.trim());
+        }
+        if (address != null && !address.isBlank()) {
+            hotel.setAddress(address.trim());
+            hotel.setAddressLine(address.trim());
+        }
+        if (description != null) {
+            hotel.setDescription(description.trim());
+        }
+        if (starRating != null) {
+            hotel.setStarRating(starRating);
+        }
+        Hotel saved = hotelRepository.save(hotel);
+        auditService.record(actor, "UPDATE_HOTEL", "HOTEL", saved.getId());
+        return saved;
+    }
+
+    @Transactional
+    public void deleteHotel(User actor, UUID hotelId) {
+        Hotel hotel = requireHotel(hotelId);
+        hotel.setDeleted(true);
+        hotelRepository.save(hotel);
+        auditService.record(actor, "DELETE_HOTEL", "HOTEL", hotelId);
+    }
+
+    @Transactional
+    public Room createRoom(User actor, UUID hotelId, String name, String roomType, int capacity,
+                           BigDecimal pricePerNight, String description) {
+        Hotel hotel = requireHotel(hotelId);
+        if (hotel.isDeleted()) {
+            throw new BusinessException("Không thể thêm phòng cho khách sạn đã tắt");
+        }
+        validateRoomFields(name, roomType, capacity, pricePerNight);
+        Room room = new Room();
+        room.setHotel(hotel);
+        room.setName(name.trim());
+        room.setRoomType(roomType.trim());
+        room.setCapacity(capacity);
+        room.setPricePerNight(pricePerNight);
+        room.setDescription(description == null ? "" : description.trim());
+        room.setCancellationPolicy("Chính sách hủy theo quy định khách sạn.");
+        room.setStatus(RoomStatus.AVAILABLE);
+        Room saved = roomRepository.save(room);
+        auditService.record(actor, "CREATE_ROOM", "ROOM", saved.getId());
+        return saved;
+    }
+
+    @Transactional
+    public Room updateRoomForHotel(User actor, UUID hotelId, UUID roomId, String name, String roomType,
+                                   Integer capacity, BigDecimal price, RoomStatus status, String description) {
+        Room room = requireRoomForHotel(hotelId, roomId);
+        if (name != null && !name.isBlank()) {
+            room.setName(name.trim());
+        }
+        if (roomType != null && !roomType.isBlank()) {
+            room.setRoomType(roomType.trim());
+        }
+        if (capacity != null) {
+            if (capacity < 1 || capacity > 20) {
+                throw new BusinessException("Sức chứa phòng không hợp lệ");
+            }
+            room.setCapacity(capacity);
+        }
+        if (price != null) {
+            if (price.compareTo(BigDecimal.ZERO) <= 0 || price.compareTo(BigDecimal.valueOf(100_000_000)) > 0) {
+                throw new BusinessException("Giá phòng không hợp lệ");
+            }
+            room.setPricePerNight(price);
+        }
+        if (status != null) {
+            room.setStatus(status);
+        }
+        if (description != null) {
+            room.setDescription(description.trim());
+        }
+        Room saved = roomRepository.save(room);
+        auditService.record(actor, "UPDATE_ROOM", "ROOM", saved.getId());
+        return saved;
+    }
+
+    @Transactional
+    public void deleteRoomForHotel(User actor, UUID hotelId, UUID roomId) {
+        Room room = requireRoomForHotel(hotelId, roomId);
+        room.setDeleted(true);
+        roomRepository.save(room);
+        auditService.record(actor, "DELETE_ROOM", "ROOM", roomId);
+    }
+
+    public Room requireRoomForHotel(UUID hotelId, UUID roomId) {
+        requireHotel(hotelId);
+        return roomRepository.findActiveByHotelIdAndId(hotelId, roomId)
+                .orElseThrow(() -> new BusinessException("Phòng không thuộc khách sạn này"));
+    }
+
+    private void validateHotelFields(String name, String city, String province, String address) {
+        if (name == null || name.isBlank()) {
+            throw new BusinessException("Tên khách sạn không được để trống");
+        }
+        if (city == null || city.isBlank()) {
+            throw new BusinessException("Thành phố không được để trống");
+        }
+        if (province == null || province.isBlank()) {
+            throw new BusinessException("Tỉnh/thành không được để trống");
+        }
+        if (address == null || address.isBlank()) {
+            throw new BusinessException("Địa chỉ không được để trống");
+        }
+    }
+
+    private void validateRoomFields(String name, String roomType, int capacity, BigDecimal price) {
+        if (name == null || name.isBlank()) {
+            throw new BusinessException("Tên phòng không được để trống");
+        }
+        if (roomType == null || roomType.isBlank()) {
+            throw new BusinessException("Loại phòng không được để trống");
+        }
+        if (capacity < 1 || capacity > 20) {
+            throw new BusinessException("Sức chứa phòng không hợp lệ");
+        }
+        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0
+                || price.compareTo(BigDecimal.valueOf(100_000_000)) > 0) {
+            throw new BusinessException("Giá phòng không hợp lệ");
+        }
+    }
+
+    private String slug(String value) {
+        return value.trim().toLowerCase(java.util.Locale.ROOT)
+                .replaceAll("[^a-z0-9]+", "-")
+                .replaceAll("(^-|-$)", "");
     }
 
     public Page<Booking> bookings(Pageable pageable) {

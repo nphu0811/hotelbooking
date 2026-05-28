@@ -1,33 +1,65 @@
 <!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Room management')}"></head>
+<head th:replace="~{fragments/layout :: head('Quản lý phòng')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page admin-page">
     <header class="page-header">
         <div>
-            <p class="page-kicker">Inventory</p>
-            <h1>Quản lý phòng</h1>
+            <p class="page-kicker">Admin / Khách sạn / Phòng</p>
+            <h1 th:text="${'Quản lý phòng — ' + hotel.name}">Quản lý phòng</h1>
+            <p class="muted">
+                <a th:href="@{/admin/hotels}">Khách sạn</a>
+                <span> / </span>
+                <span th:text="${hotel.name}">Hotel</span>
+                <span> / Phòng</span>
+            </p>
         </div>
+        <a class="button button-muted" th:href="@{/admin/hotels}">← Danh sách khách sạn</a>
     </header>
     <p class="alert" th:if="${error}" th:text="${error}"></p>
+    <p class="success" th:if="${param.created}">Đã tạo phòng.</p>
+    <p class="success" th:if="${param.updated}">Đã cập nhật phòng.</p>
+    <p class="success" th:if="${param.deleted}">Đã xóa phòng.</p>
+
+    <section class="premium-panel">
+        <h2>Thêm phòng</h2>
+        <form class="toolbar" th:action="@{/admin/hotels/{hotelId}/rooms(hotelId=${hotel.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input name="name" placeholder="Tên phòng" required>
+            <input name="roomType" placeholder="Loại phòng" required>
+            <input name="capacity" type="number" min="1" max="20" value="2" required>
+            <input name="pricePerNight" type="number" min="1" placeholder="Giá/đêm" required>
+            <button class="button" type="submit">Tạo phòng</button>
+        </form>
+    </section>
+
     <div class="table-wrap">
         <table>
-            <thead><tr><th>Phòng</th><th>Khách sạn</th><th>Giá</th><th>Trạng thái</th><th>Cập nhật</th></tr></thead>
+            <thead><tr><th>Phòng</th><th>Loại</th><th>Giá</th><th>Trạng thái</th><th>Cập nhật</th></tr></thead>
             <tbody>
             <tr th:each="room : ${rooms.content}">
                 <td th:text="${room.name}">Room</td>
-                <td th:text="${room.hotel != null ? room.hotel.name : '-'}">Hotel</td>
+                <td th:text="${room.roomType}">Type</td>
                 <td th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT')}">0</td>
                 <td><span class="badge" th:text="${room.status}">Status</span></td>
                 <td>
-                    <form class="inline-form" th:action="@{/admin/rooms/{id}(id=${room.id})}" method="post">
+                    <form class="inline-form"
+                          th:action="@{/admin/hotels/{hotelId}/rooms/{roomId}(hotelId=${hotel.id},roomId=${room.id})}"
+                          method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                         <input type="number" name="price" th:value="${room.pricePerNight}">
                         <select name="status">
-                            <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}" th:selected="${status == room.status}">AVAILABLE</option>
+                            <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}"
+                                    th:selected="${status == room.status}">AVAILABLE</option>
                         </select>
                         <button class="button button-small" type="submit">Lưu</button>
+                    </form>
+                    <form class="inline-form"
+                          th:action="@{/admin/hotels/{hotelId}/rooms/{roomId}/delete(hotelId=${hotel.id},roomId=${room.id})}"
+                          method="post" onsubmit="return confirm('Xóa phòng này?');">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button class="button button-small button-muted" type="submit">Xóa</button>
                     </form>
                 </td>
             </tr>

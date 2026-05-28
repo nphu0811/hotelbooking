@@ -18,6 +18,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.HexFormat;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 public class HotelUpsertService {
@@ -47,12 +48,13 @@ public class HotelUpsertService {
         if (!valid(record)) {
             return UpsertResult.skip();
         }
-        boolean existing = deduplicationService.findExisting(record).isPresent();
+        Optional<Hotel> existingHotel = deduplicationService.findExisting(record);
+        boolean existing = existingHotel.isPresent();
         if (dryRun) {
             return existing ? UpsertResult.update() : UpsertResult.insert();
         }
 
-        Hotel hotel = deduplicationService.findExisting(record).orElseGet(Hotel::new);
+        Hotel hotel = existingHotel.orElseGet(Hotel::new);
         hotel.setName(record.name().trim());
         hotel.setSlug(slug(record.name()));
         hotel.setAddressLine(blankToFallback(record.addressLine(), record.city()));
@@ -68,6 +70,9 @@ public class HotelUpsertService {
         hotel.setSource(record.source().toUpperCase(Locale.ROOT));
         hotel.setSourceExternalId(record.externalId());
         hotel.setSourceUrl(record.sourceUrl());
+        if (record.primaryImageUrl() != null && !record.primaryImageUrl().isBlank()) {
+            hotel.setThumbnailUrl(record.primaryImageUrl().trim());
+        }
         hotel.setDataQualityScore(dataQualityScoringService.score(record));
         hotel.setDescription("Imported place data from " + record.source().toUpperCase(Locale.ROOT) + ". Availability and rates are internal estimates unless a provider offer is attached.");
         Instant now = Instant.now(clock);
@@ -75,9 +80,9 @@ public class HotelUpsertService {
             hotel.setImportedAt(now);
         }
         hotel.setLastSyncedAt(now);
-        Hotel saved = hotelRepository.saveAndFlush(hotel);
+        Hotel saved = hotelRepository.save(hotel);
         upsertSourceRecord(record);
-        ensureInternalRoomTemplate(saved, record);
+        ensureInternalRoomTemplate(saved, record, existing);
         return existing ? UpsertResult.update() : UpsertResult.insert();
     }
 
@@ -93,9 +98,13 @@ public class HotelUpsertService {
         sourceRecordRepository.save(sourceRecord);
     }
 
-    private void ensureInternalRoomTemplate(Hotel hotel, HotelDataRecord record) {
-        if (roomRepository.existsByHotel(hotel)) {
-            return;
+    private void ensureInternalRoomTemplate(Hotel hotel, HotelDataRecord record, boolean existingHotel) {
+        if (existingHotel) {
+            Optional<Room> existingRoom = roomRepository.findFirstByHotelOrderByCreatedAtAsc(hotel);
+            if (existingRoom.isPresent()) {
+                updateInternalTemplateImage(existingRoom.get(), record);
+                return;
+            }
         }
         Room room = new Room();
         room.setHotel(hotel);
@@ -114,6 +123,28 @@ public class HotelUpsertService {
         image.setAltText(hotel.getName());
         image.setPrimary(true);
         room.getImages().add(image);
+        roomRepository.save(room);
+    }
+
+    private void updateInternalTemplateImage(Room room, HotelDataRecord record) {
+        if (record.primaryImageUrl() == null || record.primaryImageUrl().isBlank()) {
+            return;
+        }
+        if (!"INTERNAL_TEMPLATE".equalsIgnoreCase(room.getRoomSource())) {
+            return;
+        }
+        RoomImage image = room.getImages().stream()
+                .filter(RoomImage::isPrimary)
+                .findFirst()
+                .orElseGet(() -> {
+                    RoomImage created = new RoomImage();
+                    created.setRoom(room);
+                    created.setPrimary(true);
+                    room.getImages().add(created);
+                    return created;
+                });
+        image.setImageUrl(record.primaryImageUrl().trim());
+        image.setAltText(room.getHotel().getName());
         roomRepository.save(room);
     }
 

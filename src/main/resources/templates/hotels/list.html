@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Khách sạn')}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="page">
+    <header class="page-header">
+        <p class="page-kicker">Khách sạn</p>
+        <h1>Tìm khách sạn</h1>
+        <p th:if="${hotels != null}" th:text="${hotels.totalElements + ' khách sạn'}">0 khách sạn</p>
+    </header>
+
+    <form class="toolbar" th:action="@{/hotels}" method="get" aria-label="Tìm khách sạn">
+        <input name="q" th:value="${q}" placeholder="Tên khách sạn / địa điểm">
+        <input name="city" th:value="${city}" placeholder="Thành phố">
+        <input type="number" name="minRating" min="1" max="5" th:value="${minRating}" placeholder="Sao tối thiểu">
+        <button class="button" type="submit">Lọc</button>
+    </form>
+
+    <div class="room-list" th:if="${hotels != null and !hotels.isEmpty()}">
+        <article class="room-row" th:each="hotel : ${hotels.content}">
+            <img th:src="${hotel.thumbnailUrl != null ? hotel.thumbnailUrl : '/css/room-placeholder.svg'}" th:alt="${hotel.name}">
+            <div>
+                <h2 th:text="${hotel.name}">Hotel</h2>
+                <p class="muted" th:text="${hotel.city + ' — ' + hotel.address}">City</p>
+                <p th:if="${hotel.rating != null}" th:text="${'★ ' + hotel.rating}">Rating</p>
+                <p class="muted" th:text="${hotel.roomCount + ' phòng'}">Rooms</p>
+            </div>
+            <div class="row-side">
+                <strong th:if="${hotel.minPrice != null}"
+                        th:text="${'Từ ' + #numbers.formatDecimal(hotel.minPrice,0,'COMMA',0,'POINT') + ' VND / đêm'}">Price</strong>
+                <a class="button" th:href="@{/hotels/{id}(id=${hotel.id})}">Xem phòng</a>
+            </div>
+        </article>
+    </div>
+    <p class="empty" th:if="${hotels == null or hotels.isEmpty()}">Không tìm thấy khách sạn phù hợp.</p>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

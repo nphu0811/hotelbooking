@@ -98,6 +98,7 @@ public class GooglePlacesHotelDataProvider implements HotelDataProvider {
                 .header("Content-Type", "application/json")
                 .header("X-Goog-Api-Key", apiKey)
                 .header("X-Goog-FieldMask", FIELD_MASK)
+                .header("Referer", "https://hotelbooking-production-57a9.up.railway.app/")
                 .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(body)))
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -171,6 +172,7 @@ public class GooglePlacesHotelDataProvider implements HotelDataProvider {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofSeconds(30))
+                .header("Referer", "https://hotelbooking-production-57a9.up.railway.app/")
                 .GET()
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

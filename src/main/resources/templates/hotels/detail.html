@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${hotel.name})}"></head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main class="page detail-layout">
+    <section class="detail-main">
+        <img class="detail-image"
+             th:src="${hotel.thumbnailUrl != null ? hotel.thumbnailUrl : '/css/room-placeholder.svg'}"
+             th:alt="${hotel.name}">
+        <div class="detail-copy">
+            <p class="page-kicker" th:text="${hotel.city}">City</p>
+            <h1 th:text="${hotel.name}">Hotel</h1>
+            <p class="muted" th:text="${hotel.address}">Address</p>
+            <p th:if="${hotel.rating != null}" th:text="${'★ ' + hotel.rating}">Rating</p>
+            <p th:if="${hotel.description != null}" th:text="${hotel.description}">Description</p>
+        </div>
+
+        <section class="premium-panel" th:if="${mapEmbedUrl != null}">
+            <h2>Bản đồ</h2>
+            <iframe th:src="${mapEmbedUrl}" width="100%" height="360" style="border:0;border-radius:12px;"
+                    allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                    title="Bản đồ khách sạn"></iframe>
+        </section>
+        <section class="premium-panel" th:if="${mapEmbedUrl == null and hotel.staticMapUrl != null}">
+            <h2>Bản đồ</h2>
+            <img th:src="${hotel.staticMapUrl}" alt="Bản đồ khách sạn" style="width:100%;border-radius:12px;">
+        </section>
+        <p th:if="${mapEmbedUrl == null and hotel.staticMapUrl == null and hotel.mapUrl != null}">
+            <a class="button button-muted" th:href="${hotel.mapUrl}" target="_blank" rel="noopener">Mở trên Google Maps</a>
+        </p>
+
+        <section>
+            <div class="section-heading">
+                <h2>Phòng có sẵn</h2>
+                <p class="muted" th:text="${rooms.size() + ' phòng'}">0 phòng</p>
+            </div>
+            <p class="empty" th:if="${rooms.isEmpty()}">Chưa có phòng nào cho khách sạn này.</p>
+            <div class="room-list" th:if="${!rooms.isEmpty()}">
+                <article class="room-row" th:each="room : ${rooms}">
+                    <img th:src="${room.primaryImageUrl != null ? room.primaryImageUrl : '/css/room-placeholder.svg'}"
+                         th:alt="${room.name}">
+                    <div>
+                        <h2 th:text="${room.name}">Room</h2>
+                        <p class="muted" th:text="${room.roomType + ' · ' + room.capacity + ' khách'}">Type</p>
+                        <p th:text="${room.description}">Description</p>
+                        <span class="badge" th:text="${room.status}">AVAILABLE</span>
+                    </div>
+                    <div class="row-side">
+                        <strong th:text="${#numbers.formatDecimal(room.pricePerNight,0,'COMMA',0,'POINT') + ' VND / đêm'}">0</strong>
+                        <a class="button" th:if="${room.status.name() == 'AVAILABLE'}"
+                           th:href="@{/rooms/{id}(id=${room.id})}">Đặt phòng</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </section>
+</main>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
