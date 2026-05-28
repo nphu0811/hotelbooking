@@ -105,7 +105,8 @@
 /* Hero Section */
 .home-shell .hero {
     position: relative;
-    min-height: 850px;
+    min-height: calc(100vh - 80px);
+    max-height: 740px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -137,8 +138,8 @@
     gap: 48px;
     width: min(1280px, calc(100% - 40px));
     margin: 0 auto;
-    padding-top: 120px;
-    padding-bottom: 64px;
+    padding-top: 100px;
+    padding-bottom: 60px;
 }
 
 .home-shell .hero-copy {
