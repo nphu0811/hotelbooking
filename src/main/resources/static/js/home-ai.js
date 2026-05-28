@@ -229,6 +229,13 @@
                 // Create container overlay inside hero
                 var container = document.createElement("div");
                 container.id = "threejs-container";
+                container.style.position = "absolute";
+                container.style.top = "0";
+                container.style.left = "0";
+                container.style.width = "100%";
+                container.style.height = "100%";
+                container.style.zIndex = "3";
+                container.style.pointerEvents = "none";
                 heroSection.appendChild(container);
 
                 // Setup Scene
@@ -366,6 +373,8 @@
                         camera.aspect = heroSection.clientWidth / heroSection.clientHeight;
                         camera.updateProjectionMatrix();
                         renderer.setSize(heroSection.clientWidth, heroSection.clientHeight);
+                        windowHalfX = window.innerWidth / 2;
+                        windowHalfY = window.innerHeight / 2;
                         updateLayout();
                     }
                 });
