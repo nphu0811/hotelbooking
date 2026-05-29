@@ -145,20 +145,20 @@
             }
         });
         
-        var langItems = modal.querySelectorAll(".lang-item");
-        langItems.forEach(function(item) {
-            item.addEventListener("click", function() {
+        // Initial setup from localStorage
+        var savedLang = localStorage.getItem("lumiere-lang") || "vi";
+        updateLangUI(savedLang);
+        
+        function updateLangUI(langCode) {
+            var activeItem = modal.querySelector('.lang-item[data-lang="' + langCode + '"]');
+            if (activeItem) {
+                var langItems = modal.querySelectorAll(".lang-item");
                 langItems.forEach(function(el) {
                     el.classList.remove("active");
                     var check = el.querySelector(".checkmark");
                     if (check) check.style.visibility = "hidden";
                 });
                 
-                item.classList.add("active");
-                var check = item.querySelector(".checkmark");
-                if (check) check.style.visibility = "visible";
-                
-                var langCode = item.getAttribute("data-lang");
                 var matches = modal.querySelectorAll('.lang-item[data-lang="' + langCode + '"]');
                 matches.forEach(function(match) {
                     match.classList.add("active");
@@ -167,15 +167,73 @@
                 });
 
                 var btnImg = langBtn.querySelector("img");
-                var clickedImg = item.querySelector("img");
+                var clickedImg = activeItem.querySelector("img");
                 if (btnImg && clickedImg) {
                     btnImg.src = clickedImg.src;
-                    btnImg.alt = item.querySelector(".lang-name").textContent;
+                    btnImg.alt = activeItem.querySelector(".lang-name").textContent;
                 }
-                
+            }
+        }
+
+        function setLanguage(langCode) {
+            localStorage.setItem("lumiere-lang", langCode);
+            updateLangUI(langCode);
+
+            var googleLangCode = langCode;
+            if (langCode === 'zh-cn') googleLangCode = 'zh-CN';
+            if (langCode === 'zh-tw') googleLangCode = 'zh-TW';
+            if (langCode === 'zh-hk') googleLangCode = 'zh-TW';
+            if (langCode === 'pt-br') googleLangCode = 'pt';
+
+            if (langCode === 'vi') {
+                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=." + window.location.hostname;
+            } else {
+                document.cookie = "googtrans=/vi/" + googleLangCode + "; path=/";
+                document.cookie = "googtrans=/vi/" + googleLangCode + "; path=/; domain=" + window.location.hostname;
+                document.cookie = "googtrans=/vi/" + googleLangCode + "; path=/; domain=." + window.location.hostname;
+            }
+
+            var translateSelect = document.querySelector('.goog-te-combo');
+            if (translateSelect) {
+                translateSelect.value = googleLangCode;
+                translateSelect.dispatchEvent(new Event('change'));
+            } else {
+                window.location.reload();
+            }
+        }
+        
+        var langItems = modal.querySelectorAll(".lang-item");
+        langItems.forEach(function(item) {
+            item.addEventListener("click", function() {
+                var langCode = item.getAttribute("data-lang");
+                setLanguage(langCode);
                 setTimeout(closeModal, 300);
             });
         });
+
+        // Sync with Google Translate Combo when it loads
+        var checkCount = 0;
+        var checkInterval = setInterval(function() {
+            var translateSelect = document.querySelector('.goog-te-combo');
+            if (translateSelect) {
+                var googleLangCode = savedLang;
+                if (savedLang === 'zh-cn') googleLangCode = 'zh-CN';
+                if (savedLang === 'zh-tw') googleLangCode = 'zh-TW';
+                if (savedLang === 'zh-hk') googleLangCode = 'zh-TW';
+                if (savedLang === 'pt-br') googleLangCode = 'pt';
+
+                if (translateSelect.value !== googleLangCode && savedLang !== 'vi') {
+                    translateSelect.value = googleLangCode;
+                    translateSelect.dispatchEvent(new Event('change'));
+                }
+                clearInterval(checkInterval);
+            }
+            if (++checkCount > 30) {
+                clearInterval(checkInterval);
+            }
+        }, 500);
     }
 
     function bindToggle() {

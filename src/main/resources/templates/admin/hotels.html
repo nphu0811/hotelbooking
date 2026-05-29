@@ -18,11 +18,12 @@
     <p class="success" th:if="${param.updated}">Đã cập nhật khách sạn.</p>
     <p class="success" th:if="${param.deleted}">Đã tắt khách sạn.</p>
 
-    <div class="admin-board">
-        <section class="ops-panel">
-            <div class="panel-title">
-                <h2>Thêm khách sạn mới</h2>
-            </div>
+    <!-- Collapsible Add Hotel Form -->
+    <details class="ops-panel" style="margin-bottom: 24px; padding: 24px;">
+        <summary class="button" style="cursor: pointer; list-style: none; display: inline-flex; gap: 8px; outline: none; user-select: none;">
+            <span>+ Thêm khách sạn mới</span>
+        </summary>
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--color-border);">
             <form th:action="@{/admin/hotels}" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div class="form-grid">
@@ -42,65 +43,70 @@
                         <input name="starRating" type="number" min="1" max="5" placeholder="1–5">
                     </label>
                 </div>
-                <button class="button" type="submit" style="margin-top: 16px;">Tạo khách sạn</button>
+                <button class="button" type="submit" style="margin-top: 20px;">Tạo khách sạn</button>
             </form>
-        </section>
+        </div>
+    </details>
 
-        <section class="ops-panel">
-            <div class="panel-title">
-                <h2>Danh sách khách sạn</h2>
-                <span class="page-kicker" th:text="${hotels.totalElements + ' khách sạn'}">0 khách sạn</span>
-            </div>
+    <!-- Full-width Hotel List Section -->
+    <section class="ops-panel" style="width: 100%; padding: 24px;">
+        <div class="panel-title" style="margin-bottom: 20px;">
+            <h2>Danh sách khách sạn</h2>
+            <span class="page-kicker" th:text="${hotels.totalElements + ' khách sạn'}">0 khách sạn</span>
+        </div>
 
-            <p class="empty" th:if="${hotels.empty}">Chưa có khách sạn nào.</p>
+        <p class="empty" th:if="${hotels.empty}">Chưa có khách sạn nào.</p>
 
-            <div class="mini-list" th:if="${!hotels.empty}">
-                <article th:each="h : ${hotels.content}">
-                    <div>
-                        <strong th:text="${h.name}">Tên khách sạn</strong>
-                        <span th:text="${h.city + ' · ' + h.address}">Thành phố · Địa chỉ</span>
-                        <span class="muted" th:text="${roomCounts[h.id] + ' phòng'}">0 phòng</span>
+        <div class="mini-list" th:if="${!hotels.empty}" style="display: flex; flex-direction: column; gap: 16px;">
+            <article th:each="h : ${hotels.content}" style="display: grid; grid-template-columns: 2fr 1fr 1fr; align-items: center; gap: 16px; padding: 16px; border-bottom: 1px solid var(--color-border);">
+                <div>
+                    <strong th:text="${h.name}" style="font-size: 18px; color: var(--color-primary);">Tên khách sạn</strong>
+                    <div style="font-size: 13px; color: var(--color-text-soft); margin-top: 4px;" th:text="${h.address + ', ' + h.city}">Địa chỉ, Thành phố</div>
+                    <div style="font-size: 12px; color: var(--color-text-muted); margin-top: 4px;">
+                        <span th:text="${roomCounts[h.id] + ' phòng'}">0 phòng</span>
+                        <span th:if="${h.starRating != null}" th:text="' · ' + ${h.starRating} + '★'"> · 5★</span>
                     </div>
+                </div>
+                <div>
                     <span th:replace="~{fragments/i18n :: hotelStatus(${h.status})}">Đang hoạt động</span>
-                    <div class="actions" style="flex-direction: column; align-items: flex-end;">
-                        <a class="button button-small"
-                           th:href="@{/admin/hotels/{id}/rooms(id=${h.id})}">Xem phòng</a>
-                        <details th:if="${!h.deleted}" style="margin-top: 8px; width: 100%; max-width: 320px;">
-                            <summary class="button button-small button-muted" style="list-style: none; cursor: pointer; text-align: center;">Chỉnh sửa</summary>
-                            <form th:action="@{/admin/hotels/{id}(id=${h.id})}" method="post" style="margin-top: 12px;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; justify-self: end; width: 100%; max-width: 240px;">
+                    <a class="button button-small" th:href="@{/admin/hotels/{id}/rooms(id=${h.id})}" style="width: 100%; text-align: center;">Quản lý phòng</a>
+                    
+                    <details th:if="${!h.deleted}" style="width: 100%;">
+                        <summary class="button button-small button-muted" style="list-style: none; cursor: pointer; text-align: center; width: 100%;">Chỉnh sửa</summary>
+                        <div style="margin-top: 12px; padding: 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg-soft);">
+                            <form th:action="@{/admin/hotels/{id}(id=${h.id})}" method="post">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                <div class="form-grid" style="grid-template-columns: 1fr;">
-                                    <label>Tên
-                                        <input name="name" th:value="${h.name}" required>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <label style="font-size: 12px; color: var(--color-text-muted);">Tên
+                                        <input name="name" th:value="${h.name}" required style="width: 100%; height: 36px; padding: 0 8px; font-size: 13px;">
                                     </label>
-                                    <label>Thành phố
-                                        <input name="city" th:value="${h.city}" required>
+                                    <label style="font-size: 12px; color: var(--color-text-muted);">Thành phố
+                                        <input name="city" th:value="${h.city}" required style="width: 100%; height: 36px; padding: 0 8px; font-size: 13px;">
                                     </label>
-                                    <label>Tỉnh / thành
-                                        <input name="province" th:value="${h.province}" required>
+                                    <label style="font-size: 12px; color: var(--color-text-muted);">Tỉnh / thành
+                                        <input name="province" th:value="${h.province}" required style="width: 100%; height: 36px; padding: 0 8px; font-size: 13px;">
                                     </label>
-                                    <label>Địa chỉ
-                                        <input name="address" th:value="${h.address}" required>
+                                    <label style="font-size: 12px; color: var(--color-text-muted);">Địa chỉ
+                                        <input name="address" th:value="${h.address}" required style="width: 100%; height: 36px; padding: 0 8px; font-size: 13px;">
                                     </label>
-                                </div>
-                                <div class="actions" style="margin-top: 12px; justify-content: flex-end;">
-                                    <button class="button button-small" type="submit">Lưu</button>
+                                    <button class="button button-small" type="submit" style="width: 100%; min-height: 36px; margin-top: 4px;">Lưu</button>
                                 </div>
                             </form>
-                        </details>
-                        <form th:if="${!h.deleted}"
-                              th:action="@{/admin/hotels/{id}/delete(id=${h.id})}"
-                              method="post"
-                              onsubmit="return confirm('Tắt khách sạn này?');"
-                              style="margin-top: 8px;">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                            <button class="button button-small button-muted" type="submit">Tắt khách sạn</button>
-                        </form>
-                    </div>
-                </article>
-            </div>
-        </section>
-    </div>
+                            <form th:action="@{/admin/hotels/{id}/delete(id=${h.id})}"
+                                  method="post"
+                                  onsubmit="return confirm('Tắt khách sạn này?');"
+                                  style="margin-top: 8px;">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <button class="button button-small button-danger" type="submit" style="width: 100%; min-height: 36px; color: white;">Tắt khách sạn</button>
+                            </form>
+                        </div>
+                    </details>
+                </div>
+            </article>
+        </div>
+    </section>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
