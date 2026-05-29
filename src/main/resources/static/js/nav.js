@@ -69,15 +69,23 @@
             return;
         }
 
+        var visibleSet = {};
+
         var observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
-                if (entry.isIntersecting) {
-                    setActiveLink(entry.target.id);
-                }
+                visibleSet[entry.target.id] = entry.isIntersecting;
             });
+
+            // Pick the first visible section in DOM order
+            for (var i = 0; i < sectionIds.length; i++) {
+                if (visibleSet[sectionIds[i]]) {
+                    setActiveLink(sectionIds[i]);
+                    return;
+                }
+            }
         }, {
-            rootMargin: "-" + headerOffset() + "px 0px -62% 0px",
-            threshold: 0.12
+            rootMargin: "-" + headerOffset() + "px 0px -40% 0px",
+            threshold: [0, 0.05, 0.1]
         });
 
         sections.forEach(function (section) {

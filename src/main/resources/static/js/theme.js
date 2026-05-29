@@ -185,18 +185,38 @@
             if (langCode === 'zh-hk') googleLangCode = 'zh-TW';
             if (langCode === 'pt-br') googleLangCode = 'pt';
 
-            if (langCode === 'vi') {
-                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-            } else {
-                document.cookie = "googtrans=/vi/" + googleLangCode + "; path=/";
-            }
+            // Determine the domain for cookie
+            var hostDomain = window.location.hostname;
 
-            var translateSelect = document.querySelector('.goog-te-combo');
-            if (translateSelect) {
-                translateSelect.value = googleLangCode;
-                translateSelect.dispatchEvent(new Event('change'));
-            } else {
+            if (langCode === 'vi') {
+                // Clear googtrans cookies on both path and domain
+                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + hostDomain;
+                // Also try removing the Google Translate frame
+                var gtFrame = document.querySelector('.skiptranslate');
+                if (gtFrame) {
+                    var restoreBtn = document.querySelector('.goog-te-banner-frame');
+                    if (restoreBtn) {
+                        try {
+                            restoreBtn.contentDocument.querySelector('.goog-close-link').click();
+                        } catch(e) { /* cross-origin, fallback to reload */ }
+                    }
+                }
                 window.location.reload();
+            } else {
+                // Set googtrans on both root path and with domain
+                var cookieVal = "/vi/" + googleLangCode;
+                document.cookie = "googtrans=" + cookieVal + "; path=/";
+                document.cookie = "googtrans=" + cookieVal + "; path=/; domain=" + hostDomain;
+
+                var translateSelect = document.querySelector('.goog-te-combo');
+                if (translateSelect) {
+                    translateSelect.value = googleLangCode;
+                    translateSelect.dispatchEvent(new Event('change'));
+                } else {
+                    // Google Translate widget not yet loaded, reload so it picks up the cookie
+                    window.location.reload();
+                }
             }
         }
         
