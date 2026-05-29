@@ -60,7 +60,7 @@
         <p class="empty" th:if="${rooms.empty}">Chưa có phòng nào cho khách sạn này.</p>
 
         <div class="mini-list" th:if="${!rooms.empty}" style="display: flex; flex-direction: column; gap: 16px;">
-            <article th:each="room : ${rooms.content}" style="display: grid; grid-template-columns: 2fr 1fr 1fr; align-items: center; gap: 16px; padding: 16px; border-bottom: 1px solid var(--color-border);">
+            <article th:each="room : ${rooms.content}" style="display: grid; grid-template-columns: 1fr 150px 240px; align-items: center; gap: 16px; padding: 16px; border-bottom: 1px solid var(--color-border);">
                 <div>
                     <strong th:text="${room.name}" style="font-size: 18px; color: var(--color-primary);">Tên phòng</strong>
                     <div style="font-size: 13px; color: var(--color-text-soft); margin-top: 4px;">

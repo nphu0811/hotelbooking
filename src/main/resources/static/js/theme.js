@@ -187,12 +187,8 @@
 
             if (langCode === 'vi') {
                 document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
-                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=." + window.location.hostname;
             } else {
                 document.cookie = "googtrans=/vi/" + googleLangCode + "; path=/";
-                document.cookie = "googtrans=/vi/" + googleLangCode + "; path=/; domain=" + window.location.hostname;
-                document.cookie = "googtrans=/vi/" + googleLangCode + "; path=/; domain=." + window.location.hostname;
             }
 
             var translateSelect = document.querySelector('.goog-te-combo');
