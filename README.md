@@ -1,72 +1,213 @@
-# HotelBooking
+# LUMIERE Hotel Booking
 
-Spring Boot hotel booking application prepared for deployment with PostgreSQL/Flyway, Brevo HTTP email/SMS API, and VNPay payment boundaries.
+Premium hotel booking web application built with Spring Boot, Thymeleaf, Spring Security, Flyway, and provider-ready payment/email integrations.
 
-## Requirements
+The app supports guest search, room details, secure authentication, OTP verification, booking checkout, mock/local payment flows, production payment boundaries, admin management, and AI-assisted room recommendations.
 
-- Java 21
-- Docker for local PostgreSQL or container deployment
+## Highlights
 
-## Local Setup
+- Clean LUMIERE-style responsive UI with light/dark theme support.
+- Password login, OTP login, Google/Facebook OAuth entry points, email and phone verification.
+- Hotel and room browsing with search, detail pages, booking history, cancellation and refund states.
+- Admin dashboard for rooms, bookings, users, refunds, and operational review.
+- Payment abstraction with local mock payment plus VNPay and MoMo provider adapters.
+- Transactional email/SMS abstraction with local console providers and Brevo-ready production delivery.
+- Flyway-managed PostgreSQL schema for production; H2 in-memory profile for fast local development.
+- AI recommendation endpoint powered by `OPENAI_API_KEY` when configured.
+- E2E fixture mode and Playwright smoke coverage for authenticated booking flows.
+
+## Tech Stack
+
+| Area | Tools |
+| --- | --- |
+| Backend | Java 21, Spring Boot 4, Spring MVC, Spring Security |
+| Views | Thymeleaf, CSS, vanilla JavaScript |
+| Data | Spring Data JPA, Flyway, PostgreSQL, H2 local profile |
+| Auth | Form login, OTP, OAuth2 client |
+| Payments | Mock, VNPay, MoMo adapters |
+| Messaging | Console providers, Brevo email/SMS integration |
+| Testing | JUnit, Spring tests, Testcontainers, Playwright |
+| Runtime | Gradle, Docker Compose |
+
+## Quick Start
+
+### 1. Clone and prepare environment
 
 ```bash
+git clone https://github.com/nphu0811/hotelbooking.git
+cd hotelbooking
 cp .env.example .env
-docker compose up -d postgres
+```
+
+### 2. Run locally with the development profile
+
+```bash
 ./gradlew bootRun --args="--spring.profiles.active=local"
 ```
 
-Local profile uses H2, console email, and mock payment only for development/testing. Production profile rejects H2, mock payment/email, seed data, and placeholder secrets.
+Open:
 
-## Production Profile
+```text
+http://localhost:8080
+```
 
-Required environment variables:
+The `local` profile uses:
 
-- `SPRING_PROFILES_ACTIVE=prod`
-- `SPRING_DATASOURCE_URL`
-- `SPRING_DATASOURCE_USERNAME`
-- `SPRING_DATASOURCE_PASSWORD`
-- `APP_PAYMENT_PROVIDER`
-- `APP_PUBLIC_BASE_URL` public HTTPS base URL used in email links and provider redirects
-- `VNPAY_TMN_CODE`, `VNPAY_HASH_SECRET`, `VNPAY_PAY_URL`, `VNPAY_RETURN_URL`, `VNPAY_IPN_URL` when `APP_PAYMENT_PROVIDER=vnpay`
-- `BREVO_API_KEY`, `BREVO_SMS_SENDER`, `MAIL_FROM` for Brevo email & SMS transactional delivery
+- H2 in-memory database
+- seeded demo data
+- console email/SMS providers
+- mock payment provider
+- H2 console enabled for development
 
-Do not commit real credentials. Use platform environment variables for all production secrets.
+## Useful Commands
+
+```bash
+# Run backend tests
+./gradlew test
+
+# Build the application jar
+./gradlew bootJar
+
+# Full build
+./gradlew clean build
+
+# Run Playwright smoke tests
+npm install
+npm run test:e2e
+```
+
+## Docker
+
+Start PostgreSQL for local infrastructure work:
+
+```bash
+docker compose up -d postgres
+```
+
+The `app` service in `docker-compose.yml` is wired for production-like settings and requires real environment variables for public URL, payment provider, and Brevo credentials.
+
+## Production Configuration
+
+Set the production profile and provide secrets through environment variables. Do not commit real credentials.
+
+Required baseline variables:
+
+```text
+SPRING_PROFILES_ACTIVE=prod
+SPRING_DATASOURCE_URL
+SPRING_DATASOURCE_USERNAME
+SPRING_DATASOURCE_PASSWORD
+APP_PUBLIC_BASE_URL
+APP_PAYMENT_PROVIDER
+APP_EMAIL_PROVIDER
+APP_SMS_PROVIDER
+MAIL_FROM
+```
+
+VNPay variables when `APP_PAYMENT_PROVIDER=vnpay`:
+
+```text
+VNPAY_TMN_CODE
+VNPAY_HASH_SECRET
+VNPAY_PAY_URL
+VNPAY_RETURN_URL
+VNPAY_IPN_URL
+```
+
+MoMo variables when `APP_PAYMENT_PROVIDER=momo`:
+
+```text
+MOMO_PARTNER_CODE
+MOMO_ACCESS_KEY
+MOMO_SECRET_KEY
+MOMO_CREATE_URL
+MOMO_RETURN_URL
+MOMO_IPN_URL
+```
+
+Brevo variables for production email/SMS:
+
+```text
+BREVO_API_KEY
+BREVO_SMS_SENDER
+```
+
+Optional integrations:
+
+```text
+OPENAI_API_KEY
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+FACEBOOK_CLIENT_ID
+FACEBOOK_CLIENT_SECRET
+GOOGLE_PLACES_API_KEY
+GEOAPIFY_API_KEY
+AMADEUS_CLIENT_ID
+AMADEUS_CLIENT_SECRET
+```
+
+Production guardrails reject unsafe combinations such as H2, mock payment/email providers, demo seed data, and placeholder secrets.
 
 ## Database And Migrations
 
-Flyway migrations are in `src/main/resources/db/migration`. Production runs against PostgreSQL with `spring.jpa.hibernate.ddl-auto=none`.
+Flyway migrations live in:
 
-```bash
-./gradlew build
+```text
+src/main/resources/db/migration
 ```
+
+Production uses PostgreSQL with:
+
+```properties
+spring.jpa.hibernate.ddl-auto=none
+```
+
+Local development uses H2 with schema recreation for quick iteration.
 
 ## Import Real Hotel Data
 
-MVP source is OpenStreetMap through Overpass. Imported rows store source, external id, raw payload hash, import run logs, and source URLs.
+The import runner can pull hotel source records from Overpass/OpenStreetMap.
 
 ```bash
 ./gradlew bootRun --args="--spring.profiles.active=local --spring.main.web-application-type=none --app.import-hotels=true --app.import-hotels.exit=true --source=overpass --city=HCMC --limit=100"
 ```
 
-Room/rate templates created for OSM places are marked `INTERNAL_TEMPLATE` and `INTERNAL_ESTIMATE`; they are not real provider availability or rates.
+Imported records store source metadata, external IDs, raw payload hashes, import run logs, and source URLs.
 
-## Payment, Email, Refund
+Room/rate templates generated for imported OSM places are marked as internal templates or estimates; they are not live provider inventory.
 
-- Local/test: `MockPaymentProvider` and `ConsoleEmailProvider`.
-- Production: mock providers are denied; Brevo HTTP APIs and a real payment adapter are required.
-- Payment confirmation is webhook/IPN-driven with signature verification and idempotent event storage.
-- Refund requests remain pending/processing unless a provider refund completes.
-
-## Build
-
-```bash
-./gradlew clean build
-```
-
-## Health
+## Health Checks
 
 ```bash
 curl http://localhost:8080/actuator/health
 ```
 
-Actuator exposes `health`, `info`, and `metrics` when enabled by configuration.
+Actuator exposes health, info, and metrics endpoints when enabled by configuration.
+
+## Project Layout
+
+```text
+src/main/java/com/example/demo
+  config/        security, providers, startup guards
+  controller/    web routes and admin flows
+  entity/        JPA domain models
+  payment/       payment provider adapters
+  repository/    Spring Data repositories
+  service/       business logic
+
+src/main/resources
+  templates/     Thymeleaf views
+  static/        CSS, JavaScript, images
+  db/migration/  Flyway migrations
+
+src/test
+  java/          backend tests
+  e2e/           Playwright smoke tests
+```
+
+## Notes
+
+- Keep all production secrets in environment variables.
+- Use `local` only for development and testing.
+- Payment confirmation is webhook/IPN-driven with signature verification and idempotent event storage.
+- Refund requests remain pending or processing until the selected payment provider confirms settlement.
