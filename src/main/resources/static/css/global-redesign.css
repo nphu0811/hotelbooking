@@ -1231,3 +1231,82 @@
     background: rgba(255,255,255,0.06);
 }
 
+/* Password visibility toggle */
+.password-input {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.password-input input {
+    padding-right: 56px !important;
+}
+
+.password-input input::-ms-clear,
+.password-input input::-ms-reveal {
+    display: none;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    z-index: 2;
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    min-height: 42px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #747878;
+    cursor: pointer;
+    box-shadow: none;
+    transform: translateY(-50%);
+    transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.password-toggle:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #1A1A1A;
+}
+
+.password-toggle:active {
+    transform: translateY(-50%) scale(0.96);
+}
+
+.password-toggle:focus-visible {
+    outline: 3px solid rgba(0, 0, 0, 0.24);
+    outline-offset: 2px;
+}
+
+.password-toggle-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.password-toggle-icon-hide,
+.password-toggle[aria-pressed="true"] .password-toggle-icon-show {
+    display: none;
+}
+
+.password-toggle[aria-pressed="true"] .password-toggle-icon-hide {
+    display: block;
+}
+
+:root[data-theme="dark"] .password-toggle {
+    color: #8a8278;
+}
+
+:root[data-theme="dark"] .password-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f0ece4;
+}
+
+:root[data-theme="dark"] .password-toggle:focus-visible {
+    outline-color: rgba(201, 169, 110, 0.42);
+}

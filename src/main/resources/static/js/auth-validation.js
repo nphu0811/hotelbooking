@@ -31,6 +31,57 @@
         return input ? String(input.value || "") : "";
     }
 
+    function passwordToggleIconMarkup() {
+        return [
+            '<svg class="password-toggle-icon password-toggle-icon-show" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">',
+            '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path>',
+            '<circle cx="12" cy="12" r="3"></circle>',
+            '</svg>',
+            '<svg class="password-toggle-icon password-toggle-icon-hide" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">',
+            '<path d="M17.94 17.94A10.8 10.8 0 0 1 12 19C5.5 19 2 12 2 12a19.1 19.1 0 0 1 5.06-5.94"></path>',
+            '<path d="M9.9 4.24A10.3 10.3 0 0 1 12 5c6.5 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19"></path>',
+            '<path d="M14.12 14.12a3 3 0 0 1-4.24-4.24"></path>',
+            '<path d="M1 1l22 22"></path>',
+            '</svg>'
+        ].join("");
+    }
+
+    function setPasswordToggleState(input, button, visible) {
+        input.type = visible ? "text" : "password";
+        button.setAttribute("aria-pressed", String(visible));
+        button.setAttribute("aria-label", visible ? "Ẩn mật khẩu" : "Hiện mật khẩu");
+        button.setAttribute("title", visible ? "Ẩn mật khẩu" : "Hiện mật khẩu");
+    }
+
+    function initPasswordToggles() {
+        document.querySelectorAll('input[type="password"]').forEach(function (input) {
+            if (input.closest(".password-input")) {
+                return;
+            }
+
+            var wrapper = document.createElement("span");
+            wrapper.className = "password-input";
+            input.parentNode.insertBefore(wrapper, input);
+            wrapper.appendChild(input);
+
+            var button = document.createElement("button");
+            button.className = "password-toggle";
+            button.type = "button";
+            button.innerHTML = passwordToggleIconMarkup();
+            button.setAttribute("data-password-toggle", "");
+            setPasswordToggleState(input, button, false);
+
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                setPasswordToggleState(input, button, input.type === "password");
+                input.focus({ preventScroll: true });
+            });
+
+            wrapper.appendChild(button);
+        });
+    }
+
     function validateInput(form, input) {
         var value = String(input.value || "").trim();
         var rule = input.getAttribute("data-validate-field");
@@ -140,6 +191,8 @@
         }
         return valid;
     }
+
+    initPasswordToggles();
 
     document.querySelectorAll("form[data-validate]").forEach(function (form) {
         form.addEventListener("submit", function (event) {
