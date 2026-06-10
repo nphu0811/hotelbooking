@@ -22,9 +22,35 @@
                 if (!field) {
                     return;
                 }
-                field.value = button.dataset.suggestPrompt || "";
+                // Ưu tiên lấy text đang hiển thị trên nút (đã được Google Translate dịch).
+                // Nếu text nút quá ngắn (chỉ là label tóm tắt), dùng data attribute gốc.
+                var displayedText = (button.innerText || button.textContent || "").trim();
+                var originalPrompt = button.dataset.suggestPrompt || "";
+                // Nếu ngôn ngữ hiện tại không phải tiếng Việt và nút đã bị Google Translate dịch,
+                // lấy translated prompt từ data-suggest-prompt-translated (nếu đã lưu),
+                // hoặc dùng originalPrompt (sẽ được AI hiểu được vì OpenAI đa ngôn ngữ).
+                var translatedPrompt = button.dataset.suggestPromptTranslated;
+                field.value = translatedPrompt || originalPrompt;
                 field.focus();
             });
+        });
+
+        // Lắng nghe khi Google Translate hoàn thành để lưu bản dịch vào attribute
+        function cacheTranslatedPrompts() {
+            document.querySelectorAll("[data-suggest-prompt]").forEach(function (button) {
+                // Lưu text hiển thị (đã dịch) vào attribute riêng để dùng khi click
+                var displayedText = (button.innerText || button.textContent || "").trim();
+                if (displayedText && displayedText !== button.dataset.suggestPromptTranslated) {
+                    button.dataset.suggestPromptTranslated = displayedText;
+                }
+            });
+        }
+
+        // Theo dõi sau khi Google Translate render xong (thường sau 1-2 giây)
+        var cacheTimer = setTimeout(cacheTranslatedPrompts, 2000);
+        document.addEventListener("lumiere:translate-ready", function () {
+            clearTimeout(cacheTimer);
+            setTimeout(cacheTranslatedPrompts, 1500);
         });
     }
 
