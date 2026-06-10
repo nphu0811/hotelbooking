@@ -156,11 +156,11 @@ public class SecurityConfig {
                                     "base-uri 'self'; " +
                                     "form-action " + paymentFormActionSources + "; " +
                                     "frame-ancestors 'none'; " +
-                                    "frame-src https://www.google.com https://maps.google.com; " +
-                                    "img-src 'self' data: https: https://maps.googleapis.com; " +
-                                    "style-src 'self' 'unsafe-inline'; " +
-                                    "script-src 'self'; " +
-                                    "connect-src 'self';"));
+                                    "frame-src 'self' https://www.google.com https://maps.google.com https://translate.google.com; " +
+                                    "img-src 'self' data: https: https://maps.googleapis.com https://translate.google.com https://translate.googleapis.com https://www.gstatic.com; " +
+                                    "style-src 'self' 'unsafe-inline' https://translate.googleapis.com; " +
+                                    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://translate.google.com https://translate.googleapis.com https://www.gstatic.com; " +
+                                    "connect-src 'self' https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com;"));
                     headers.httpStrictTransportSecurity(hsts -> hsts
                             .includeSubDomains(true)
                             .preload(true)
