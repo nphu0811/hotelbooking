@@ -84,6 +84,10 @@
         </div>
     </div>
 </footer>
-<th:block th:fragment="scripts"></th:block>
+<th:block th:fragment="scripts">
+    <script th:src="@{/webjars/github-com-greensock-GSAP/3.12.5/gsap.min.js}" defer></script>
+    <script th:src="@{/webjars/github-com-greensock-GSAP/3.12.5/ScrollTrigger.min.js}" defer></script>
+    <script th:src="@{/js/gsap-animations.js(v=1)}" defer></script>
+</th:block>
 </body>
 </html>

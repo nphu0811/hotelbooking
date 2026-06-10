@@ -13,6 +13,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -50,24 +51,26 @@ public class VnPayPaymentProvider implements PaymentProvider {
     @Override
     public PaymentIntent createPaymentIntent(PaymentIntentRequest request) {
         requireConfigured();
+        Instant now = Instant.now(clock);
+        String txnRef = vnpayTxnRef(request);
         Map<String, String> params = new TreeMap<>();
         params.put("vnp_Version", "2.1.0");
         params.put("vnp_Command", "pay");
         params.put("vnp_TmnCode", tmnCode);
         params.put("vnp_Amount", request.amount().multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).toPlainString());
         params.put("vnp_CurrCode", request.currency());
-        params.put("vnp_TxnRef", request.idempotencyKey());
+        params.put("vnp_TxnRef", txnRef);
         params.put("vnp_OrderInfo", "HotelBooking " + request.bookingCode());
         params.put("vnp_OrderType", "other");
         params.put("vnp_Locale", "vn");
-        params.put("vnp_IpAddr", request.clientIpAddress());
+        params.put("vnp_IpAddr", vnpayIpAddress(request.clientIpAddress()));
         params.put("vnp_ReturnUrl", returnUrl);
-        params.put("vnp_IpnUrl", ipnUrl);
-        params.put("vnp_CreateDate", VNPAY_TIME_FORMAT.format(Instant.now(clock)));
+        params.put("vnp_CreateDate", VNPAY_TIME_FORMAT.format(now));
+        params.put("vnp_ExpireDate", VNPAY_TIME_FORMAT.format(now.plus(Duration.ofMinutes(15))));
         String query = canonical(params);
         String secureHash = hmacSha512(hashSecret, query);
         String redirectUrl = payUrl + "?" + query + "&vnp_SecureHash=" + encode(secureHash);
-        return new PaymentIntent(getProviderName(), request.idempotencyKey(), redirectUrl, toJsonLike(params));
+        return new PaymentIntent(getProviderName(), txnRef, redirectUrl, toJsonLike(params));
     }
 
     @Override
@@ -99,7 +102,7 @@ public class VnPayPaymentProvider implements PaymentProvider {
                 : PaymentStatus.FAILED;
         String transactionNo = params.getOrDefault("vnp_TransactionNo", "");
         String eventId = "vnpay:" + txnRef + ":" + transactionNo + ":" + responseCode + ":" + transactionStatus;
-        UUID bookingId = parseBookingIdFromIdempotencyKey(txnRef);
+        UUID bookingId = parseBookingIdFromTxnRef(txnRef);
         return new PaymentWebhookPayload(
                 getProviderName(),
                 eventId,
@@ -131,13 +134,46 @@ public class VnPayPaymentProvider implements PaymentProvider {
         }
     }
 
-    private UUID parseBookingIdFromIdempotencyKey(String idempotencyKey) {
-        String raw = idempotencyKey;
+    private String vnpayTxnRef(PaymentIntentRequest request) {
+        String bookingPart = request.bookingId().toString().replace("-", "");
+        String suffix = "";
+        String idempotencyKey = request.idempotencyKey() == null ? "" : request.idempotencyKey();
+        int separator = idempotencyKey.lastIndexOf(':');
+        if (separator >= 0 && separator < idempotencyKey.length() - 1) {
+            String candidate = idempotencyKey.substring(separator + 1).replaceAll("[^A-Za-z0-9]", "");
+            if (!candidate.equalsIgnoreCase(getProviderName())) {
+                suffix = candidate;
+            }
+        }
+        String txnRef = bookingPart + suffix;
+        return txnRef.length() > 80 ? txnRef.substring(0, 80) : txnRef;
+    }
+
+    private String vnpayIpAddress(String ipAddress) {
+        if (ipAddress == null || ipAddress.isBlank()
+                || "::1".equals(ipAddress)
+                || "0:0:0:0:0:0:0:1".equals(ipAddress)) {
+            return "127.0.0.1";
+        }
+        return ipAddress;
+    }
+
+    private UUID parseBookingIdFromTxnRef(String txnRef) {
+        String raw = txnRef;
         int separator = raw.indexOf(':');
         if (separator > 0) {
             raw = raw.substring(0, separator);
         }
-        return UUID.fromString(raw);
+        try {
+            if (raw.length() >= 32 && raw.substring(0, 32).matches("[0-9A-Fa-f]{32}")) {
+                return UUID.fromString(raw.substring(0, 32)
+                        .replaceFirst("([0-9A-Fa-f]{8})([0-9A-Fa-f]{4})([0-9A-Fa-f]{4})([0-9A-Fa-f]{4})([0-9A-Fa-f]{12})",
+                                "$1-$2-$3-$4-$5"));
+            }
+            return UUID.fromString(raw);
+        } catch (IllegalArgumentException ex) {
+            throw new BusinessException("VNPay webhook has invalid vnp_TxnRef");
+        }
     }
 
     private Map<String, String> parseForm(String rawPayload) {
