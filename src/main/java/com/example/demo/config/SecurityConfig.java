@@ -158,8 +158,8 @@ public class SecurityConfig {
                                     "frame-ancestors 'none'; " +
                                     "frame-src 'self' https://www.google.com https://maps.google.com https://translate.google.com; " +
                                     "img-src 'self' data: https: https://maps.googleapis.com https://translate.google.com https://translate.googleapis.com https://www.gstatic.com; " +
-                                    "style-src 'self' 'unsafe-inline' https://translate.googleapis.com; " +
-                                    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://translate.google.com https://translate.googleapis.com https://www.gstatic.com; " +
+                                    "style-src 'self' 'unsafe-inline' https://translate.googleapis.com https://www.gstatic.com; " +
+                                    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://www.gstatic.com; " +
                                     "connect-src 'self' https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com;"));
                     headers.httpStrictTransportSecurity(hsts -> hsts
                             .includeSubDomains(true)
