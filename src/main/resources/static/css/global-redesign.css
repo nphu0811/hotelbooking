@@ -1310,3 +1310,16 @@
 :root[data-theme="dark"] .password-toggle:focus-visible {
     outline-color: rgba(201, 169, 110, 0.42);
 }
+
+/* Action Buttons in Admin Tables */
+.action-btns {
+    display: flex !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+}
+.action-btns .button {
+    white-space: nowrap !important;
+    padding: 0 12px !important;
+}
