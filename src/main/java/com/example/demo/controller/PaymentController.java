@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
@@ -34,6 +36,7 @@ public class PaymentController {
     private final PaymentService paymentService;
     private final BookingService bookingService;
     private final CurrentUserService currentUserService;
+    private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
 
     public PaymentController(PaymentService paymentService,
                              BookingService bookingService,
@@ -54,6 +57,7 @@ public class PaymentController {
             PaymentIntent intent = provider == null || provider.isBlank()
                     ? paymentService.createConfiguredPaymentIntent(booking, clientIp(request))
                     : paymentService.createPaymentIntent(booking, provider, clientIp(request));
+            log.info("Redirecting to payment provider URL: {}", intent.redirectUrl());
             return "redirect:" + intent.redirectUrl();
         } catch (BusinessException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
