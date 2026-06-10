@@ -32,14 +32,14 @@
             return;
         }
         actions.forEach(function (action) {
-            action.setAttribute("aria-disabled", "true");
-            action.classList.add("is-disabled");
-            if (action.tagName === "BUTTON") {
-                action.disabled = true;
+            // Only disable non-button elements (e.g., links) to keep the payment button functional
+            if (action.tagName !== "BUTTON") {
+                action.setAttribute("aria-disabled", "true");
+                action.classList.add("is-disabled");
+                action.addEventListener("click", function (event) {
+                    event.preventDefault();
+                });
             }
-            action.addEventListener("click", function (event) {
-                event.preventDefault();
-            });
         });
     }
 
