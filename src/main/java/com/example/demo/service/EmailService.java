@@ -64,7 +64,7 @@ public class EmailService {
         return emailJobRepository.save(job);
     }
 
-    @Scheduled(fixedDelay = 60_000)
+    @Scheduled(fixedDelay = 5_000)
     @Transactional
     public void processPendingEmails() {
         Instant now = Instant.now(clock);
@@ -117,6 +117,6 @@ public class EmailService {
     }
 
     private Duration backoff(int attempts) {
-        return Duration.ofMinutes((long) Math.pow(2, Math.max(1, attempts)));
+        return Duration.ofSeconds((long) Math.pow(2, Math.max(1, attempts)));
     }
 }
