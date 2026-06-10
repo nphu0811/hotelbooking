@@ -46,6 +46,13 @@ public class RecommendationService {
         if (allRooms.isEmpty()) {
             return List.of();
         }
+        
+        // Tránh gửi quá nhiều phòng (vượt quá context limit của OpenAI hoặc làm chậm quá trình)
+        if (allRooms.size() > 80) {
+            List<Room> shuffled = new ArrayList<>(allRooms);
+            Collections.shuffle(shuffled);
+            allRooms = shuffled.subList(0, 80);
+        }
 
         try {
             // Build rooms data payload in a compact format for the AI context
