@@ -99,7 +99,7 @@ public class SecurityConfig {
                 && environment.getProperty("spring.h2.console.enabled", Boolean.class, false);
         boolean e2eFixtureEnabled = localDebugProfile
                 && environment.getProperty("app.e2e-fixture.enabled", Boolean.class, false);
-        String paymentNavigationSources = paymentNavigationSources(environment);
+        String paymentFormActionSources = paymentFormActionSources(environment);
 
         http
                 .csrf(csrf -> {
@@ -154,14 +154,13 @@ public class SecurityConfig {
                     headers.contentSecurityPolicy(csp -> csp.policyDirectives(
                             "default-src 'self'; " +
                                     "base-uri 'self'; " +
-                                    "form-action " + paymentNavigationSources + "; " +
+                                    "form-action " + paymentFormActionSources + "; " +
                                     "frame-ancestors 'none'; " +
                                     "frame-src https://www.google.com https://maps.google.com; " +
                                     "img-src 'self' data: https: https://maps.googleapis.com; " +
                                     "style-src 'self' 'unsafe-inline'; " +
                                     "script-src 'self'; " +
-                                    "connect-src 'self'; " +
-                                    "navigate-to " + paymentNavigationSources + ";"));
+                                    "connect-src 'self';"));
                     headers.httpStrictTransportSecurity(hsts -> hsts
                             .includeSubDomains(true)
                             .preload(true)
@@ -202,7 +201,7 @@ public class SecurityConfig {
         };
     }
 
-    private static String paymentNavigationSources(Environment environment) {
+    private static String paymentFormActionSources(Environment environment) {
         Set<String> sources = new LinkedHashSet<>();
         sources.add("'self'");
         addOrigin(sources, environment.getProperty("vnpay.pay-url", ""));
