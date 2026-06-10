@@ -21,16 +21,22 @@ public class BrevoEmailProvider implements EmailProvider {
     private final String apiKey;
     private final String fromEmail;
     private final String fromName;
+    private final String appUrl;
 
     public BrevoEmailProvider(@Value("${brevo.api-key:}") String apiKey,
                               @Value("${mail.from:}") String fromEmail,
-                              @Value("${brevo.email.from-name:HotelBooking}") String fromName) {
+                              @Value("${brevo.email.from-name:HotelBooking}") String fromName,
+                              @Value("${app.base-url:https://hotelbooking-production-57a9.up.railway.app}") String appUrl) {
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
+
         this.apiKey = apiKey == null ? "" : apiKey.trim();
         this.fromEmail = fromEmail == null ? "" : fromEmail.trim();
-        this.fromName = fromName == null ? "HotelBooking" : fromName.trim();
+        this.fromName = fromName == null || fromName.isBlank() ? "HotelBooking" : fromName.trim();
+        this.appUrl = appUrl == null || appUrl.isBlank()
+                ? "https://hotelbooking-production-57a9.up.railway.app"
+                : appUrl.trim();
     }
 
     @Override
@@ -42,8 +48,13 @@ public class BrevoEmailProvider implements EmailProvider {
             return new EmailSendResult(false, null, "MAIL_FROM is not configured");
         }
 
-        String bodyText = renderBody(request);
-        String jsonBody = buildJsonBody(request.recipient(), request.subject(), bodyText);
+        EmailBody emailBody = renderBody(request);
+        String jsonBody = buildJsonBody(
+                request.recipient(),
+                request.subject(),
+                emailBody.htmlContent(),
+                emailBody.textContent()
+        );
 
         HttpRequest httpRequest = HttpRequest.newBuilder(BREVO_SEND_EMAIL_URI)
                 .timeout(Duration.ofSeconds(15))
@@ -54,12 +65,20 @@ public class BrevoEmailProvider implements EmailProvider {
                 .build();
 
         try {
-            HttpResponse<String> response = httpClient.send(httpRequest,
-                    HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+            HttpResponse<String> response = httpClient.send(
+                    httpRequest,
+                    HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)
+            );
+
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 String messageId = extractMessageId(response.body());
-                return new EmailSendResult(true, messageId != null ? messageId : "BREVO-" + request.jobId(), null);
+                return new EmailSendResult(
+                        true,
+                        messageId != null ? messageId : "BREVO-" + request.jobId(),
+                        null
+                );
             }
+
             log.warn("Brevo email send failed with status {}: {}", response.statusCode(), response.body());
             return new EmailSendResult(false, null, "Brevo API returned status " + response.statusCode());
         } catch (InterruptedException ex) {
@@ -76,49 +95,214 @@ public class BrevoEmailProvider implements EmailProvider {
         return "brevo";
     }
 
-    private String buildJsonBody(String to, String subject, String bodyText) {
+    private String buildJsonBody(String to, String subject, String htmlContent, String textContent) {
         return "{"
                 + "\"sender\":{\"name\":\"" + jsonEscape(fromName) + "\",\"email\":\"" + jsonEscape(fromEmail) + "\"},"
                 + "\"to\":[{\"email\":\"" + jsonEscape(to) + "\"}],"
                 + "\"subject\":\"" + jsonEscape(subject) + "\","
-                + "\"textContent\":\"" + jsonEscape(bodyText) + "\""
+                + "\"htmlContent\":\"" + jsonEscape(htmlContent) + "\","
+                + "\"textContent\":\"" + jsonEscape(textContent) + "\""
                 + "}";
     }
 
-    private String renderBody(EmailSendRequest request) {
-        if (request.bodyText() != null && !request.bodyText().isBlank()) {
-            return request.bodyText();
+    private EmailBody renderBody(EmailSendRequest request) {
+        String customBody = request.bodyText();
+
+        if (customBody != null && !customBody.isBlank()) {
+            String title = "Notification from HotelBooking";
+            String message = customBody.trim();
+
+            return new EmailBody(
+                    buildHtmlTemplate(
+                            title,
+                            escapeHtml(message).replace("\n", "<br>"),
+                            "View details",
+                            appUrl
+                    ),
+                    title + "\n\n" + message + "\n\nView details: " + appUrl
+            );
         }
-        return switch (request.eventType()) {
-            case BOOKING_CONFIRMED -> "Your HotelBooking reservation is confirmed. Sign in to view booking details.";
-            case BOOKING_CANCELLED -> "Your HotelBooking reservation cancellation has been recorded.";
-            case CHECKED_IN -> "Welcome. Your HotelBooking check-in has been recorded.";
-            case CHECKED_OUT -> "Your HotelBooking check-out has been recorded.";
-            case REVIEW_REQUEST -> "Thank you for staying with us. Sign in to leave your review.";
-            case ACCOUNT_UNLOCKED -> "Your HotelBooking account has been unlocked.";
-            case EMAIL_VERIFICATION -> "Verify your HotelBooking account from the latest verification email.";
-            case LOGIN_OTP -> "Use the latest OTP email to sign in to HotelBooking.";
+
+        EmailContent content = switch (request.eventType()) {
+            case BOOKING_CONFIRMED -> new EmailContent(
+                    "Reservation confirmed",
+                    "Your HotelBooking reservation has been confirmed successfully. You can sign in to view your booking details, payment status, and stay information.",
+                    "View booking",
+                    appUrl + "/bookings"
+            );
+
+            case BOOKING_CANCELLED -> new EmailContent(
+                    "Reservation cancelled",
+                    "Your reservation cancellation has been recorded. If your booking is eligible for a refund, the refund process will be handled according to our policy.",
+                    "View booking history",
+                    appUrl + "/bookings"
+            );
+
+            case CHECKED_IN -> new EmailContent(
+                    "Check-in completed",
+                    "Welcome to HotelBooking. Your check-in has been recorded successfully. We hope you enjoy your stay.",
+                    "View stay details",
+                    appUrl + "/bookings"
+            );
+
+            case CHECKED_OUT -> new EmailContent(
+                    "Check-out completed",
+                    "Your check-out has been recorded successfully. Thank you for choosing HotelBooking. We hope to welcome you again soon.",
+                    "View booking history",
+                    appUrl + "/bookings"
+            );
+
+            case REVIEW_REQUEST -> new EmailContent(
+                    "How was your stay?",
+                    "Thank you for staying with us. Your feedback helps us improve our service and helps other guests choose the right hotel.",
+                    "Leave a review",
+                    appUrl + "/bookings"
+            );
+
+            case ACCOUNT_UNLOCKED -> new EmailContent(
+                    "Account unlocked",
+                    "Your HotelBooking account has been unlocked. You can now sign in and continue using your account normally.",
+                    "Sign in",
+                    appUrl + "/login"
+            );
+
+            case EMAIL_VERIFICATION -> new EmailContent(
+                    "Verify your email address",
+                    "Please verify your HotelBooking account using the latest verification email. If you did not create this account, you can safely ignore this message.",
+                    "Go to HotelBooking",
+                    appUrl
+            );
+
+            case LOGIN_OTP -> new EmailContent(
+                    "Your login OTP",
+                    "Please use the latest OTP email to sign in to your HotelBooking account. For your security, do not share this code with anyone.",
+                    "Sign in",
+                    appUrl + "/login"
+            );
         };
+
+        String html = buildHtmlTemplate(
+                content.title(),
+                escapeHtml(content.message()),
+                content.buttonText(),
+                content.buttonUrl()
+        );
+
+        String text = content.title()
+                + "\n\n"
+                + content.message()
+                + "\n\n"
+                + content.buttonText() + ": " + content.buttonUrl();
+
+        return new EmailBody(html, text);
+    }
+
+    private String buildHtmlTemplate(String title, String messageHtml, String buttonText, String buttonUrl) {
+        return """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>%s</title>
+                </head>
+                <body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+                    <table role="presentation" width="100%%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:32px 12px;">
+                        <tr>
+                            <td align="center">
+                                <table role="presentation" width="100%%" cellpadding="0" cellspacing="0"
+                                       style="max-width:620px;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 16px 40px rgba(15,23,42,0.12);">
+                
+                                    <tr>
+                                        <td style="background:linear-gradient(135deg,#111827 0%%,#1f2937 45%%,#dc2626 100%%);padding:30px 34px;">
+                                            <div style="font-size:13px;letter-spacing:1.8px;text-transform:uppercase;color:#fecaca;font-weight:700;">
+                                                HotelBooking
+                                            </div>
+                                            <h1 style="margin:12px 0 0;font-size:28px;line-height:1.3;color:#ffffff;font-weight:800;">
+                                                %s
+                                            </h1>
+                                        </td>
+                                    </tr>
+                
+                                    <tr>
+                                        <td style="padding:34px;">
+                                            <p style="margin:0 0 18px;font-size:16px;line-height:1.7;color:#374151;">
+                                                Hello,
+                                            </p>
+                
+                                            <p style="margin:0 0 28px;font-size:16px;line-height:1.7;color:#374151;">
+                                                %s
+                                            </p>
+                
+                                            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 30px;">
+                                                <tr>
+                                                    <td>
+                                                        <a href="%s"
+                                                           style="display:inline-block;background:#dc2626;color:#ffffff;text-decoration:none;
+                                                                  font-size:15px;font-weight:700;padding:14px 24px;border-radius:999px;">
+                                                            %s
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                
+                                            <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:16px;padding:16px 18px;">
+                                                <p style="margin:0;font-size:13px;line-height:1.6;color:#6b7280;">
+                                                    If the button does not work, please sign in to your HotelBooking account directly from our website.
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                
+                                    <tr>
+                                        <td style="padding:22px 34px;background:#111827;">
+                                            <p style="margin:0;font-size:13px;line-height:1.6;color:#d1d5db;">
+                                                This is an automated email from HotelBooking. Please do not reply to this message.
+                                            </p>
+                                            <p style="margin:8px 0 0;font-size:12px;color:#9ca3af;">
+                                                © HotelBooking. All rights reserved.
+                                            </p>
+                                        </td>
+                                    </tr>
+                
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
+                """.formatted(
+                escapeHtml(title),
+                escapeHtml(title),
+                messageHtml,
+                escapeHtml(buttonUrl),
+                escapeHtml(buttonText)
+        );
     }
 
     private String extractMessageId(String responseBody) {
-        // Simple extraction of messageId from Brevo JSON response
-        // Response format: {"messageId":"<xxx@xxx>"}
         int idx = responseBody.indexOf("\"messageId\"");
         if (idx < 0) return null;
+
         int start = responseBody.indexOf('"', idx + 11);
         if (start < 0) return null;
+
         start++;
+
         int end = responseBody.indexOf('"', start);
         if (end < 0) return null;
+
         return responseBody.substring(start, end);
     }
 
     private String jsonEscape(String value) {
         if (value == null) return "";
+
         StringBuilder result = new StringBuilder(value.length() + 16);
+
         for (int i = 0; i < value.length(); i++) {
             char c = value.charAt(i);
+
             switch (c) {
                 case '"' -> result.append("\\\"");
                 case '\\' -> result.append("\\\\");
@@ -136,6 +320,32 @@ public class BrevoEmailProvider implements EmailProvider {
                 }
             }
         }
+
         return result.toString();
+    }
+
+    private String escapeHtml(String value) {
+        if (value == null) return "";
+
+        return value
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
+
+    private record EmailContent(
+            String title,
+            String message,
+            String buttonText,
+            String buttonUrl
+    ) {
+    }
+
+    private record EmailBody(
+            String htmlContent,
+            String textContent
+    ) {
     }
 }
