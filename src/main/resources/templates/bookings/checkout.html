@@ -49,7 +49,7 @@
         <p class="alert" th:unless="${hasConfiguredPaymentMethod}">
             Chưa có cổng thanh toán khả dụng. Hãy cấu hình VNPAY hoặc MoMo trong biến môi trường trước khi thanh toán.
         </p>
-        <button class="button" type="submit" aria-label="Tiếp tục thanh toán" data-hold-action
+        <button id="continue-payment-btn" class="button" type="submit" aria-label="Tiếp tục thanh toán" data-hold-action
                 th:disabled="${!hasConfiguredPaymentMethod}">
             Tiếp tục thanh toán
         </button>

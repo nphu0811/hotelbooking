@@ -23,6 +23,10 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import java.net.URI;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class SecurityConfig {
@@ -95,6 +99,7 @@ public class SecurityConfig {
                 && environment.getProperty("spring.h2.console.enabled", Boolean.class, false);
         boolean e2eFixtureEnabled = localDebugProfile
                 && environment.getProperty("app.e2e-fixture.enabled", Boolean.class, false);
+        String paymentNavigationSources = paymentNavigationSources(environment);
 
         http
                 .csrf(csrf -> {
@@ -149,12 +154,14 @@ public class SecurityConfig {
                     headers.contentSecurityPolicy(csp -> csp.policyDirectives(
                             "default-src 'self'; " +
                                     "base-uri 'self'; " +
-                                    "form-action 'self'; " +
+                                    "form-action " + paymentNavigationSources + "; " +
                                     "frame-ancestors 'none'; " +
                                     "frame-src https://www.google.com https://maps.google.com; " +
                                     "img-src 'self' data: https: https://maps.googleapis.com; " +
                                     "style-src 'self' 'unsafe-inline'; " +
-                                    "script-src 'self'"));
+                                    "script-src 'self'; " +
+                                    "connect-src 'self'; " +
+                                    "navigate-to " + paymentNavigationSources + ";"));
                     headers.httpStrictTransportSecurity(hsts -> hsts
                             .includeSubDomains(true)
                             .preload(true)
@@ -193,5 +200,40 @@ public class SecurityConfig {
             }
             return path.matches("^/payments/[^/]+" + suffix + "$");
         };
+    }
+
+    private static String paymentNavigationSources(Environment environment) {
+        Set<String> sources = new LinkedHashSet<>();
+        sources.add("'self'");
+        addOrigin(sources, environment.getProperty("vnpay.pay-url", ""));
+        addOrigin(sources, environment.getProperty("momo.create-url", ""));
+        sources.add("https://sandbox.vnpayment.vn");
+        sources.add("https://pay.vnpay.vn");
+        sources.add("https://test-payment.momo.vn");
+        sources.add("https://payment.momo.vn");
+        return String.join(" ", sources);
+    }
+
+    private static void addOrigin(Set<String> sources, String url) {
+        if (url == null || url.isBlank()) {
+            return;
+        }
+        try {
+            URI uri = URI.create(stripQuotes(url.trim()));
+            if (uri.getScheme() == null || uri.getHost() == null) {
+                return;
+            }
+            int port = uri.getPort();
+            String origin = uri.getScheme() + "://" + uri.getHost() + (port > 0 ? ":" + port : "");
+            sources.add(origin);
+        } catch (IllegalArgumentException ignored) {
+        }
+    }
+
+    private static String stripQuotes(String value) {
+        if (value.length() >= 2 && value.startsWith("\"") && value.endsWith("\"")) {
+            return value.substring(1, value.length() - 1);
+        }
+        return value;
     }
 }

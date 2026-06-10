@@ -60,6 +60,7 @@ public class PaymentController {
             log.info("Redirecting to payment provider URL: {}", intent.redirectUrl());
             return "redirect:" + intent.redirectUrl();
         } catch (BusinessException ex) {
+            log.warn("Payment start failed for booking {} with provider {}", booking.getId(), provider, ex);
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
             redirectAttributes.addFlashAttribute("selectedPaymentProvider", provider);
             return "redirect:/checkout/" + booking.getId();
