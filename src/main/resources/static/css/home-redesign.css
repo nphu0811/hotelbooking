@@ -830,7 +830,7 @@
     background: #d4b87a !important;
     border-color: #d4b87a !important;
 }
-}
+
 :root[data-theme="dark"] .home-shell .ai-heading h2 {
     color: #f0ece4 !important;
 }
