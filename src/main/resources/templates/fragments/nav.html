@@ -28,7 +28,7 @@
 
             <div sec:authorize="isAuthenticated()" class="user-menu-dropdown" style="position: relative; display: inline-block;">
                 <button type="button" onclick="this.nextElementSibling.toggleAttribute('hidden')" style="display:flex;align-items:center;gap:6px;background:#f3f4f6;border:1px solid #e5e7eb;cursor:pointer;font-weight:600;padding:6px 14px;border-radius:99px;font-family:inherit;font-size:14px;color:#111827;transition:background 0.2s;">
-                    <span sec:authentication="principal.fullName">Tên User</span>
+                    <span th:text="${(#authentication.principal instanceof T(com.example.demo.service.CustomUserDetails)) ? #authentication.principal.fullName : ((#authentication.principal instanceof T(com.example.demo.service.CustomOAuth2User)) ? #authentication.principal.fullName : (#strings.contains(#authentication.name, '@') ? #strings.substringBefore(#authentication.name, '@') : #authentication.name))}">Tên User</span>
                     <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M7 10l5 5 5-5z"/></svg>
                 </button>
                 <div hidden style="position:absolute;top:calc(100% + 8px);right:0;background:white;box-shadow:0 10px 40px rgba(0,0,0,0.15);border-radius:12px;padding:8px 0;min-width:240px;z-index:100;border:1px solid rgba(0,0,0,0.05);display:flex;flex-direction:column;">
