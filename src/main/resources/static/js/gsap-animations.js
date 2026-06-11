@@ -330,68 +330,84 @@
         });
     }
 
-    function initUserDropdown(gsap) {
-        /* Animate the user dropdown open/close using a GSAP timeline.
-           Per gsap-core skill: use autoAlpha instead of opacity, prefer transform aliases (y, scale).
-           Per gsap-timeline skill: use timeline defaults for shared duration/ease.
-           Per gsap-performance skill: animate transform + opacity only (compositor-friendly). */
+    function initUserDropdown() {
+        /* UI toggle logic that gracefully degrades if GSAP is unavailable or motion is reduced */
         document.addEventListener('click', function (e) {
             var toggleBtn = e.target.closest('[data-user-menu-toggle]');
 
             all('.user-dropdown-menu').forEach(function (menu) {
                 var isRelated = toggleBtn && toggleBtn.nextElementSibling === menu;
+                var isOpen = menu.classList.contains('is-open');
+                
+                var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                var useGsap = window.gsap && !prefersReducedMotion;
 
-                if (isRelated && menu.classList.contains('is-open')) {
-                    /* Close with timeline */
-                    var tlClose = gsap.timeline({
-                        defaults: { duration: 0.18, ease: "power2.in" },
-                        onComplete: function () {
-                            menu.classList.remove('is-open');
-                            menu.style.display = 'none';
-                            gsap.set(menu, { clearProps: "all" });
-                        }
-                    });
-                    tlClose
-                        .to(all('.dropdown-link, .dropdown-section-label, .dropdown-divider, .dropdown-logout', menu), {
-                            autoAlpha: 0, y: -4, stagger: 0.01, duration: 0.1
-                        }, 0)
-                        .to(menu, { autoAlpha: 0, y: -8, scale: 0.96 }, 0.02);
+                if (isRelated && isOpen) {
+                    /* Close menu */
+                    if (useGsap) {
+                        var tlClose = window.gsap.timeline({
+                            defaults: { duration: 0.18, ease: "power2.in" },
+                            onComplete: function () {
+                                menu.classList.remove('is-open');
+                                menu.style.display = 'none';
+                                window.gsap.set(menu, { clearProps: "all" });
+                            }
+                        });
+                        tlClose
+                            .to(all('.dropdown-link, .dropdown-section-label, .dropdown-divider, .dropdown-logout', menu), {
+                                autoAlpha: 0, y: -4, stagger: 0.01, duration: 0.1
+                            }, 0)
+                            .to(menu, { autoAlpha: 0, y: -8, scale: 0.96 }, 0.02);
+                    } else {
+                        menu.classList.remove('is-open');
+                        menu.style.display = 'none';
+                    }
 
-                } else if (isRelated && !menu.classList.contains('is-open')) {
-                    /* Open with timeline */
+                } else if (isRelated && !isOpen) {
+                    /* Open menu */
                     menu.style.display = 'flex';
                     menu.classList.add('is-open');
 
-                    var items = all('.dropdown-link, .dropdown-section-label, .dropdown-divider, .dropdown-logout', menu);
-                    var tlOpen = gsap.timeline({
-                        defaults: { duration: 0.32, ease: "power3.out" }
-                    });
-                    tlOpen
-                        .fromTo(menu,
-                            { autoAlpha: 0, y: -12, scale: 0.96 },
-                            { autoAlpha: 1, y: 0, scale: 1, clearProps: "transform" }
-                        )
-                        .fromTo(items,
-                            { autoAlpha: 0, y: -6 },
-                            { autoAlpha: 1, y: 0, stagger: 0.025, duration: 0.22, clearProps: "transform,opacity,visibility" },
-                            "<0.06"
-                        );
+                    if (useGsap) {
+                        var items = all('.dropdown-link, .dropdown-section-label, .dropdown-divider, .dropdown-logout', menu);
+                        var tlOpen = window.gsap.timeline({
+                            defaults: { duration: 0.32, ease: "power3.out" }
+                        });
+                        tlOpen
+                            .fromTo(menu,
+                                { autoAlpha: 0, y: -12, scale: 0.96 },
+                                { autoAlpha: 1, y: 0, scale: 1, clearProps: "transform" }
+                            )
+                            .fromTo(items,
+                                { autoAlpha: 0, y: -6 },
+                                { autoAlpha: 1, y: 0, stagger: 0.025, duration: 0.22, clearProps: "transform,opacity,visibility" },
+                                "<0.06"
+                            );
+                    }
 
-                } else if (!isRelated && menu.classList.contains('is-open')) {
+                } else if (!isRelated && isOpen) {
                     /* Close when clicking outside */
-                    gsap.to(menu, {
-                        autoAlpha: 0, y: -8, scale: 0.96,
-                        duration: 0.15, ease: "power2.in",
-                        onComplete: function () {
-                            menu.classList.remove('is-open');
-                            menu.style.display = 'none';
-                            gsap.set(menu, { clearProps: "all" });
-                        }
-                    });
+                    if (useGsap) {
+                        window.gsap.to(menu, {
+                            autoAlpha: 0, y: -8, scale: 0.96,
+                            duration: 0.15, ease: "power2.in",
+                            onComplete: function () {
+                                menu.classList.remove('is-open');
+                                menu.style.display = 'none';
+                                window.gsap.set(menu, { clearProps: "all" });
+                            }
+                        });
+                    } else {
+                        menu.classList.remove('is-open');
+                        menu.style.display = 'none';
+                    }
                 }
             });
         }, true);
     }
+
+    // Initialize UI that must work regardless of GSAP
+    initUserDropdown();
 
     onReady(function () {
         if (!window.gsap) {
@@ -429,7 +445,6 @@
             initMicroInteractions(gsap, finePointer);
             initDynamicResults(gsap);
             initModalMotion(gsap);
-            initUserDropdown(gsap);
 
             if (ScrollTrigger) {
                 window.addEventListener("load", function () {

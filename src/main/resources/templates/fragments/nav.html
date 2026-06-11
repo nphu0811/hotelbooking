@@ -57,28 +57,7 @@
         </div>
     </div>
     
-    <script>
-        /* Toggle only — GSAP animation is in gsap-animations.js */
-        document.addEventListener('click', function(e) {
-            var toggleBtn = e.target.closest('[data-user-menu-toggle]');
-            document.querySelectorAll('.user-dropdown-menu').forEach(function(menu) {
-                var isRelated = toggleBtn && toggleBtn.nextElementSibling === menu;
-                if (isRelated) {
-                    var isOpen = menu.classList.contains('is-open');
-                    if (isOpen) {
-                        menu.classList.remove('is-open');
-                        menu.style.display = 'none';
-                    } else {
-                        menu.classList.add('is-open');
-                        menu.style.display = 'flex';
-                    }
-                } else {
-                    menu.classList.remove('is-open');
-                    menu.style.display = 'none';
-                }
-            });
-        });
-    </script>
+
 </nav>
     
     <!-- Language Selection Modal -->
