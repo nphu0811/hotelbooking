@@ -11,10 +11,10 @@
         </div>
         <form method="get" action="/admin/bookings" style="display: flex; gap: 12px; align-items: flex-end;">
             <label style="margin-bottom: 0;">Từ ngày:
-                <input type="date" name="startDate" th:value="${startDate}" style="min-height: 40px; padding: 8px 16px;">
+                <input type="date" name="startDate" th:value="${startDate}" th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" style="min-height: 40px; padding: 8px 16px;">
             </label>
             <label style="margin-bottom: 0;">Đến ngày:
-                <input type="date" name="endDate" th:value="${endDate}" style="min-height: 40px; padding: 8px 16px;">
+                <input type="date" name="endDate" th:value="${endDate}" th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" style="min-height: 40px; padding: 8px 16px;">
             </label>
             <button type="submit" class="button button-small" style="min-height: 40px;">Lọc</button>
             <a th:if="${startDate != null or endDate != null}" th:href="@{/admin/bookings}" class="button button-small button-muted" style="min-height: 40px;">Xóa</a>

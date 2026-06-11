@@ -12,8 +12,8 @@
 
     <form class="toolbar" th:action="@{/rooms/search}" method="get" aria-label="Tìm kiếm phòng trống">
         <input name="q" th:value="${q}" placeholder="Địa điểm / khách sạn">
-        <input type="date" name="checkIn" th:value="${checkIn}" aria-label="Ngày nhận phòng" required>
-        <input type="date" name="checkOut" th:value="${checkOut}" aria-label="Ngày trả phòng" required>
+        <input type="date" name="checkIn" th:value="${checkIn}" th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" aria-label="Ngày nhận phòng" required>
+        <input type="date" name="checkOut" th:value="${checkOut}" th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" aria-label="Ngày trả phòng" required>
         <input type="number" name="guests" min="1" max="10" th:value="${guests}" aria-label="Số khách" required>
         <input type="number" name="minPrice" th:value="${minPrice}" placeholder="Giá từ">
         <input type="number" name="maxPrice" th:value="${maxPrice}" placeholder="Giá đến">
