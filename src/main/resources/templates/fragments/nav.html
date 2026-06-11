@@ -27,9 +27,9 @@
             <a class="button button-small" th:href="@{/hotels}">Đặt ngay</a>
 
             <div sec:authorize="isAuthenticated()" class="user-menu-dropdown" style="position: relative; display: inline-block;">
-                <button type="button" data-user-menu-toggle style="display:inline-flex;align-items:center;gap:4px;background:transparent;border:none;cursor:pointer;font-weight:500;padding:0 12px;min-height:42px;font-family:inherit;font-size:var(--text-base, 15px);color:var(--color-text-soft, #4b5563);transition:color 0.2s;">
-                    <span th:text="${(#authentication.principal instanceof T(com.example.demo.service.CustomUserDetails)) ? #authentication.principal.fullName : ((#authentication.principal instanceof T(com.example.demo.service.CustomOAuth2User)) ? #authentication.principal.fullName : (#strings.contains(#authentication.name, '@') ? #strings.substringBefore(#authentication.name, '@') : #authentication.name))}">Tên User</span>
-                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;opacity:0.7;"><path d="M7 10l5 5 5-5z"/></svg>
+                <button type="button" data-user-menu-toggle style="display:inline-flex;align-items:center;gap:4px;background:transparent;border:none;cursor:pointer;font-weight:500;padding:0 12px;min-height:42px;font-family:inherit;font-size:var(--text-base, 15px);color:var(--color-text-soft, #4b5563);transition:color 0.2s;white-space:nowrap;">
+                    <span style="max-width:150px;overflow:hidden;text-overflow:ellipsis;" th:text="${(#authentication.principal instanceof T(com.example.demo.service.CustomUserDetails)) ? #authentication.principal.fullName : ((#authentication.principal instanceof T(com.example.demo.service.CustomOAuth2User)) ? #authentication.principal.fullName : (#strings.contains(#authentication.name, '@') ? #strings.substringBefore(#authentication.name, '@') : #authentication.name))}">Tên User</span>
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;opacity:0.7;flex-shrink:0;"><path d="M7 10l5 5 5-5z"/></svg>
                 </button>
                 <div class="user-dropdown-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:white;box-shadow:0 10px 40px rgba(0,0,0,0.15);border-radius:12px;padding:8px 0;min-width:240px;z-index:100;border:1px solid rgba(0,0,0,0.05);flex-direction:column;">
                     
