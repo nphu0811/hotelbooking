@@ -36,9 +36,9 @@ public class HomeController {
         model.addAttribute("guests", 2);
 
         model.addAttribute("hotels", hotelService.featuredHotels(FEATURED_SIZE));
-        model.addAttribute("hanoiHotels", hotelService.searchHotels("hanoi", "", null, 0));
-        model.addAttribute("hcmHotels", hotelService.searchHotels("ho chi minh", "", null, 0));
-        model.addAttribute("danangHotels", hotelService.searchHotels("da nang", "", null, 0));
+        model.addAttribute("hanoiHotels", hotelService.searchHotels("", "Hà Nội", null, 0));
+        model.addAttribute("hcmHotels", hotelService.searchHotels("", "Hồ Chí Minh", null, 0));
+        model.addAttribute("danangHotels", hotelService.searchHotels("", "Đà Nẵng", null, 0));
 
         return "home";
     }
