@@ -46,12 +46,15 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getCode()))
                 .map(GrantedAuthority.class::cast)
                 .toList();
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
-                .password(user.getPasswordHash())
-                .authorities(authorities)
-                .accountLocked(!notLocked || user.getStatus() == UserStatus.LOCKED)
-                .disabled(!active)
-                .build();
+        return new CustomUserDetails(
+                user.getEmail(),
+                user.getPasswordHash(),
+                active,
+                true,
+                true,
+                notLocked && user.getStatus() != UserStatus.LOCKED,
+                authorities,
+                user.getFullName()
+        );
     }
 }
