@@ -56,10 +56,10 @@
             <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             <input type="hidden" name="roomId" th:value="${room.id}">
             <label>Nhận phòng
-                <input type="date" name="checkIn" th:value="${checkIn}" required>
+                <input type="date" name="checkIn" th:value="${checkIn}" th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
             </label>
             <label>Trả phòng
-                <input type="date" name="checkOut" th:value="${checkOut}" required>
+                <input type="date" name="checkOut" th:value="${checkOut}" th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
             </label>
             <label>Số khách
                 <input type="number" name="guests" min="1" max="10" th:value="${guests}" required>

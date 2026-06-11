@@ -88,7 +88,15 @@ public class MoMoPaymentProvider implements PaymentProvider {
                     .build();
             HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                throw new BusinessException("MoMo provider rejected the payment request");
+                String errorDetails = response.body();
+                try {
+                    JsonNode errorNode = objectMapper.readTree(response.body());
+                    if (errorNode.has("message")) {
+                        errorDetails = errorNode.get("message").asText();
+                    }
+                } catch (Exception ignored) {
+                }
+                throw new BusinessException("MoMo provider rejected the payment request: " + errorDetails);
             }
             JsonNode responseBody = objectMapper.readTree(response.body());
             String payUrl = text(responseBody, "payUrl");
