@@ -112,6 +112,18 @@ public class SecurityConfig {
                         csrf.ignoringRequestMatchers(pathStartsWith("/__e2e__"));
                     }
                 })
+                .addFilterAfter(new org.springframework.web.filter.OncePerRequestFilter() {
+                    @Override
+                    protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain)
+                            throws jakarta.servlet.ServletException, java.io.IOException {
+                        org.springframework.security.web.csrf.CsrfToken csrfToken = (org.springframework.security.web.csrf.CsrfToken) request.getAttribute(org.springframework.security.web.csrf.CsrfToken.class.getName());
+                        if (csrfToken != null) {
+                            csrfToken.getToken(); // force token resolution
+                            request.setAttribute("_csrf", csrfToken);
+                        }
+                        filterChain.doFilter(request, response);
+                    }
+                }, org.springframework.security.web.csrf.CsrfFilter.class)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/", "/hotels/**", "/rooms/**", "/login", "/login/password", "/login/otp", "/login/otp/**", "/login-otp", "/login/oauth-mock", "/login/oauth2/**", "/register", "/signup", "/verify/**", "/error",
                             "/ai-recommendation", "/recommend", "/api/recommend", "/api/chat",

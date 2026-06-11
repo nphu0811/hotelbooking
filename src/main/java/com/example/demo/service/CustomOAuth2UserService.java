@@ -99,6 +99,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         customAttributes.put("email", finalEmail);
         customAttributes.put("name", finalName);
                 
-        return new DefaultOAuth2User(authorities, customAttributes, "email");
+        return new CustomOAuth2User(authorities, customAttributes, "email", user.getFullName());
     }
 }
