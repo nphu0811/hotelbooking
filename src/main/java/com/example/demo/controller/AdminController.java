@@ -162,10 +162,7 @@ public class AdminController {
                            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate startDate,
                            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate endDate,
                            Model model) {
-        java.time.Instant startInstant = startDate != null ? startDate.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant() : null;
-        java.time.Instant endInstant = endDate != null ? endDate.plusDays(1).atStartOfDay(java.time.ZoneId.systemDefault()).toInstant() : null;
-
-        model.addAttribute("bookings", adminService.bookings(PageRequest.of(page, 20), startInstant, endInstant));
+        model.addAttribute("bookings", adminService.bookings(PageRequest.of(page, 20), startDate, endDate));
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
         return "admin/bookings";

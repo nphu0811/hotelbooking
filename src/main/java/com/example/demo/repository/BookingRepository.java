@@ -44,13 +44,13 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     Page<Booking> findAdminPageWithDetails(Pageable pageable);
 
     @EntityGraph(attributePaths = {"room", "room.hotel", "user"})
-    Page<Booking> findByCreatedAtBetween(Instant startDate, Instant endDate, Pageable pageable);
+    Page<Booking> findByCheckInBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
 
     @EntityGraph(attributePaths = {"room", "room.hotel", "user"})
-    Page<Booking> findByCreatedAtAfter(Instant startDate, Pageable pageable);
+    Page<Booking> findByCheckInGreaterThanEqual(LocalDate startDate, Pageable pageable);
 
     @EntityGraph(attributePaths = {"room", "room.hotel", "user"})
-    Page<Booking> findByCreatedAtBefore(Instant endDate, Pageable pageable);
+    Page<Booking> findByCheckInLessThanEqual(LocalDate endDate, Pageable pageable);
 
     List<Booking> findByStatusAndExpiresAtBefore(BookingStatus status, Instant expiresAt);
 

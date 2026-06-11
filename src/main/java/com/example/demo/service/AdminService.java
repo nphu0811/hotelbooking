@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -234,13 +235,13 @@ public class AdminService {
                 .replaceAll("(^-|-$)", "");
     }
 
-    public Page<Booking> bookings(Pageable pageable, Instant startDate, Instant endDate) {
+    public Page<Booking> bookings(Pageable pageable, LocalDate startDate, LocalDate endDate) {
         if (startDate != null && endDate != null) {
-            return bookingRepository.findByCreatedAtBetween(startDate, endDate, pageable);
+            return bookingRepository.findByCheckInBetween(startDate, endDate, pageable);
         } else if (startDate != null) {
-            return bookingRepository.findByCreatedAtAfter(startDate, pageable);
+            return bookingRepository.findByCheckInGreaterThanEqual(startDate, pageable);
         } else if (endDate != null) {
-            return bookingRepository.findByCreatedAtBefore(endDate, pageable);
+            return bookingRepository.findByCheckInLessThanEqual(endDate, pageable);
         }
         return bookingRepository.findAdminPageWithDetails(pageable);
     }
