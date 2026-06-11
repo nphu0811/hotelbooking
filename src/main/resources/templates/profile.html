@@ -8,6 +8,40 @@
         <p class="page-kicker">Thông tin cá nhân</p>
         <h1>Hồ sơ của bạn</h1>
 
+        <!-- Quick Actions Panel -->
+        <div style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin: 24px 0 32px 0; border: 1px solid #e9ecef;">
+            <p style="font-size: 13px; font-weight: 700; color: #6c757d; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Phím tắt truy cập nhanh</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+                <!-- Admin Only Actions -->
+                <th:block sec:authorize="hasAnyRole('ADMIN', 'SUPER_ADMIN')">
+                    <a th:href="@{/admin}" class="button button-muted" style="justify-content: flex-start; gap: 8px;">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">dashboard</span> Bảng điều khiển
+                    </a>
+                    <a th:href="@{/admin/hotels}" class="button button-muted" style="justify-content: flex-start; gap: 8px;">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">apartment</span> Quản lý khách sạn
+                    </a>
+                    <a th:href="@{/admin/bookings}" class="button button-muted" style="justify-content: flex-start; gap: 8px;">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">book_online</span> Quản lý đặt phòng
+                    </a>
+                    <a th:href="@{/admin/users}" class="button button-muted" style="justify-content: flex-start; gap: 8px;">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">group</span> Quản lý người dùng
+                    </a>
+                </th:block>
+
+                <!-- Common User Actions -->
+                <a th:href="@{/account/bookings}" class="button button-muted" style="justify-content: flex-start; gap: 8px;">
+                    <span class="material-symbols-outlined" style="font-size: 20px;">receipt_long</span> Đặt phòng của tôi
+                </a>
+                <form th:action="@{/logout}" method="post" style="margin: 0; width: 100%;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="button button-muted" style="width: 100%; justify-content: flex-start; gap: 8px; color: #dc2626;">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">logout</span> Đăng xuất
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <p class="alert" th:if="${error}" th:text="${error}"></p>
         <p class="success" th:if="${message}" th:text="${message}"></p>
 
