@@ -26,30 +26,31 @@
             <a sec:authorize="isAnonymous()" th:href="@{/register}">Đăng ký</a>
             <a class="button button-small" th:href="@{/hotels}">Đặt ngay</a>
 
-            <div sec:authorize="isAuthenticated()" class="user-menu-dropdown" style="position: relative; display: inline-block;">
-                <button type="button" data-user-menu-toggle style="display:inline-flex;align-items:center;gap:4px;background:transparent;border:none;cursor:pointer;font-weight:500;padding:0 12px;min-height:42px;font-family:inherit;font-size:var(--text-base, 15px);color:var(--color-text-soft, #4b5563);transition:color 0.2s;white-space:nowrap;">
-                    <span style="max-width:150px;overflow:hidden;text-overflow:ellipsis;" th:text="${(#authentication.principal instanceof T(com.example.demo.service.CustomUserDetails)) ? #authentication.principal.fullName : ((#authentication.principal instanceof T(com.example.demo.service.CustomOAuth2User)) ? #authentication.principal.fullName : (#strings.contains(#authentication.name, '@') ? #strings.substringBefore(#authentication.name, '@') : #authentication.name))}">Tên User</span>
-                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;opacity:0.7;flex-shrink:0;"><path d="M7 10l5 5 5-5z"/></svg>
+            <div sec:authorize="isAuthenticated()" class="user-menu-dropdown" style="position:relative;display:inline-block;">
+                <button type="button" class="user-avatar-btn" data-user-menu-toggle>
+                    <span class="user-avatar-circle" th:text="${#strings.substring((#authentication.principal instanceof T(com.example.demo.service.CustomUserDetails)) ? #authentication.principal.fullName : ((#authentication.principal instanceof T(com.example.demo.service.CustomOAuth2User)) ? #authentication.principal.fullName : #authentication.name), 0, 1).toUpperCase()}">U</span>
+                    <span class="user-avatar-name" th:text="${(#authentication.principal instanceof T(com.example.demo.service.CustomUserDetails)) ? #authentication.principal.fullName : ((#authentication.principal instanceof T(com.example.demo.service.CustomOAuth2User)) ? #authentication.principal.fullName : (#strings.contains(#authentication.name, '@') ? #strings.substringBefore(#authentication.name, '@') : #authentication.name))}">Tên User</span>
+                    <svg class="user-avatar-caret" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
                 </button>
-                <div class="user-dropdown-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:white;box-shadow:0 10px 40px rgba(0,0,0,0.15);border-radius:12px;padding:8px 0;min-width:240px;z-index:100;border:1px solid rgba(0,0,0,0.05);flex-direction:column;">
+                <div class="user-dropdown-menu">
                     
                     <th:block sec:authorize="hasAnyRole('ADMIN', 'SUPER_ADMIN')">
-                        <span style="padding:8px 16px;font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:700;letter-spacing:1px;display:block;">Quản trị viên</span>
-                        <a th:href="@{/admin}" style="padding:10px 16px;color:#111827;text-decoration:none;font-size:14px;display:block;">Bảng điều khiển</a>
-                        <a th:href="@{/admin/hotels}" style="padding:10px 16px;color:#111827;text-decoration:none;font-size:14px;display:block;">Quản lý khách sạn</a>
-                        <a th:href="@{/admin/bookings}" style="padding:10px 16px;color:#111827;text-decoration:none;font-size:14px;display:block;">Quản lý đặt phòng</a>
-                        <a th:href="@{/admin/users}" style="padding:10px 16px;color:#111827;text-decoration:none;font-size:14px;display:block;">Quản lý người dùng</a>
-                        <div style="height:1px;background:#f3f4f6;margin:4px 0;"></div>
+                        <span class="dropdown-section-label">Quản trị viên</span>
+                        <a th:href="@{/admin}" class="dropdown-link">Bảng điều khiển</a>
+                        <a th:href="@{/admin/hotels}" class="dropdown-link">Quản lý khách sạn</a>
+                        <a th:href="@{/admin/bookings}" class="dropdown-link">Quản lý đặt phòng</a>
+                        <a th:href="@{/admin/users}" class="dropdown-link">Quản lý người dùng</a>
+                        <div class="dropdown-divider"></div>
                     </th:block>
 
-                    <span style="padding:8px 16px;font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:700;letter-spacing:1px;display:block;">Cá nhân</span>
-                    <a th:href="@{/account/bookings}" style="padding:10px 16px;color:#111827;text-decoration:none;font-size:14px;display:block;">Phòng của tôi</a>
-                    <a th:href="@{/profile}" style="padding:10px 16px;color:#111827;text-decoration:none;font-size:14px;display:block;">Thông tin tài khoản</a>
+                    <span class="dropdown-section-label">Cá nhân</span>
+                    <a th:href="@{/account/bookings}" class="dropdown-link">Phòng của tôi</a>
+                    <a th:href="@{/profile}" class="dropdown-link">Thông tin tài khoản</a>
                     
-                    <div style="height:1px;background:#f3f4f6;margin:4px 0;"></div>
+                    <div class="dropdown-divider"></div>
                     
                     <form th:action="@{/logout}" method="post">
-                        <button type="submit" style="width:100%;text-align:left;padding:10px 8px;background:none;border:none;color:#dc2626;font-size:14px;cursor:pointer;font-weight:600;border-radius:6px;font-family:inherit;">Đăng xuất</button>
+                        <button type="submit" class="dropdown-link dropdown-logout">Đăng xuất</button>
                     </form>
                 </div>
             </div>
@@ -57,13 +58,22 @@
     </div>
     
     <script>
+        /* Toggle only — GSAP animation is in gsap-animations.js */
         document.addEventListener('click', function(e) {
             var toggleBtn = e.target.closest('[data-user-menu-toggle]');
             document.querySelectorAll('.user-dropdown-menu').forEach(function(menu) {
                 var isRelated = toggleBtn && toggleBtn.nextElementSibling === menu;
                 if (isRelated) {
-                    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+                    var isOpen = menu.classList.contains('is-open');
+                    if (isOpen) {
+                        menu.classList.remove('is-open');
+                        menu.style.display = 'none';
+                    } else {
+                        menu.classList.add('is-open');
+                        menu.style.display = 'flex';
+                    }
                 } else {
+                    menu.classList.remove('is-open');
                     menu.style.display = 'none';
                 }
             });
