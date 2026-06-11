@@ -32,7 +32,7 @@ public class AdminController {
     public String dashboard(Model model) {
         var hotels = adminService.hotels(PageRequest.of(0, 5));
         model.addAttribute("hotels", hotels);
-        model.addAttribute("bookings", adminService.bookings(PageRequest.of(0, 5)));
+        model.addAttribute("bookings", adminService.bookings(PageRequest.of(0, 5), null, null));
         model.addAttribute("users", adminService.users(PageRequest.of(0, 5)));
         model.addAttribute("stats", adminService.dashboardStats());
         return "admin/dashboard";
@@ -158,8 +158,16 @@ public class AdminController {
     }
 
     @GetMapping("/admin/bookings")
-    public String bookings(@RequestParam(defaultValue = "0") int page, Model model) {
-        model.addAttribute("bookings", adminService.bookings(PageRequest.of(page, 20)));
+    public String bookings(@RequestParam(defaultValue = "0") int page,
+                           @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate startDate,
+                           @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate endDate,
+                           Model model) {
+        java.time.Instant startInstant = startDate != null ? startDate.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant() : null;
+        java.time.Instant endInstant = endDate != null ? endDate.plusDays(1).atStartOfDay(java.time.ZoneId.systemDefault()).toInstant() : null;
+
+        model.addAttribute("bookings", adminService.bookings(PageRequest.of(page, 20), startInstant, endInstant));
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
         return "admin/bookings";
     }
 

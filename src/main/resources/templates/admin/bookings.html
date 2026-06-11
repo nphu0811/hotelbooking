@@ -4,11 +4,21 @@
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="page admin-page">
-    <header class="page-header">
+    <header class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
         <div>
             <p class="page-kicker">Vận hành lưu trú</p>
             <h1>Quản lý đặt phòng</h1>
         </div>
+        <form method="get" action="/admin/bookings" style="display: flex; gap: 12px; align-items: flex-end;">
+            <label style="margin-bottom: 0;">Từ ngày:
+                <input type="date" name="startDate" th:value="${startDate}" style="min-height: 40px; padding: 8px 16px;">
+            </label>
+            <label style="margin-bottom: 0;">Đến ngày:
+                <input type="date" name="endDate" th:value="${endDate}" style="min-height: 40px; padding: 8px 16px;">
+            </label>
+            <button type="submit" class="button button-small" style="min-height: 40px;">Lọc</button>
+            <a th:if="${startDate != null or endDate != null}" th:href="@{/admin/bookings}" class="button button-small button-muted" style="min-height: 40px;">Xóa</a>
+        </form>
     </header>
     <div class="table-wrap">
         <table>
@@ -33,6 +43,20 @@
             </tr>
             </tbody>
         </table>
+    </div>
+    
+    <div th:if="${bookings.totalPages > 1}" style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
+        <a th:if="${bookings.hasPrevious()}"
+           th:href="@{/admin/bookings(page=${bookings.number - 1}, startDate=${startDate}, endDate=${endDate})}"
+           class="button button-small button-muted">Trang trước</a>
+           
+        <span style="display: flex; align-items: center; font-size: 14px; font-weight: 600;">
+            Trang <span th:text="${bookings.number + 1}"></span> / <span th:text="${bookings.totalPages}"></span>
+        </span>
+        
+        <a th:if="${bookings.hasNext()}"
+           th:href="@{/admin/bookings(page=${bookings.number + 1}, startDate=${startDate}, endDate=${endDate})}"
+           class="button button-small button-muted">Trang sau</a>
     </div>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>

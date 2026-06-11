@@ -234,7 +234,14 @@ public class AdminService {
                 .replaceAll("(^-|-$)", "");
     }
 
-    public Page<Booking> bookings(Pageable pageable) {
+    public Page<Booking> bookings(Pageable pageable, Instant startDate, Instant endDate) {
+        if (startDate != null && endDate != null) {
+            return bookingRepository.findByCreatedAtBetween(startDate, endDate, pageable);
+        } else if (startDate != null) {
+            return bookingRepository.findByCreatedAtAfter(startDate, pageable);
+        } else if (endDate != null) {
+            return bookingRepository.findByCreatedAtBefore(endDate, pageable);
+        }
         return bookingRepository.findAdminPageWithDetails(pageable);
     }
 
