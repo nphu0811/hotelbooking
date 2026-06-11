@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="widget">
+    <div id="lumi-chatbot-widget">
+        <!-- Floating Toggle Button -->
+        <button id="lumi-chatbot-toggle" aria-label="Mở Chatbot LUMI">
+            <svg viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/>
+                <path d="M7 9h10v2H7zm0-3h10v2H7zm0 6h7v2H7z"/>
+            </svg>
+        </button>
+
+        <!-- Chat Window -->
+        <div id="lumi-chatbot-window" hidden>
+            <div class="lumi-chat-header">
+                <div class="lumi-chat-header-info">
+                    <h3>LUMI</h3>
+                    <span>Lễ tân ảo trực tuyến</span>
+                </div>
+                <button class="lumi-chat-close" id="lumi-chat-close" aria-label="Đóng chat">✕</button>
+            </div>
+            
+            <div id="lumi-chat-messages">
+                <div class="lumi-msg lumi-msg-bot">
+                    Chào bạn! Tôi là LUMI, lễ tân ảo của LUMIÈRE Hotel. Tôi có thể giúp gì cho bạn hôm nay?
+                </div>
+            </div>
+            
+            <div class="lumi-chat-input-area">
+                <input type="text" id="lumi-chat-input" placeholder="Nhập tin nhắn..." autocomplete="off">
+                <button id="lumi-chat-send" aria-label="Gửi">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -7,6 +7,7 @@
     <script th:src="@{/js/theme.js(v=9)}"></script>
     <script th:src="@{/js/nav.js(v=6)}" defer></script>
     <link rel="stylesheet" th:href="@{/css/app.css(v=14)}">
+    <link rel="stylesheet" th:href="@{/css/chatbot.css(v=1)}">
     <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}">
 </head>
 <body>
@@ -72,9 +73,11 @@
     </div>
 </footer>
 <th:block th:fragment="scripts">
+    <div th:replace="~{fragments/chatbot :: widget}"></div>
     <script th:src="@{/webjars/github-com-greensock-GSAP/3.12.5/gsap.min.js}" defer></script>
     <script th:src="@{/webjars/github-com-greensock-GSAP/3.12.5/ScrollTrigger.min.js}" defer></script>
     <script th:src="@{/js/gsap-animations.js(v=1)}" defer></script>
+    <script th:src="@{/js/chatbot.js(v=1)}" defer></script>
 </th:block>
 </body>
 </html>

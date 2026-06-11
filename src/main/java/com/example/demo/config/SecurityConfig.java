@@ -107,14 +107,14 @@ public class SecurityConfig {
                     CsrfTokenRequestAttributeHandler csrfHandler = new CsrfTokenRequestAttributeHandler();
                     csrfHandler.setCsrfRequestAttributeName("_csrf");
                     csrf.csrfTokenRequestHandler(csrfHandler);
-                    csrf.ignoringRequestMatchers(paymentEndpoint("/webhook"), pathStartsWith("/api/recommend"));
+                    csrf.ignoringRequestMatchers(paymentEndpoint("/webhook"), pathStartsWith("/api/recommend"), pathStartsWith("/api/chat"));
                     if (e2eFixtureEnabled) {
                         csrf.ignoringRequestMatchers(pathStartsWith("/__e2e__"));
                     }
                 })
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/", "/hotels/**", "/rooms/**", "/login", "/login/password", "/login/otp", "/login/otp/**", "/login-otp", "/login/oauth-mock", "/login/oauth2/**", "/register", "/signup", "/verify/**", "/error",
-                            "/ai-recommendation", "/recommend", "/api/recommend",
+                            "/ai-recommendation", "/recommend", "/api/recommend", "/api/chat",
                             "/actuator/health", "/actuator/health/**", "/css/**", "/js/**", "/webjars/**", "/favicon.svg").permitAll();
                     auth.requestMatchers(paymentEndpoint("/webhook"), paymentEndpoint("/return")).permitAll();
                     if (h2ConsoleEnabled) {
