@@ -114,7 +114,7 @@ public class SecurityConfig {
                     org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler csrfHandler = new org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler();
                     csrfHandler.setCsrfRequestAttributeName(null); // Opt-out of deferred CSRF token
                     csrf.csrfTokenRequestHandler(csrfHandler);
-                    csrf.ignoringRequestMatchers(paymentEndpoint("/webhook"), pathStartsWith("/api/recommend"), pathStartsWith("/api/chat"), new org.springframework.security.web.util.matcher.AntPathRequestMatcher("/logout"));
+                    csrf.ignoringRequestMatchers(paymentEndpoint("/webhook"), pathStartsWith("/api/recommend"), pathStartsWith("/api/chat"), pathStartsWith("/logout"));
                     if (e2eFixtureEnabled) {
                         csrf.ignoringRequestMatchers(pathStartsWith("/__e2e__"));
                     }
