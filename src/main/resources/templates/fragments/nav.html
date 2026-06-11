@@ -48,8 +48,7 @@
                     
                     <div style="height:1px;background:#f3f4f6;margin:4px 0;"></div>
                     
-                    <form th:action="@{/logout}" method="post" style="margin:0;padding:4px 8px;">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <form th:action="@{/logout}" method="post">
                         <button type="submit" style="width:100%;text-align:left;padding:10px 8px;background:none;border:none;color:#dc2626;font-size:14px;cursor:pointer;font-weight:600;border-radius:6px;font-family:inherit;">Đăng xuất</button>
                     </form>
                 </div>

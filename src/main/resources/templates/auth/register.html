@@ -15,7 +15,6 @@
         <section class="auth-form-area">
             <form class="auth-panel" th:action="@{/register}" th:object="${registerForm}" method="post"
                   data-validate="register" novalidate>
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <p class="page-kicker">Khách mới</p>
                 <h1>Tạo tài khoản</h1>
                 <p class="muted auth-copy">Lưu thông tin đặt phòng, theo dõi thanh toán và quản lý lịch sử lưu trú.</p>
