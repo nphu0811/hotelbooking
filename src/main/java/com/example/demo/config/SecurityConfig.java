@@ -69,6 +69,13 @@ public class SecurityConfig {
                 return;
             }
             
+            String continueUrl = (String) request.getSession().getAttribute("CONTINUE_URL");
+            if (continueUrl != null) {
+                request.getSession().removeAttribute("CONTINUE_URL");
+                new DefaultRedirectStrategy().sendRedirect(request, response, continueUrl);
+                return;
+            }
+            
             delegate.onAuthenticationSuccess(request, response, authentication);
         };
     }

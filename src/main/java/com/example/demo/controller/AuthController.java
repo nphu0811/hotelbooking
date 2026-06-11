@@ -59,12 +59,14 @@ public class AuthController {
     }
 
     @GetMapping({"/login", "/login/otp", "/login-otp"})
-    public String login(@RequestParam(required = false) String error,
+    public String login(HttpServletRequest request,
+                        @RequestParam(required = false) String error,
                         @RequestParam(required = false) String captcha,
                         @RequestParam(required = false) String locked,
                         @RequestParam(required = false) String registered,
                         @RequestParam(required = false) String resent,
                         Model model) {
+        captureReferer(request);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (isRealAuthentication(authentication)) {
             if (isAdmin(authentication)) {
@@ -95,10 +97,12 @@ public class AuthController {
     }
 
     @GetMapping("/login/password")
-    public String loginPassword(@RequestParam(required = false) String error,
+    public String loginPassword(HttpServletRequest request,
+                                @RequestParam(required = false) String error,
                                 @RequestParam(required = false) String captcha,
                                 @RequestParam(required = false) String locked,
                                 Model model) {
+        captureReferer(request);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (isRealAuthentication(authentication)) {
             if (isAdmin(authentication)) {
@@ -181,6 +185,11 @@ public class AuthController {
             if (user.getRoles().stream().anyMatch(role -> "ADMIN".equals(role.getCode()) || "SUPER_ADMIN".equals(role.getCode()))) {
                 return "redirect:/admin";
             }
+            String continueUrl = (String) request.getSession().getAttribute("CONTINUE_URL");
+            if (continueUrl != null) {
+                request.getSession().removeAttribute("CONTINUE_URL");
+                return "redirect:" + continueUrl;
+            }
             return "redirect:/";
         } catch (BusinessException ex) {
             model.addAttribute("error", ex.getMessage());
@@ -192,7 +201,8 @@ public class AuthController {
     }
 
     @GetMapping({"/register", "/signup"})
-    public String registerForm(Model model) {
+    public String registerForm(HttpServletRequest request, Model model) {
+        captureReferer(request);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (isRealAuthentication(authentication)) {
             if (isAdmin(authentication)) {
@@ -262,6 +272,11 @@ public class AuthController {
             authService.verifyOtp(user.getEmail(), otp);
             User refreshed = userRepository.findByEmailIgnoreCase(user.getEmail()).orElse(user);
             authenticateUser(refreshed, request, response);
+            String continueUrl = (String) request.getSession().getAttribute("CONTINUE_URL");
+            if (continueUrl != null) {
+                request.getSession().removeAttribute("CONTINUE_URL");
+                return "redirect:" + continueUrl + (continueUrl.contains("?") ? "&" : "?") + "verified";
+            }
             return "redirect:/?verified";
         } catch (BusinessException ex) {
             model.addAttribute("error", ex.getMessage());
@@ -341,5 +356,12 @@ public class AuthController {
     private boolean isAdmin(Authentication authentication) {
         return authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPER_ADMIN"));
+    }
+
+    private void captureReferer(HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.contains("/login") && !referer.contains("/register") && !referer.contains("/signup") && !referer.contains("/verify") && !referer.contains("/error")) {
+            request.getSession().setAttribute("CONTINUE_URL", referer);
+        }
     }
 }
