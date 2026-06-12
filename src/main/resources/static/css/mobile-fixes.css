@@ -1299,6 +1299,185 @@ iframe.skiptranslate,
     white-space: nowrap;
 }
 
+.hotels-page .hotel-map-panel {
+    display: grid;
+    gap: 16px;
+}
+
+.hotels-page .hotel-filter-panel {
+    display: grid;
+    gap: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(196, 199, 199, 0.34);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface-elevated);
+    box-shadow: var(--shadow-sm);
+}
+
+.hotels-page .hotel-filter-panel h3,
+.hotels-page .hotel-filter-panel h4,
+.hotels-page .hotel-filter-panel p {
+    margin: 0;
+}
+
+.hotels-page .hotel-filter-panel h3 {
+    padding: 18px 20px 0;
+    color: var(--color-primary);
+    font-size: 20px;
+}
+
+.hotels-page .filter-block {
+    display: grid;
+    gap: 12px;
+    padding: 0 20px 18px;
+    border-bottom: 1px solid rgba(116, 120, 120, 0.16);
+}
+
+.hotels-page .filter-block:last-child {
+    border-bottom: 0;
+}
+
+.hotels-page .filter-block h4 {
+    color: var(--color-primary);
+    font-size: 16px;
+}
+
+.hotels-page .filter-budget p {
+    color: var(--color-primary);
+    font-size: 14px;
+}
+
+.hotels-page .filter-histogram {
+    height: 70px;
+    margin: 4px 4px -12px;
+    background: repeating-linear-gradient(
+        90deg,
+        rgba(116, 120, 120, 0.18) 0 5px,
+        transparent 5px 10px
+    );
+    clip-path: polygon(
+        0 86%, 4% 62%, 8% 42%, 12% 8%, 16% 32%, 20% 20%, 24% 50%, 28% 44%,
+        33% 66%, 38% 72%, 44% 56%, 50% 78%, 58% 68%, 66% 82%, 74% 74%,
+        82% 86%, 90% 76%, 100% 68%, 100% 100%, 0 100%
+    );
+}
+
+.hotels-page .filter-range {
+    position: relative;
+    height: 24px;
+    margin: 0 10px 2px;
+}
+
+.hotels-page .filter-range::before,
+.hotels-page .filter-range::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 10px;
+    height: 4px;
+    border-radius: var(--radius-full);
+}
+
+.hotels-page .filter-range::before {
+    background: rgba(116, 120, 120, 0.22);
+}
+
+.hotels-page .filter-range::after {
+    background: #0071e3;
+}
+
+.hotels-page .filter-range span {
+    position: absolute;
+    top: 2px;
+    z-index: 1;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #0071e3;
+}
+
+.hotels-page .filter-range span:first-child {
+    left: -4px;
+}
+
+.hotels-page .filter-range span:last-child {
+    right: -4px;
+}
+
+.hotels-page .filter-check {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-primary);
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.hotels-page .filter-check input {
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    accent-color: #0071e3;
+}
+
+.hotels-page .filter-check em {
+    color: var(--color-text-muted);
+    font-style: normal;
+}
+
+.hotels-page .filter-note {
+    margin: -8px 0 0 34px !important;
+    color: var(--color-text-muted);
+    font-size: 13px;
+}
+
+.hotels-page .filter-smart h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hotels-page .filter-smart h4 span {
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(0, 113, 227, 0.1);
+    color: #0071e3;
+}
+
+.hotels-page .filter-smart label {
+    display: grid;
+    gap: 8px;
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.hotels-page .filter-smart textarea {
+    width: 100%;
+    min-height: 88px;
+    resize: vertical;
+    border: 1px solid rgba(116, 120, 120, 0.32);
+    border-radius: 8px;
+    background: var(--color-bg-soft);
+    color: var(--color-primary);
+    padding: 12px;
+    font: inherit;
+    font-weight: 500;
+}
+
+.hotels-page .filter-smart button {
+    border: 0;
+    background: transparent;
+    color: #0071e3;
+    font-weight: 800;
+    cursor: pointer;
+}
+
 .hotels-page .hotel-results-controls {
     display: flex;
     align-items: flex-start;
@@ -1488,5 +1667,9 @@ iframe.skiptranslate,
 
     .hotels-page .hotel-map-card iframe {
         height: 220px;
+    }
+
+    .hotels-page .hotel-filter-panel {
+        border-radius: 24px;
     }
 }

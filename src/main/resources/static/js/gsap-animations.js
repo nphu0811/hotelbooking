@@ -60,7 +60,7 @@
         if (first(".home-shell")) {
             tl.from(".home-shell .hero", { autoAlpha: 0, y: 30, scale: 0.985, duration: 0.88 }, 0.08)
                 .from(".home-shell .hero-copy > *", { autoAlpha: 0, y: 30, stagger: 0.09 }, 0.28)
-                .from(".home-shell .hero-key-stage", { autoAlpha: 0, y: 34, rotationY: -8, duration: 0.82 }, 0.34)
+                .from(".home-shell #threejs-container", { autoAlpha: 0, y: 34, rotationY: -8, duration: 0.82 }, 0.34)
                 .from(".home-shell .hero-search-wrap", { autoAlpha: 0, y: 26, scale: 0.98, duration: 0.72 }, 0.48);
             return;
         }

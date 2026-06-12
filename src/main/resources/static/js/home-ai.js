@@ -414,6 +414,5 @@
     onReady(function () {
         bindSuggestions();
         bindHomeAiForm();
-        initThreeJsKey();
     });
 })();

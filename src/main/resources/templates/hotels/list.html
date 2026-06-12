@@ -100,6 +100,50 @@
                 <iframe th:src="${searchMapEmbedUrl}" title="Bản đồ khu vực tìm kiếm" loading="lazy"></iframe>
                 <a class="button" th:href="${searchMapUrl}" target="_blank" rel="noopener">Hiển thị trên bản đồ</a>
             </div>
+            <form class="hotel-filter-panel" th:action="@{/hotels}" method="get" aria-label="Bộ lọc khách sạn">
+                <input type="hidden" name="q" th:value="${q}">
+                <input type="hidden" name="city" th:value="${city}">
+                <input type="hidden" name="view" th:value="${view}">
+                <input type="hidden" name="checkIn" th:value="${checkIn}">
+                <input type="hidden" name="checkOut" th:value="${checkOut}">
+                <input type="hidden" name="adults" th:value="${adults}">
+                <input type="hidden" name="children" th:value="${children}">
+                <input type="hidden" name="rooms" th:value="${rooms}">
+                <input type="hidden" name="guests" th:value="${guests}">
+
+                <h3>Chọn lọc theo:</h3>
+                <div class="filter-block filter-budget">
+                    <h4>Ngân sách của bạn (mỗi đêm)</h4>
+                    <p>VND 50.000 - VND 2.000.000+</p>
+                    <div class="filter-histogram" aria-hidden="true"></div>
+                    <div class="filter-range" aria-hidden="true"><span></span><span></span></div>
+                </div>
+
+                <div class="filter-block">
+                    <h4>Các bộ lọc phổ biến</h4>
+                    <label class="filter-check">
+                        <input type="checkbox" name="minRating" value="4" th:checked="${minRating != null and minRating == 4}" onchange="this.form.submit()">
+                        <span>4 sao</span><em>61</em>
+                    </label>
+                    <label class="filter-check"><input type="checkbox"><span>Khách sạn</span><em>388</em></label>
+                    <label class="filter-check"><input type="checkbox"><span>Rất tốt: 8 điểm trở lên</span><em>431</em></label>
+                    <p class="filter-note">Dựa trên đánh giá của khách</p>
+                    <label class="filter-check"><input type="checkbox"><span>Bao gồm bữa sáng</span><em>91</em></label>
+                    <label class="filter-check"><input type="checkbox"><span>Dưới 1 km</span><em>244</em></label>
+                    <p class="filter-note">Khoảng cách từ địa chỉ</p>
+                    <label class="filter-check"><input type="checkbox"><span>Căn hộ</span><em>76</em></label>
+                    <label class="filter-check"><input type="checkbox"><span>Resort</span><em>14</em></label>
+                    <label class="filter-check"><input type="checkbox"><span>Biệt thự</span><em>10</em></label>
+                </div>
+
+                <div class="filter-block filter-smart">
+                    <h4><span aria-hidden="true">✧</span> Bộ lọc thông minh</h4>
+                    <label>Bạn đang tìm kiếm điều gì?
+                        <textarea rows="3" placeholder="Ví dụ: Tôi muốn một nơi có đánh giá tốt và cho hủy miễn phí"></textarea>
+                    </label>
+                    <button type="button">Tìm chỗ nghỉ</button>
+                </div>
+            </form>
         </aside>
 
         <section class="hotel-results-main">

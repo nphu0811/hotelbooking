@@ -12,13 +12,6 @@
                 <h1>Khám phá sự tinh tế</h1>
                 <p>Khám phá sự tinh tế trong trải nghiệm lưu trú, với quy trình đặt phòng trực quan và các kỳ nghỉ được tuyển chọn tại những điểm đến hấp dẫn nhất Việt Nam.</p>
             </div>
-            <div class="hero-key-stage" aria-hidden="true">
-                <div class="hero-key">
-                    <span class="hero-key-ring"></span>
-                    <span class="hero-key-shaft"></span>
-                    <span class="hero-key-tooth"></span>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -103,10 +96,6 @@
                 <button class="guest-done" type="button" data-close-popovers>Xong</button>
             </div>
         </form>
-        <div class="search-widget-options">
-            <label><input type="checkbox" name="entirePlace" form="home-hotel-search"> Tôi đang tìm nhà hoặc căn hộ nguyên căn</label>
-            <label><input type="checkbox" name="withFlights" form="home-hotel-search"> Thêm các chuyến bay vào tìm kiếm của tôi</label>
-        </div>
         <p class="muted" style="text-align:center;margin-top:8px;font-size:13px;">
             Tìm phòng theo ngày? <a th:href="@{/rooms/search(checkIn=${checkIn},checkOut=${checkOut},guests=${guests})}">Tìm phòng trống</a>
         </p>
@@ -268,7 +257,7 @@
 
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
-<script th:src="@{/js/home-ai.js(v=2)}"></script>
+<script th:src="@{/js/home-ai.js(v=3)}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script th:src="@{/js/home-key-3d.js(v=1)}"></script>
 </body>

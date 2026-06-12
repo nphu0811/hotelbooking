@@ -51,7 +51,7 @@ public class HotelController {
         model.addAttribute("searchLocationLabel", locationLabel);
         model.addAttribute("searchMapEmbedUrl", googleMapEmbedUrl(locationLabel));
         model.addAttribute("searchMapUrl", googleMapSearchUrl(locationLabel));
-        model.addAttribute("hotels", hotelService.searchHotels(q, city, minRating, page));
+        model.addAttribute("hotels", hotelService.searchHotels(searchKeyword(q), searchKeyword(city), minRating, page));
         return "hotels/list";
     }
 
@@ -108,6 +108,21 @@ public class HotelController {
         }
         if (normalized.contains("nha trang")) {
             return "Nha Trang";
+        }
+        return value.trim();
+    }
+
+    private String searchKeyword(String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+        String normalized = ascii(value)
+                .replaceAll("[^a-z0-9]+", " ")
+                .replaceAll("\\s+", " ")
+                .trim();
+        if (normalized.contains("ho chi minh") || normalized.contains("hcm") || normalized.contains("hcmc")
+                || normalized.contains("sai gon") || normalized.contains("saigon")) {
+            return "Hồ Chí Minh";
         }
         return value.trim();
     }
