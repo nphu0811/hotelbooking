@@ -127,31 +127,66 @@
         </div>
     </section>
 
-    <section id="ai-recommendation" class="section ai-recommendation-panel">
-        <div class="section-heading ai-heading">
-            <div>
+    <section id="ai-recommendation" class="section ai-recommendation-panel ai-planner-panel">
+        <div class="ai-planner-grid">
+            <div class="ai-planner-copy">
                 <p class="page-kicker">Gợi ý AI</p>
-                <h2>Đề xuất kỳ nghỉ bằng AI</h2>
-                <p>Mô tả không khí, điểm đến và ngân sách của bạn. LUMIÈRE sẽ gợi ý danh sách các kỳ nghỉ phù hợp với kế hoạch của bạn.</p>
-            </div>
-        </div>
+                <h2>Trợ lý riêng cho kỳ nghỉ của bạn</h2>
+                <p>Chọn đúng phòng nhanh hơn bằng cách để LUMIÈRE AI đọc gu lưu trú, ngân sách và nhịp chuyến đi của bạn.</p>
 
-        <form id="ai-form" class="ai-form-container">
-            <label for="ai-prompt" class="ai-input-label">Sở thích của bạn
-                <textarea id="ai-prompt" rows="3" placeholder="Ví dụ: Tôi muốn một suite yên tĩnh ở Đà Lạt cho 2 người, có bồn tắm và ngân sách khoảng 2 triệu/đêm..." required></textarea>
-            </label>
-            <div class="prompt-suggestions">
-                <span class="suggestion-label">Gợi ý nhanh:</span>
-                <div class="suggestion-chips">
-                    <button type="button" class="btn-suggest" data-suggest-prompt="Tìm phòng cho gia đình 4 người ở Đà Nẵng, phòng rộng, có hồ bơi và ăn sáng.">Gia đình ở Đà Nẵng</button>
-                    <button type="button" class="btn-suggest" data-suggest-prompt="Tôi cần phòng Deluxe ở trung tâm phố cổ Hà Nội cho chuyến công tác 2 người, yên tĩnh để làm việc.">Công tác ở Hà Nội</button>
-                    <button type="button" class="btn-suggest" data-suggest-prompt="Kiếm phòng ấm cúng nhìn ra vườn thông ở Đà Lạt cho cặp đôi.">Cặp đôi ở Đà Lạt</button>
+                <div class="ai-signal-strip" aria-label="Tín hiệu AI">
+                    <span><span class="material-symbols-outlined" aria-hidden="true">travel_explore</span> Điểm đến</span>
+                    <span><span class="material-symbols-outlined" aria-hidden="true">tune</span> Gu lưu trú</span>
+                    <span><span class="material-symbols-outlined" aria-hidden="true">payments</span> Ngân sách</span>
+                </div>
+
+                <div class="ai-preview-card">
+                    <div class="ai-preview-photo" role="img" aria-label="Phòng nghỉ cao cấp nhìn ra biển"></div>
+                    <div class="ai-preview-content">
+                        <span class="ai-preview-badge">AI phù hợp</span>
+                        <strong>Đà Nẵng · nghỉ dưỡng sát biển</strong>
+                        <p>Suite yên tĩnh, hồ bơi, ăn sáng, phù hợp cặp đôi hoặc gia đình nhỏ.</p>
+                    </div>
                 </div>
             </div>
-            <button class="button" type="submit">
-                <span>Tìm kiếm bằng AI</span>
-            </button>
-        </form>
+
+            <form id="ai-form" class="ai-form-container ai-planner-form">
+                <div class="ai-form-header">
+                    <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+                    <div>
+                        <h3>Nói với LUMIÈRE AI</h3>
+                        <p>Kết quả sẽ hiện ngay bên dưới khi AI chọn xong.</p>
+                    </div>
+                </div>
+
+                <label for="ai-prompt" class="ai-input-label">Yêu cầu lưu trú
+                    <textarea id="ai-prompt" rows="5" placeholder="Ví dụ: Tôi muốn một suite yên tĩnh ở Đà Lạt cho 2 người, có bồn tắm và ngân sách khoảng 2 triệu/đêm..." required></textarea>
+                </label>
+
+                <div class="prompt-suggestions">
+                    <span class="suggestion-label">Gợi ý nhanh</span>
+                    <div class="suggestion-chips">
+                        <button type="button" class="btn-suggest" data-suggest-prompt="Tìm phòng cho gia đình 4 người ở Đà Nẵng, phòng rộng, có hồ bơi và ăn sáng.">
+                            <span class="material-symbols-outlined" aria-hidden="true">pool</span>
+                            Gia đình ở Đà Nẵng
+                        </button>
+                        <button type="button" class="btn-suggest" data-suggest-prompt="Tôi cần phòng Deluxe ở trung tâm phố cổ Hà Nội cho chuyến công tác 2 người, yên tĩnh để làm việc.">
+                            <span class="material-symbols-outlined" aria-hidden="true">business_center</span>
+                            Công tác ở Hà Nội
+                        </button>
+                        <button type="button" class="btn-suggest" data-suggest-prompt="Kiếm phòng ấm cúng nhìn ra vườn thông ở Đà Lạt cho cặp đôi.">
+                            <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
+                            Cặp đôi ở Đà Lạt
+                        </button>
+                    </div>
+                </div>
+
+                <button class="button ai-submit-btn" type="submit">
+                    <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+                    <span>Tạo đề xuất</span>
+                </button>
+            </form>
+        </div>
 
         <div id="ai-results" class="ai-results-container" hidden></div>
     </section>

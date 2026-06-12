@@ -541,6 +541,21 @@ iframe.skiptranslate,
         margin-bottom: 40px !important;
     }
 
+    .home-shell .ai-planner-panel {
+        padding: 56px 0 0 !important;
+        border-radius: 0 !important;
+        margin-bottom: 46px !important;
+    }
+
+    .home-shell .ai-planner-grid {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+
+    .home-shell .ai-planner-form {
+        padding: 22px !important;
+    }
+
     .home-shell .section-heading {
         display: grid !important;
         align-items: start !important;
@@ -703,6 +718,14 @@ iframe.skiptranslate,
     }
 
     .home-shell .ai-recommendation-panel {
+        padding: 18px !important;
+    }
+
+    .home-shell .ai-planner-panel {
+        padding: 48px 0 0 !important;
+    }
+
+    .home-shell .ai-planner-form {
         padding: 18px !important;
     }
 
