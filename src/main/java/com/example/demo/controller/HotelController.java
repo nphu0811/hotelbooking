@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
@@ -27,6 +28,8 @@ public class HotelController {
     public String list(@RequestParam(defaultValue = "") String q,
                        @RequestParam(defaultValue = "") String city,
                        @RequestParam(required = false) Integer minRating,
+                       @RequestParam(required = false) BigDecimal maxPrice,
+                       @RequestParam(defaultValue = "") String smartFilter,
                        @RequestParam(defaultValue = "list") String view,
                        @RequestParam(defaultValue = "") String checkIn,
                        @RequestParam(defaultValue = "") String checkOut,
@@ -37,10 +40,14 @@ public class HotelController {
                        @RequestParam(defaultValue = "0") int page,
                        Model model) {
         String safeView = "list".equalsIgnoreCase(view) ? "list" : "grid";
-        String locationLabel = searchLocationLabel(q, city);
+        var searchResult = hotelService.searchHotels(searchKeyword(q), searchKeyword(city), minRating, maxPrice, smartFilter, page);
+        String locationLabel = searchLocationLabel(searchResult.effectiveKeyword(), searchResult.effectiveCity());
         model.addAttribute("q", q);
         model.addAttribute("city", city);
-        model.addAttribute("minRating", minRating);
+        model.addAttribute("minRating", searchResult.effectiveMinRating());
+        model.addAttribute("maxPrice", searchResult.effectiveMaxPrice());
+        model.addAttribute("smartFilter", smartFilter);
+        model.addAttribute("smartSummary", searchResult.smartSummary());
         model.addAttribute("view", safeView);
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
@@ -51,7 +58,7 @@ public class HotelController {
         model.addAttribute("searchLocationLabel", locationLabel);
         model.addAttribute("searchMapEmbedUrl", googleMapEmbedUrl(locationLabel));
         model.addAttribute("searchMapUrl", googleMapSearchUrl(locationLabel));
-        model.addAttribute("hotels", hotelService.searchHotels(searchKeyword(q), searchKeyword(city), minRating, page));
+        model.addAttribute("hotels", searchResult.hotels());
         return "hotels/list";
     }
 

@@ -104,6 +104,7 @@
                 <input type="hidden" name="q" th:value="${q}">
                 <input type="hidden" name="city" th:value="${city}">
                 <input type="hidden" name="view" th:value="${view}">
+                <input type="hidden" name="minRating" th:if="${minRating != null}" th:value="${minRating}">
                 <input type="hidden" name="checkIn" th:value="${checkIn}">
                 <input type="hidden" name="checkOut" th:value="${checkOut}">
                 <input type="hidden" name="adults" th:value="${adults}">
@@ -114,34 +115,43 @@
                 <h3>Chọn lọc theo:</h3>
                 <div class="filter-block filter-budget">
                     <h4>Ngân sách của bạn (mỗi đêm)</h4>
-                    <p>VND 50.000 - VND 2.000.000+</p>
+                    <div class="budget-value">
+                        <span>Tối đa</span>
+                        <strong data-budget-value
+                                th:text="${maxPrice != null ? 'VND ' + #numbers.formatDecimal(maxPrice,0,'COMMA',0,'POINT') : 'VND 2,000,000+'}">VND 2,000,000+</strong>
+                    </div>
                     <div class="filter-histogram" aria-hidden="true"></div>
-                    <div class="filter-range" aria-hidden="true"><span></span><span></span></div>
-                </div>
-
-                <div class="filter-block">
-                    <h4>Các bộ lọc phổ biến</h4>
-                    <label class="filter-check">
-                        <input type="checkbox" name="minRating" value="4" th:checked="${minRating != null and minRating == 4}" onchange="this.form.submit()">
-                        <span>4 sao</span><em>61</em>
-                    </label>
-                    <label class="filter-check"><input type="checkbox"><span>Khách sạn</span><em>388</em></label>
-                    <label class="filter-check"><input type="checkbox"><span>Rất tốt: 8 điểm trở lên</span><em>431</em></label>
-                    <p class="filter-note">Dựa trên đánh giá của khách</p>
-                    <label class="filter-check"><input type="checkbox"><span>Bao gồm bữa sáng</span><em>91</em></label>
-                    <label class="filter-check"><input type="checkbox"><span>Dưới 1 km</span><em>244</em></label>
-                    <p class="filter-note">Khoảng cách từ địa chỉ</p>
-                    <label class="filter-check"><input type="checkbox"><span>Căn hộ</span><em>76</em></label>
-                    <label class="filter-check"><input type="checkbox"><span>Resort</span><em>14</em></label>
-                    <label class="filter-check"><input type="checkbox"><span>Biệt thự</span><em>10</em></label>
+                    <input class="budget-slider"
+                           type="range"
+                           name="maxPrice"
+                           min="50000"
+                           max="2000000"
+                           step="50000"
+                           th:value="${maxPrice != null ? maxPrice : 2000000}"
+                           aria-label="Ngân sách tối đa mỗi đêm"
+                           data-budget-range>
+                    <div class="budget-scale" aria-hidden="true">
+                        <span>50.000</span>
+                        <span>2.000.000+</span>
+                    </div>
+                    <button class="filter-submit" type="submit">Áp dụng lọc</button>
                 </div>
 
                 <div class="filter-block filter-smart">
-                    <h4><span aria-hidden="true">✧</span> Bộ lọc thông minh</h4>
+                    <h4><span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span> Bộ lọc AI</h4>
                     <label>Bạn đang tìm kiếm điều gì?
-                        <textarea rows="3" placeholder="Ví dụ: Tôi muốn một nơi có đánh giá tốt và cho hủy miễn phí"></textarea>
+                        <textarea name="smartFilter"
+                                  rows="3"
+                                  placeholder="Ví dụ: Đà Nẵng, 4 sao, gần biển, dưới 1.5 triệu"
+                                  th:text="${smartFilter}"></textarea>
                     </label>
-                    <button type="button">Tìm chỗ nghỉ</button>
+                    <p class="filter-note smart-summary"
+                       th:if="${smartSummary != null and !#strings.isEmpty(smartSummary)}"
+                       th:text="${smartSummary}">AI đã áp dụng điều kiện lọc.</p>
+                    <button class="filter-submit" type="submit">AI tìm chỗ nghỉ</button>
+                    <a class="filter-reset"
+                       th:if="${maxPrice != null or minRating != null or (smartFilter != null and !#strings.isEmpty(smartFilter))}"
+                       th:href="@{/hotels(q=${q},city=${city},view=${view},checkIn=${checkIn},checkOut=${checkOut},adults=${adults},children=${children},rooms=${rooms},guests=${guests})}">Xóa lọc</a>
                 </div>
             </form>
         </aside>
@@ -157,9 +167,9 @@
                 </div>
                 <div class="hotel-view-toggle" aria-label="Kiểu hiển thị">
                     <a th:classappend="${view == 'grid'} ? ' is-active'"
-                       th:href="@{/hotels(q=${q},city=${city},minRating=${minRating},view='grid')}">Xem ngang</a>
+                       th:href="@{/hotels(q=${q},city=${city},minRating=${minRating},maxPrice=${maxPrice},smartFilter=${smartFilter},checkIn=${checkIn},checkOut=${checkOut},adults=${adults},children=${children},rooms=${rooms},guests=${guests},view='grid')}">Xem ngang</a>
                     <a th:classappend="${view == 'list'} ? ' is-active'"
-                       th:href="@{/hotels(q=${q},city=${city},minRating=${minRating},view='list')}">Xem dọc</a>
+                       th:href="@{/hotels(q=${q},city=${city},minRating=${minRating},maxPrice=${maxPrice},smartFilter=${smartFilter},checkIn=${checkIn},checkOut=${checkOut},adults=${adults},children=${children},rooms=${rooms},guests=${guests},view='list')}">Xem dọc</a>
                 </div>
             </div>
 
@@ -187,5 +197,24 @@
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
+<script>
+    (function () {
+        document.querySelectorAll("[data-budget-range]").forEach(function (slider) {
+            var panel = slider.closest(".filter-budget");
+            var output = panel ? panel.querySelector("[data-budget-value]") : null;
+            var formatter = new Intl.NumberFormat("vi-VN");
+            function syncBudgetLabel() {
+                if (!output) {
+                    return;
+                }
+                var value = Number(slider.value || 0);
+                var suffix = value >= Number(slider.max) ? "+" : "";
+                output.textContent = "VND " + formatter.format(value) + suffix;
+            }
+            slider.addEventListener("input", syncBudgetLabel);
+            syncBudgetLabel();
+        });
+    })();
+</script>
 </body>
 </html>

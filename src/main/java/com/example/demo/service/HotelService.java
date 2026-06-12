@@ -14,17 +14,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class HotelService {
     private static final String DEFAULT_THUMBNAIL =
             "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80";
+    private static final BigDecimal ONE_THOUSAND = BigDecimal.valueOf(1_000L);
+    private static final BigDecimal ONE_MILLION = BigDecimal.valueOf(1_000_000L);
+    private static final Pattern PRICE_WITH_UNIT = Pattern.compile(
+            "(\\d+(?:[\\.,]\\d+)?)\\s*(trieu|tr|m|nghin|ngan|k)\\b");
+    private static final Pattern PRICE_NEAR_BUDGET_WORD = Pattern.compile(
+            "(?:duoi|toi da|max|ngan sach|gia|budget|<=|<)[^0-9]{0,24}(\\d[\\d\\.,]{4,})");
+    private static final Pattern RATING_PATTERN = Pattern.compile("([1-5])\\s*(sao|star)\\b");
 
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
@@ -40,19 +51,41 @@ public class HotelService {
 
     @Transactional(readOnly = true)
     public Page<HotelCard> searchHotels(String keyword, String city, Integer minRating, int page) {
-        return searchHotels(keyword, city, minRating, PageRequest.of(Math.max(page, 0), 20, defaultSort()));
+        return searchHotels(keyword, city, minRating, null, PageRequest.of(Math.max(page, 0), 20, defaultSort()));
     }
 
     @Transactional(readOnly = true)
     public Page<HotelCard> searchHotels(String keyword, String city, Integer minRating, Pageable pageable) {
+        return searchHotels(keyword, city, minRating, null, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public HotelSearchResult searchHotels(String keyword, String city, Integer minRating,
+                                          BigDecimal maxPrice, String smartFilter, int page) {
+        HotelSearchFilters filters = resolveSearchFilters(keyword, city, minRating, maxPrice, smartFilter);
+        Page<HotelCard> hotels = searchHotels(
+                filters.keyword(),
+                filters.city(),
+                filters.minRating(),
+                filters.maxPrice(),
+                PageRequest.of(Math.max(page, 0), 20, defaultSort()));
+        return new HotelSearchResult(hotels, filters.keyword(), filters.city(), filters.minRating(),
+                filters.maxPrice(), filters.smartSummary());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<HotelCard> searchHotels(String keyword, String city, Integer minRating,
+                                        BigDecimal maxPrice, Pageable pageable) {
         String safeKeyword = clean(keyword);
         String safeCity = clean(city);
+        BigDecimal safeMaxPrice = normalizePrice(maxPrice);
         Page<Hotel> hotels = hotelRepository.searchActive(
                 safeKeyword,
                 ascii(safeKeyword),
                 safeCity,
                 ascii(safeCity),
                 minRating,
+                safeMaxPrice,
                 pageable);
         List<HotelCard> cards = hotels.getContent().stream()
                 .map(this::toCard)
@@ -62,7 +95,7 @@ public class HotelService {
 
     @Transactional(readOnly = true)
     public Page<HotelCard> featuredHotels(int size) {
-        return searchHotels("", "", null, PageRequest.of(0, Math.max(size, 1), defaultSort()));
+        return searchHotels("", "", null, null, PageRequest.of(0, Math.max(size, 1), defaultSort()));
     }
 
     @Transactional(readOnly = true)
@@ -248,6 +281,181 @@ public class HotelService {
         return Sort.by(Sort.Order.desc("updatedAt"), Sort.Order.asc("name"));
     }
 
+    private HotelSearchFilters resolveSearchFilters(String keyword, String city, Integer minRating,
+                                                    BigDecimal maxPrice, String smartFilter) {
+        String safeKeyword = clean(keyword);
+        String safeCity = clean(city);
+        BigDecimal safeMaxPrice = normalizePrice(maxPrice);
+        String safeSmartFilter = clean(smartFilter);
+        if (safeSmartFilter.isBlank()) {
+            return new HotelSearchFilters(safeKeyword, safeCity, minRating, safeMaxPrice, "");
+        }
+
+        String normalizedPrompt = ascii(safeSmartFilter);
+        String smartCity = detectSmartCity(normalizedPrompt);
+        String smartKeyword = detectSmartKeyword(normalizedPrompt);
+        Integer smartRating = detectSmartRating(normalizedPrompt);
+        BigDecimal smartMaxPrice = detectSmartBudget(normalizedPrompt);
+
+        String effectiveKeyword = safeKeyword.isBlank() ? smartKeyword : safeKeyword;
+        String effectiveCity = safeCity.isBlank() ? smartCity : safeCity;
+        Integer effectiveRating = minRating != null ? minRating : smartRating;
+        BigDecimal effectiveMaxPrice = safeMaxPrice != null ? safeMaxPrice : smartMaxPrice;
+
+        return new HotelSearchFilters(
+                effectiveKeyword,
+                effectiveCity,
+                effectiveRating,
+                effectiveMaxPrice,
+                smartSummary(smartCity, smartKeyword, smartRating, smartMaxPrice));
+    }
+
+    private String detectSmartCity(String normalizedPrompt) {
+        if (containsAny(normalizedPrompt, "ho chi minh", "hcm", "hcmc", "sai gon", "saigon")) {
+            return "Hồ Chí Minh";
+        }
+        if (containsAny(normalizedPrompt, "da nang", "danang")) {
+            return "Đà Nẵng";
+        }
+        if (containsAny(normalizedPrompt, "ha noi", "hanoi")) {
+            return "Hà Nội";
+        }
+        if (containsAny(normalizedPrompt, "da lat", "dalat")) {
+            return "Đà Lạt";
+        }
+        if (containsAny(normalizedPrompt, "vung tau")) {
+            return "Vũng Tàu";
+        }
+        if (containsAny(normalizedPrompt, "nha trang")) {
+            return "Nha Trang";
+        }
+        if (containsAny(normalizedPrompt, "phu quoc")) {
+            return "Phú Quốc";
+        }
+        if (containsAny(normalizedPrompt, "hoi an")) {
+            return "Hội An";
+        }
+        return "";
+    }
+
+    private String detectSmartKeyword(String normalizedPrompt) {
+        if (containsAny(normalizedPrompt, "gan bien", "sat bien", "view bien", "bai bien")) {
+            return "biển";
+        }
+        if (containsAny(normalizedPrompt, "trung tam", "gan pho co", "gan cho dem")) {
+            return "trung tâm";
+        }
+        if (containsAny(normalizedPrompt, "san bay", "gan may bay")) {
+            return "sân bay";
+        }
+        if (containsAny(normalizedPrompt, "resort", "khu nghi duong")) {
+            return "resort";
+        }
+        if (containsAny(normalizedPrompt, "can ho", "apartment")) {
+            return "căn hộ";
+        }
+        if (containsAny(normalizedPrompt, "biet thu", "villa")) {
+            return "biệt thự";
+        }
+        if (containsAny(normalizedPrompt, "yen tinh", "lang man", "honeymoon", "tuan trang mat")) {
+            return "yên tĩnh";
+        }
+        return "";
+    }
+
+    private Integer detectSmartRating(String normalizedPrompt) {
+        Matcher matcher = RATING_PATTERN.matcher(normalizedPrompt);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        if (containsAny(normalizedPrompt, "danh gia tot", "rat tot", "cao cap", "sang trong")) {
+            return 4;
+        }
+        return null;
+    }
+
+    private BigDecimal detectSmartBudget(String normalizedPrompt) {
+        BigDecimal result = null;
+        Matcher unitMatcher = PRICE_WITH_UNIT.matcher(normalizedPrompt);
+        while (unitMatcher.find()) {
+            BigDecimal value = toBudgetValue(unitMatcher.group(1), unitMatcher.group(2));
+            if (value != null && (result == null || value.compareTo(result) > 0)) {
+                result = value;
+            }
+        }
+        if (result != null) {
+            return result;
+        }
+
+        Matcher budgetMatcher = PRICE_NEAR_BUDGET_WORD.matcher(normalizedPrompt);
+        if (budgetMatcher.find()) {
+            String digits = budgetMatcher.group(1).replaceAll("[^0-9]", "");
+            if (!digits.isBlank()) {
+                BigDecimal value = normalizePrice(new BigDecimal(digits));
+                if (value != null && value.compareTo(BigDecimal.valueOf(50_000L)) >= 0) {
+                    return value;
+                }
+            }
+        }
+        return null;
+    }
+
+    private BigDecimal toBudgetValue(String number, String unit) {
+        if (number == null || unit == null) {
+            return null;
+        }
+        try {
+            BigDecimal value = new BigDecimal(number.replace(',', '.'));
+            String normalizedUnit = unit.toLowerCase(Locale.ROOT);
+            if (normalizedUnit.equals("trieu") || normalizedUnit.equals("tr") || normalizedUnit.equals("m")) {
+                value = value.multiply(ONE_MILLION);
+            } else if (normalizedUnit.equals("nghin") || normalizedUnit.equals("ngan") || normalizedUnit.equals("k")) {
+                value = value.multiply(ONE_THOUSAND);
+            }
+            return normalizePrice(value);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    private BigDecimal normalizePrice(BigDecimal value) {
+        if (value == null || value.compareTo(BigDecimal.ZERO) <= 0) {
+            return null;
+        }
+        return value.setScale(0, RoundingMode.HALF_UP);
+    }
+
+    private boolean containsAny(String value, String... candidates) {
+        for (String candidate : candidates) {
+            if (value.contains(candidate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String smartSummary(String smartCity, String smartKeyword, Integer smartRating, BigDecimal smartMaxPrice) {
+        List<String> parts = new ArrayList<>();
+        if (smartCity != null && !smartCity.isBlank()) {
+            parts.add("khu vực " + smartCity);
+        }
+        if (smartKeyword != null && !smartKeyword.isBlank()) {
+            parts.add("từ khóa " + smartKeyword);
+        }
+        if (smartRating != null) {
+            parts.add("từ " + smartRating + " sao");
+        }
+        if (smartMaxPrice != null) {
+            parts.add("dưới " + formatVnd(smartMaxPrice) + " VND/đêm");
+        }
+        return parts.isEmpty() ? "AI đã đọc yêu cầu, chưa tìm thấy điều kiện cụ thể để áp dụng."
+                : "AI đã áp dụng: " + String.join(", ", parts) + ".";
+    }
+
+    private String formatVnd(BigDecimal value) {
+        return String.format(Locale.US, "%,d", value.longValue());
+    }
+
     private String clean(String value) {
         return value == null ? "" : value.trim();
     }
@@ -327,5 +535,20 @@ public class HotelService {
     }
 
     public record HotelDetail(HotelCard hotel, List<Room> rooms) {
+    }
+
+    public record HotelSearchResult(Page<HotelCard> hotels,
+                                    String effectiveKeyword,
+                                    String effectiveCity,
+                                    Integer effectiveMinRating,
+                                    BigDecimal effectiveMaxPrice,
+                                    String smartSummary) {
+    }
+
+    private record HotelSearchFilters(String keyword,
+                                      String city,
+                                      Integer minRating,
+                                      BigDecimal maxPrice,
+                                      String smartSummary) {
     }
 }

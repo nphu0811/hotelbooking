@@ -29,21 +29,31 @@ public interface HotelRepository extends JpaRepository<Hotel, UUID> {
                    or lower(h.city) like lower(concat('%', :keyword, '%'))
                    or lower(h.province) like lower(concat('%', :keyword, '%'))
                    or lower(h.address) like lower(concat('%', :keyword, '%'))
+                   or lower(coalesce(h.description, '')) like lower(concat('%', :keyword, '%'))
                    or (:keywordAscii <> '' and (
                        lower(h.name) like lower(concat('%', :keywordAscii, '%'))
                        or lower(h.city) like lower(concat('%', :keywordAscii, '%'))
                        or lower(h.province) like lower(concat('%', :keywordAscii, '%'))
                        or lower(h.address) like lower(concat('%', :keywordAscii, '%'))
+                       or lower(coalesce(h.description, '')) like lower(concat('%', :keywordAscii, '%'))
                    )))
               and (:city = '' or lower(h.city) like lower(concat('%', :city, '%'))
                    or (:cityAscii <> '' and lower(h.city) like lower(concat('%', :cityAscii, '%'))))
               and (:minRating is null or coalesce(h.starRating, 0) >= :minRating)
+              and (:maxPrice is null or exists (
+                  select r.id from Room r
+                  where r.hotel = h
+                    and r.deleted = false
+                    and r.status = com.example.demo.entity.RoomStatus.AVAILABLE
+                    and r.pricePerNight <= :maxPrice
+              ))
             """)
     Page<Hotel> searchActive(@Param("keyword") String keyword,
                              @Param("keywordAscii") String keywordAscii,
                              @Param("city") String city,
                              @Param("cityAscii") String cityAscii,
                              @Param("minRating") Integer minRating,
+                             @Param("maxPrice") BigDecimal maxPrice,
                              Pageable pageable);
 
     @Query("""
