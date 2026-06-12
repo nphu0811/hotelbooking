@@ -28,6 +28,7 @@
         "zh-hk": "zh-TW",
         "zh-tw": "zh-TW"
     };
+    var translateChromeInterval = null;
 
     function savedTheme() {
         try {
@@ -123,23 +124,16 @@
     function watchGoogleTranslateChrome() {
         hideGoogleTranslateChrome();
 
-        if (!document.body || document.body.dataset.translateChromeWatcher === "true") {
+        if (translateChromeInterval) {
             return;
         }
 
-        document.body.dataset.translateChromeWatcher = "true";
-        var observer = new MutationObserver(hideGoogleTranslateChrome);
-        observer.observe(document.documentElement, {
-            attributes: true,
-            childList: true,
-            subtree: true
-        });
-
         var runs = 0;
-        var interval = setInterval(function () {
+        translateChromeInterval = setInterval(function () {
             hideGoogleTranslateChrome();
             if (++runs > 20) {
-                clearInterval(interval);
+                clearInterval(translateChromeInterval);
+                translateChromeInterval = null;
             }
         }, 250);
     }
