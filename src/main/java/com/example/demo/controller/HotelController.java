@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
+import java.util.Locale;
 import java.util.UUID;
 
 @Controller
@@ -23,11 +27,18 @@ public class HotelController {
     public String list(@RequestParam(defaultValue = "") String q,
                        @RequestParam(defaultValue = "") String city,
                        @RequestParam(required = false) Integer minRating,
+                       @RequestParam(defaultValue = "list") String view,
                        @RequestParam(defaultValue = "0") int page,
                        Model model) {
+        String safeView = "list".equalsIgnoreCase(view) ? "list" : "grid";
+        String locationLabel = searchLocationLabel(q, city);
         model.addAttribute("q", q);
         model.addAttribute("city", city);
         model.addAttribute("minRating", minRating);
+        model.addAttribute("view", safeView);
+        model.addAttribute("searchLocationLabel", locationLabel);
+        model.addAttribute("searchMapEmbedUrl", googleMapEmbedUrl(locationLabel));
+        model.addAttribute("searchMapUrl", googleMapSearchUrl(locationLabel));
         model.addAttribute("hotels", hotelService.searchHotels(q, city, minRating, page));
         return "hotels/list";
     }
@@ -59,5 +70,71 @@ public class HotelController {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
             return "redirect:/hotels/" + hotelId;
         }
+    }
+
+    private String searchLocationLabel(String keyword, String city) {
+        String value = firstPresent(keyword, city);
+        if (value.isBlank()) {
+            return "Việt Nam";
+        }
+        String normalized = ascii(value);
+        if (normalized.contains("ho chi minh") || normalized.contains("hcm") || normalized.contains("sai gon")
+                || normalized.contains("saigon")) {
+            return "TP. Hồ Chí Minh";
+        }
+        if (normalized.contains("da nang") || normalized.contains("danang")) {
+            return "Đà Nẵng";
+        }
+        if (normalized.contains("ha noi") || normalized.contains("hanoi")) {
+            return "Hà Nội";
+        }
+        if (normalized.contains("da lat") || normalized.contains("dalat")) {
+            return "Đà Lạt";
+        }
+        if (normalized.contains("vung tau")) {
+            return "Vũng Tàu";
+        }
+        if (normalized.contains("nha trang")) {
+            return "Nha Trang";
+        }
+        return value.trim();
+    }
+
+    private String firstPresent(String first, String second) {
+        if (first != null && !first.isBlank()) {
+            return first;
+        }
+        if (second != null && !second.isBlank()) {
+            return second;
+        }
+        return "";
+    }
+
+    private String googleMapEmbedUrl(String locationLabel) {
+        return "https://www.google.com/maps?q=" + encodedMapQuery(locationLabel) + "&output=embed";
+    }
+
+    private String googleMapSearchUrl(String locationLabel) {
+        return "https://www.google.com/maps/search/?api=1&query=" + encodedMapQuery(locationLabel);
+    }
+
+    private String encodedMapQuery(String locationLabel) {
+        String query = locationLabel == null || locationLabel.isBlank() ? "Việt Nam" : locationLabel.trim();
+        if (!ascii(query).contains("viet nam")) {
+            query = query + ", Việt Nam";
+        }
+        return URLEncoder.encode(query, StandardCharsets.UTF_8);
+    }
+
+    private String ascii(String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+        return Normalizer.normalize(value, Normalizer.Form.NFD)
+                .replace("đ", "d")
+                .replace("Đ", "D")
+                .replaceAll("\\p{M}", "")
+                .toLowerCase(Locale.ROOT)
+                .trim();
     }
 }

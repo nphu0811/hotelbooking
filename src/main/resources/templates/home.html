@@ -25,17 +25,54 @@
     <div class="hero-search-wrap">
         <form class="hero-search" th:action="@{/hotels}" method="get" aria-label="Tìm khách sạn">
             <label>Điểm đến
-                <input name="q" placeholder="Bạn muốn đi đâu?">
+                <input name="q" list="popular-destinations" placeholder="Bạn muốn đến đâu?">
             </label>
-            <label>Thành phố
-                <input name="city" placeholder="Tùy chọn">
+            <label>Ngày
+                <input type="text" value="Nhận phòng - Trả phòng" readonly>
             </label>
-            <button class="button" type="submit">Tìm khách sạn</button>
+            <label>Khách
+                <input type="text" value="2 người lớn · 0 trẻ em · 1 phòng" readonly>
+            </label>
+            <button class="button" type="submit">Tìm</button>
+            <datalist id="popular-destinations">
+                <option value="TP. Hồ Chí Minh"></option>
+                <option value="Vũng Tàu"></option>
+                <option value="Nha Trang"></option>
+                <option value="Đà Lạt"></option>
+                <option value="Đà Nẵng"></option>
+                <option value="Hà Nội"></option>
+            </datalist>
         </form>
         <p class="muted" style="text-align:center;margin-top:8px;font-size:13px;">
             Tìm phòng theo ngày? <a th:href="@{/rooms/search(checkIn=${checkIn},checkOut=${checkOut},guests=${guests})}">Tìm phòng trống</a>
         </p>
     </div>
+
+    <section id="trending-destinations" class="section trending-destinations">
+        <div class="section-heading">
+            <div>
+                <h2>Điểm đến đang thịnh hành</h2>
+                <p>Các lựa chọn phổ biến nhất cho du khách từ Việt Nam</p>
+            </div>
+        </div>
+        <div class="trending-grid">
+            <a class="trending-card trending-card-wide destination-hcm" th:href="@{/hotels(q='TP. Hồ Chí Minh')}">
+                <span>TP. Hồ Chí Minh <b>VN</b></span>
+            </a>
+            <a class="trending-card trending-card-wide destination-vungtau" th:href="@{/hotels(q='Vũng Tàu')}">
+                <span>Vũng Tàu <b>VN</b></span>
+            </a>
+            <a class="trending-card destination-hanoi" th:href="@{/hotels(q='Hà Nội')}">
+                <span>Hà Nội <b>VN</b></span>
+            </a>
+            <a class="trending-card destination-danang" th:href="@{/hotels(q='Đà Nẵng')}">
+                <span>Đà Nẵng <b>VN</b></span>
+            </a>
+            <a class="trending-card destination-dalat" th:href="@{/hotels(q='Đà Lạt')}">
+                <span>Đà Lạt <b>VN</b></span>
+            </a>
+        </div>
+    </section>
 
     <section id="ai-recommendation" class="section ai-recommendation-panel">
         <div class="section-heading ai-heading">

@@ -3,37 +3,83 @@
 <head th:replace="~{fragments/layout :: head('Khách sạn')}"></head>
 <body>
 <div th:replace="~{fragments/nav :: nav}"></div>
-<main class="page">
+<main class="page hotels-page">
     <header class="page-header">
         <p class="page-kicker">Khách sạn</p>
         <h1>Tìm khách sạn</h1>
         <p th:if="${hotels != null}" th:text="${hotels.totalElements + ' khách sạn'}">0 khách sạn</p>
     </header>
 
-    <form class="toolbar" th:action="@{/hotels}" method="get" aria-label="Tìm khách sạn">
-        <input name="q" th:value="${q}" placeholder="Tên khách sạn / địa điểm">
-        <input name="city" th:value="${city}" placeholder="Thành phố">
-        <input type="number" name="minRating" min="1" max="5" th:value="${minRating}" placeholder="Sao tối thiểu">
-        <button class="button" type="submit">Lọc</button>
-    </form>
-
-    <div class="room-list" th:if="${hotels != null and !hotels.isEmpty()}">
-        <article class="room-row" th:each="hotel : ${hotels.content}">
-            <img th:src="${hotel.thumbnailUrl != null ? hotel.thumbnailUrl : '/css/room-placeholder.svg'}" th:alt="${hotel.name}">
-            <div>
-                <h2 th:text="${hotel.name}">Hotel</h2>
-                <p class="muted" th:text="${hotel.city + ' — ' + hotel.address}">City</p>
-                <p th:if="${hotel.rating != null}" th:text="${'★ ' + hotel.rating}">Rating</p>
-                <p class="muted" th:text="${hotel.roomCount + ' phòng'}">Rooms</p>
-            </div>
-            <div class="row-side">
-                <strong th:if="${hotel.minPrice != null}"
-                        th:text="${'Từ ' + #numbers.formatDecimal(hotel.minPrice,0,'COMMA',0,'POINT') + ' VND / đêm'}">Price</strong>
-                <a class="button" th:href="@{/hotels/{id}(id=${hotel.id})}">Xem phòng</a>
-            </div>
-        </article>
+    <div class="hero-search-wrap hotel-search-wrap">
+        <form class="hero-search" th:action="@{/hotels}" method="get" aria-label="Tìm khách sạn">
+            <label>Điểm đến
+                <input name="q" th:value="${q}" list="hotel-popular-destinations" placeholder="Bạn muốn đến đâu?">
+            </label>
+            <label>Ngày
+                <input type="text" value="Nhận phòng - Trả phòng" readonly>
+            </label>
+            <label>Khách
+                <input type="text" value="2 người lớn · 0 trẻ em · 1 phòng" readonly>
+            </label>
+            <input type="hidden" name="view" th:value="${view}">
+            <button class="button" type="submit">Tìm</button>
+            <datalist id="hotel-popular-destinations">
+                <option value="TP. Hồ Chí Minh"></option>
+                <option value="Vũng Tàu"></option>
+                <option value="Nha Trang"></option>
+                <option value="Đà Lạt"></option>
+                <option value="Đà Nẵng"></option>
+                <option value="Hà Nội"></option>
+            </datalist>
+        </form>
     </div>
-    <p class="empty" th:if="${hotels == null or hotels.isEmpty()}">Không tìm thấy khách sạn phù hợp.</p>
+
+    <div class="hotel-results-layout">
+        <aside class="hotel-map-panel" aria-label="Bản đồ khu vực tìm kiếm">
+            <div class="hotel-map-card">
+                <iframe th:src="${searchMapEmbedUrl}" title="Bản đồ khu vực tìm kiếm" loading="lazy"></iframe>
+                <a class="button" th:href="${searchMapUrl}" target="_blank" rel="noopener">Hiển thị trên bản đồ</a>
+            </div>
+        </aside>
+
+        <section class="hotel-results-main">
+            <div class="hotel-results-controls">
+                <div>
+                    <p class="page-kicker">Kết quả tìm kiếm</p>
+                    <h2>
+                        <span th:text="${searchLocationLabel}">Việt Nam</span>:
+                        tìm thấy <span th:text="${hotels != null ? hotels.totalElements : 0}">0</span> chỗ nghỉ
+                    </h2>
+                </div>
+                <div class="hotel-view-toggle" aria-label="Kiểu hiển thị">
+                    <a th:classappend="${view == 'grid'} ? ' is-active'"
+                       th:href="@{/hotels(q=${q},city=${city},minRating=${minRating},view='grid')}">Xem ngang</a>
+                    <a th:classappend="${view == 'list'} ? ' is-active'"
+                       th:href="@{/hotels(q=${q},city=${city},minRating=${minRating},view='list')}">Xem dọc</a>
+                </div>
+            </div>
+
+            <div class="room-list"
+                 th:classappend="${view == 'grid'} ? ' room-list-grid' : ''"
+                 th:if="${hotels != null and !hotels.isEmpty()}">
+                <article class="room-row" th:each="hotel : ${hotels.content}">
+                    <img th:src="${hotel.thumbnailUrl != null ? hotel.thumbnailUrl : '/css/room-placeholder.svg'}" th:alt="${hotel.name}">
+                    <div>
+                        <h2 th:text="${hotel.name}">Hotel</h2>
+                        <p class="muted" th:text="${hotel.city + ' — ' + hotel.address}">City</p>
+                        <p th:if="${hotel.rating != null}" th:text="${'★ ' + hotel.rating}">Rating</p>
+                        <p class="muted" th:text="${hotel.roomCount + ' phòng'}">Rooms</p>
+                    </div>
+                    <div class="row-side">
+                        <strong th:if="${hotel.minPrice != null}"
+                                th:text="${'Từ ' + #numbers.formatDecimal(hotel.minPrice,0,'COMMA',0,'POINT') + ' VND / đêm'}">Price</strong>
+                        <a class="button" th:href="@{/hotels/{id}(id=${hotel.id})}">Xem phòng</a>
+                    </div>
+                </article>
+            </div>
+            <p class="empty" th:if="${hotels == null or hotels.isEmpty()}">Không tìm thấy khách sạn phù hợp.</p>
+        </section>
+    </div>
 </main>
 <div th:replace="~{fragments/layout :: footer}"></div>
 <div th:replace="~{fragments/layout :: scripts}"></div>
