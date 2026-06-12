@@ -28,6 +28,12 @@ public class HotelController {
                        @RequestParam(defaultValue = "") String city,
                        @RequestParam(required = false) Integer minRating,
                        @RequestParam(defaultValue = "list") String view,
+                       @RequestParam(defaultValue = "") String checkIn,
+                       @RequestParam(defaultValue = "") String checkOut,
+                       @RequestParam(defaultValue = "2") int adults,
+                       @RequestParam(defaultValue = "0") int children,
+                       @RequestParam(defaultValue = "1") int rooms,
+                       @RequestParam(defaultValue = "2") int guests,
                        @RequestParam(defaultValue = "0") int page,
                        Model model) {
         String safeView = "list".equalsIgnoreCase(view) ? "list" : "grid";
@@ -36,6 +42,12 @@ public class HotelController {
         model.addAttribute("city", city);
         model.addAttribute("minRating", minRating);
         model.addAttribute("view", safeView);
+        model.addAttribute("checkIn", checkIn);
+        model.addAttribute("checkOut", checkOut);
+        model.addAttribute("adults", adults);
+        model.addAttribute("children", children);
+        model.addAttribute("rooms", rooms);
+        model.addAttribute("guests", guests);
         model.addAttribute("searchLocationLabel", locationLabel);
         model.addAttribute("searchMapEmbedUrl", googleMapEmbedUrl(locationLabel));
         model.addAttribute("searchMapUrl", googleMapSearchUrl(locationLabel));

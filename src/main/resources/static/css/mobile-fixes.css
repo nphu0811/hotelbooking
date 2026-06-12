@@ -6,6 +6,25 @@ body {
     overflow-x: hidden;
 }
 
+body {
+    top: 0 !important;
+}
+
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+body > .skiptranslate,
+iframe.skiptranslate,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.goog-text-highlight {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
 *,
 *::before,
 *::after {
@@ -709,9 +728,377 @@ body {
 }
 
 /* Scoped additions for the booking-style sections without replacing the existing design system. */
+.search-widget {
+    position: relative;
+    z-index: 40;
+}
+
+.search-widget .hero-search {
+    overflow: visible;
+    position: relative;
+}
+
+.search-widget .search-field {
+    position: relative;
+}
+
+.search-widget .hero-search input[readonly],
 .home-shell .hero-search input[readonly],
 .hotels-page .hero-search input[readonly] {
     cursor: default;
+}
+
+.search-widget .search-clear {
+    position: absolute;
+    right: 8px;
+    bottom: 2px;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-primary);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.search-widget .search-field-destination input {
+    padding-right: 34px !important;
+}
+
+.search-widget .search-popover {
+    position: absolute;
+    top: calc(100% + 12px);
+    z-index: 80;
+    border: 1px solid rgba(196, 199, 199, 0.34);
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.14);
+    color: #1a1a1a;
+}
+
+.search-widget .search-popover[hidden] {
+    display: none !important;
+}
+
+.search-widget .destination-popover {
+    left: 0;
+    width: min(370px, 100%);
+    overflow: hidden;
+    border-radius: 14px;
+}
+
+.search-widget .destination-popover strong {
+    display: block;
+    padding: 18px 20px 12px;
+    font-size: 15px;
+}
+
+.search-widget .destination-popover button {
+    position: relative;
+    display: grid;
+    width: 100%;
+    padding: 15px 20px 15px 58px;
+    border: 0;
+    border-top: 1px solid rgba(116, 120, 120, 0.14);
+    background: #ffffff;
+    color: #1a1a1a;
+    text-align: left;
+    cursor: pointer;
+}
+
+.search-widget .destination-popover button::before {
+    content: "location_on";
+    position: absolute;
+    margin-left: -36px;
+    font-family: "Material Symbols Outlined";
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.search-widget .destination-popover button:hover,
+.search-widget .destination-popover button:focus-visible {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.search-widget .destination-popover span {
+    font-weight: 800;
+}
+
+.search-widget .destination-popover small {
+    margin-top: 3px;
+    color: #4f5353;
+    font-size: 13px;
+}
+
+.search-widget .date-popover {
+    left: 50%;
+    width: min(800px, calc(100vw - 40px));
+    padding: 18px 20px;
+    transform: translateX(-50%);
+}
+
+.search-widget .date-popover-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-bottom: 1px solid rgba(116, 120, 120, 0.18);
+}
+
+.search-widget .date-popover-tabs button,
+.search-widget .date-flex-options button {
+    border: 0;
+    background: transparent;
+    color: #1a1a1a;
+    font: inherit;
+    cursor: pointer;
+}
+
+.search-widget .date-popover-tabs button {
+    min-height: 48px;
+    border-bottom: 2px solid transparent;
+}
+
+.search-widget .date-popover-tabs button.is-active {
+    border-bottom-color: #0071e3;
+    color: #0071e3;
+}
+
+.search-widget .date-calendar-toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin: 14px 0 -34px;
+    pointer-events: none;
+}
+
+.search-widget .date-calendar-toolbar button {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #1a1a1a;
+    font-size: 34px;
+    line-height: 1;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.search-widget .date-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 34px;
+}
+
+.search-widget .calendar-month h3 {
+    margin: 0 0 18px;
+    text-align: center;
+    font-size: 19px;
+}
+
+.search-widget .calendar-weekdays,
+.search-widget .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    text-align: center;
+}
+
+.search-widget .calendar-weekdays {
+    margin-bottom: 12px;
+    color: #626363;
+    font-size: 14px;
+}
+
+.search-widget .calendar-empty {
+    min-height: 42px;
+}
+
+.search-widget .calendar-days button {
+    min-width: 0;
+    min-height: 42px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #1a1a1a;
+    font: inherit;
+    cursor: pointer;
+}
+
+.search-widget .calendar-days button:hover,
+.search-widget .calendar-days button:focus-visible,
+.search-widget .calendar-days button.is-range {
+    background: rgba(0, 113, 227, 0.12);
+}
+
+.search-widget .calendar-days button.is-start,
+.search-widget .calendar-days button.is-end {
+    background: #0071e3;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.search-widget .date-flex-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(116, 120, 120, 0.18);
+}
+
+.search-widget .date-flex-options button {
+    min-height: 42px;
+    padding: 0 15px;
+    border: 1px solid rgba(116, 120, 120, 0.28);
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.search-widget .date-flex-options button.is-active {
+    border-color: #0071e3;
+    color: #0071e3;
+}
+
+.search-widget .guest-popover {
+    right: 0;
+    width: min(380px, 100%);
+    padding: 24px;
+}
+
+.search-widget .guest-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 156px;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.search-widget .guest-stepper {
+    display: grid;
+    grid-template-columns: 42px 1fr 42px;
+    align-items: center;
+    min-height: 50px;
+    overflow: hidden;
+    border: 1px solid rgba(116, 120, 120, 0.42);
+    border-radius: 8px;
+}
+
+.search-widget .guest-stepper button {
+    height: 100%;
+    border: 0;
+    background: transparent;
+    color: #0071e3;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.search-widget .guest-stepper span {
+    text-align: center;
+    font-weight: 800;
+}
+
+.search-widget .guest-pet-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(116, 120, 120, 0.18);
+}
+
+.search-widget .pet-toggle {
+    position: relative;
+    flex: 0 0 auto;
+    width: 48px;
+    height: 26px;
+    border: 0;
+    border-radius: 999px;
+    background: #8b8d8f;
+    cursor: pointer;
+}
+
+.search-widget .pet-toggle span {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    transition: transform 160ms ease;
+}
+
+.search-widget .pet-toggle[aria-pressed="true"] {
+    background: #0071e3;
+}
+
+.search-widget .pet-toggle[aria-pressed="true"] span {
+    transform: translateX(22px);
+}
+
+.search-widget .guest-popover p {
+    margin: 12px 0 18px;
+    color: #4f5353;
+    font-size: 14px;
+}
+
+.search-widget .guest-done {
+    width: 100%;
+    min-height: 46px;
+    border: 1px solid #0071e3;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #0071e3;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.search-widget-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 28px;
+    margin-top: 16px;
+    color: var(--color-primary);
+    font-size: 14px;
+}
+
+.search-widget-options label {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0;
+}
+
+.search-widget-options input {
+    width: 22px;
+    height: 22px;
+    accent-color: #0071e3;
+}
+
+:root[data-theme="dark"] .search-widget .search-popover,
+:root[data-theme="dark"] .search-widget .destination-popover button,
+:root[data-theme="dark"] .search-widget .guest-done {
+    background: #171717;
+    color: #f4f1ec;
+}
+
+:root[data-theme="dark"] .search-widget .destination-popover small,
+:root[data-theme="dark"] .search-widget .calendar-weekdays,
+:root[data-theme="dark"] .search-widget .guest-popover p {
+    color: rgba(244, 241, 236, 0.72);
+}
+
+:root[data-theme="dark"] .search-widget .date-popover-tabs button,
+:root[data-theme="dark"] .search-widget .date-flex-options button,
+:root[data-theme="dark"] .search-widget .date-calendar-toolbar button,
+:root[data-theme="dark"] .search-widget .calendar-days button {
+    color: #f4f1ec;
 }
 
 .hotels-page .hotel-search-wrap {
@@ -985,6 +1372,61 @@ body {
 }
 
 @media (max-width: 860px) {
+    .search-widget .search-popover {
+        left: 0 !important;
+        right: auto !important;
+        top: calc(100% + 10px);
+        width: 100% !important;
+        max-height: min(70dvh, 620px);
+        overflow-y: auto;
+        transform: none !important;
+    }
+
+    .search-widget .date-popover {
+        padding: 14px;
+    }
+
+    .search-widget .date-calendar-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .search-widget .date-calendar-toolbar {
+        margin-bottom: 0;
+    }
+
+    .search-widget .calendar-days,
+    .search-widget .calendar-weekdays {
+        gap: 5px;
+    }
+
+    .search-widget .calendar-days button,
+    .search-widget .calendar-empty {
+        min-height: 38px;
+    }
+
+    .search-widget .date-flex-options {
+        gap: 8px;
+    }
+
+    .search-widget .guest-popover {
+        padding: 18px;
+    }
+
+    .search-widget .guest-row {
+        grid-template-columns: 1fr;
+    }
+
+    .search-widget .guest-stepper {
+        grid-template-columns: 52px 1fr 52px;
+    }
+
+    .search-widget-options {
+        display: grid;
+        gap: 12px;
+        margin-top: 14px;
+    }
+
     .hotels-page .hotel-search-wrap {
         width: 100% !important;
         margin: 0 0 28px !important;

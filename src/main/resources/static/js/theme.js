@@ -96,6 +96,54 @@
         writeTranslationCookie("/vi/" + googleLanguageCode(language));
     }
 
+    function hideGoogleTranslateChrome() {
+        if (document.body) {
+            if (document.body.style.top !== "0px") {
+                document.body.style.top = "0px";
+            }
+            if (document.body.style.position) {
+                document.body.style.position = "";
+            }
+            document.body.classList.add("lumiere-translate-clean");
+        }
+
+        var banners = document.querySelectorAll(
+            ".goog-te-banner-frame, .goog-te-banner-frame.skiptranslate, body > .skiptranslate, iframe.skiptranslate, #goog-gt-tt, .goog-te-balloon-frame"
+        );
+        banners.forEach(function (banner) {
+            if (banner.style.display !== "none") {
+                banner.style.display = "none";
+            }
+            if (banner.style.visibility !== "hidden") {
+                banner.style.visibility = "hidden";
+            }
+        });
+    }
+
+    function watchGoogleTranslateChrome() {
+        hideGoogleTranslateChrome();
+
+        if (!document.body || document.body.dataset.translateChromeWatcher === "true") {
+            return;
+        }
+
+        document.body.dataset.translateChromeWatcher = "true";
+        var observer = new MutationObserver(hideGoogleTranslateChrome);
+        observer.observe(document.documentElement, {
+            attributes: true,
+            childList: true,
+            subtree: true
+        });
+
+        var runs = 0;
+        var interval = setInterval(function () {
+            hideGoogleTranslateChrome();
+            if (++runs > 20) {
+                clearInterval(interval);
+            }
+        }, 250);
+    }
+
     function loadGoogleTranslate() {
         var translateHost = document.getElementById("google_translate_element");
         if (!translateHost) return;
@@ -111,6 +159,7 @@
                 autoDisplay: false
             }, "google_translate_element");
             translateHost.dataset.initialized = "true";
+            watchGoogleTranslateChrome();
             document.dispatchEvent(new CustomEvent("lumiere:translate-ready"));
         };
 
@@ -256,6 +305,7 @@
         updateLangUI(savedLang);
         setTranslationCookie(savedLang);
         loadGoogleTranslate();
+        watchGoogleTranslateChrome();
         
         function updateLangUI(langCode) {
             var activeItem = modal.querySelector('.lang-item[data-lang="' + langCode + '"]');
@@ -298,6 +348,7 @@
                 if (translateSelect) {
                     translateSelect.value = googleLanguageCode(langCode);
                     translateSelect.dispatchEvent(new Event('change'));
+                    watchGoogleTranslateChrome();
                 } else {
                     window.location.reload();
                 }

@@ -22,27 +22,91 @@
         </div>
     </section>
 
-    <div class="hero-search-wrap">
-        <form class="hero-search" th:action="@{/hotels}" method="get" aria-label="Tìm khách sạn">
-            <label>Điểm đến
-                <input name="q" list="popular-destinations" placeholder="Bạn muốn đến đâu?">
+    <div class="hero-search-wrap search-widget" data-search-widget>
+        <form id="home-hotel-search" class="hero-search" th:action="@{/hotels}" method="get" aria-label="Tìm khách sạn">
+            <label class="search-field search-field-destination">Điểm đến
+                <input name="q" placeholder="Bạn muốn đến đâu?" autocomplete="off" data-destination-input>
+                <button class="search-clear" type="button" aria-label="Xóa điểm đến" data-clear-destination hidden>&times;</button>
             </label>
-            <label>Ngày
-                <input type="text" value="Nhận phòng - Trả phòng" readonly>
+            <label class="search-field">Ngày
+                <input type="text" value="Nhận phòng - Trả phòng" readonly data-search-trigger="dates" data-date-display>
             </label>
-            <label>Khách
-                <input type="text" value="2 người lớn · 0 trẻ em · 1 phòng" readonly>
+            <label class="search-field">Khách
+                <input type="text" value="2 người lớn · 0 trẻ em · 1 phòng" readonly data-search-trigger="guests" data-guests-display>
             </label>
+            <input type="hidden" name="checkIn" th:value="${checkIn}" data-check-in>
+            <input type="hidden" name="checkOut" th:value="${checkOut}" data-check-out>
+            <input type="hidden" name="adults" value="2" data-counter-input="adults">
+            <input type="hidden" name="children" value="0" data-counter-input="children">
+            <input type="hidden" name="rooms" value="1" data-counter-input="rooms">
+            <input type="hidden" name="guests" value="2" data-guests-input>
             <button class="button" type="submit">Tìm</button>
-            <datalist id="popular-destinations">
-                <option value="TP. Hồ Chí Minh"></option>
-                <option value="Vũng Tàu"></option>
-                <option value="Nha Trang"></option>
-                <option value="Đà Lạt"></option>
-                <option value="Đà Nẵng"></option>
-                <option value="Hà Nội"></option>
-            </datalist>
+
+            <div class="search-popover destination-popover" data-search-panel="destination" hidden>
+                <strong>Các điểm đến thịnh hành</strong>
+                <button type="button" data-destination="TP. Hồ Chí Minh"><span>TP. Hồ Chí Minh</span><small>Việt Nam</small></button>
+                <button type="button" data-destination="Vũng Tàu"><span>Vũng Tàu</span><small>Việt Nam</small></button>
+                <button type="button" data-destination="Nha Trang"><span>Nha Trang</span><small>Việt Nam</small></button>
+                <button type="button" data-destination="Đà Lạt"><span>Đà Lạt</span><small>Việt Nam</small></button>
+                <button type="button" data-destination="Đà Nẵng"><span>Đà Nẵng</span><small>Việt Nam</small></button>
+            </div>
+
+            <div class="search-popover date-popover" data-search-panel="dates" hidden>
+                <div class="date-popover-tabs">
+                    <button class="is-active" type="button">Lịch</button>
+                    <button type="button">Ngày linh hoạt</button>
+                </div>
+                <div class="date-calendar-toolbar">
+                    <button type="button" data-calendar-prev aria-label="Tháng trước">&#8249;</button>
+                    <button type="button" data-calendar-next aria-label="Tháng sau">&#8250;</button>
+                </div>
+                <div class="date-calendar-grid" data-calendar-months></div>
+                <div class="date-flex-options">
+                    <button class="is-active" type="button">Ngày chính xác</button>
+                    <button type="button">&plusmn; 1 ngày</button>
+                    <button type="button">&plusmn; 2 ngày</button>
+                    <button type="button">&plusmn; 3 ngày</button>
+                    <button type="button">&plusmn; 7 ngày</button>
+                </div>
+            </div>
+
+            <div class="search-popover guest-popover" data-search-panel="guests" hidden>
+                <div class="guest-row">
+                    <strong>Người lớn</strong>
+                    <div class="guest-stepper">
+                        <button type="button" data-counter-action="decrease" data-counter-target="adults">-</button>
+                        <span data-counter-value="adults">2</span>
+                        <button type="button" data-counter-action="increase" data-counter-target="adults">+</button>
+                    </div>
+                </div>
+                <div class="guest-row">
+                    <strong>Trẻ em</strong>
+                    <div class="guest-stepper">
+                        <button type="button" data-counter-action="decrease" data-counter-target="children">-</button>
+                        <span data-counter-value="children">0</span>
+                        <button type="button" data-counter-action="increase" data-counter-target="children">+</button>
+                    </div>
+                </div>
+                <div class="guest-row">
+                    <strong>Phòng</strong>
+                    <div class="guest-stepper">
+                        <button type="button" data-counter-action="decrease" data-counter-target="rooms">-</button>
+                        <span data-counter-value="rooms">1</span>
+                        <button type="button" data-counter-action="increase" data-counter-target="rooms">+</button>
+                    </div>
+                </div>
+                <div class="guest-pet-row">
+                    <span>Mang thú cưng đi cùng</span>
+                    <button type="button" class="pet-toggle" aria-pressed="false" data-pet-toggle><span></span></button>
+                </div>
+                <p>Động vật trợ giúp không được xem là vật nuôi.</p>
+                <button class="guest-done" type="button" data-close-popovers>Xong</button>
+            </div>
         </form>
+        <div class="search-widget-options">
+            <label><input type="checkbox" name="entirePlace" form="home-hotel-search"> Tôi đang tìm nhà hoặc căn hộ nguyên căn</label>
+            <label><input type="checkbox" name="withFlights" form="home-hotel-search"> Thêm các chuyến bay vào tìm kiếm của tôi</label>
+        </div>
         <p class="muted" style="text-align:center;margin-top:8px;font-size:13px;">
             Tìm phòng theo ngày? <a th:href="@{/rooms/search(checkIn=${checkIn},checkOut=${checkOut},guests=${guests})}">Tìm phòng trống</a>
         </p>
