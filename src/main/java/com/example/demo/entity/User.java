@@ -69,6 +69,13 @@ public class User {
 
     private Instant loginOtpLastSentAt;
 
+    @Column(length = 128)
+    private String passwordResetTokenHash;
+
+    private Instant passwordResetExpiresAt;
+
+    private Instant passwordResetLastSentAt;
+
     @Column(nullable = false)
     private int failedLoginCount = 0;
 
@@ -230,6 +237,30 @@ public class User {
 
     public void setLoginOtpLastSentAt(Instant loginOtpLastSentAt) {
         this.loginOtpLastSentAt = loginOtpLastSentAt;
+    }
+
+    public String getPasswordResetTokenHash() {
+        return passwordResetTokenHash;
+    }
+
+    public void setPasswordResetTokenHash(String passwordResetTokenHash) {
+        this.passwordResetTokenHash = passwordResetTokenHash;
+    }
+
+    public Instant getPasswordResetExpiresAt() {
+        return passwordResetExpiresAt;
+    }
+
+    public void setPasswordResetExpiresAt(Instant passwordResetExpiresAt) {
+        this.passwordResetExpiresAt = passwordResetExpiresAt;
+    }
+
+    public Instant getPasswordResetLastSentAt() {
+        return passwordResetLastSentAt;
+    }
+
+    public void setPasswordResetLastSentAt(Instant passwordResetLastSentAt) {
+        this.passwordResetLastSentAt = passwordResetLastSentAt;
     }
 
     public int getFailedLoginCount() {

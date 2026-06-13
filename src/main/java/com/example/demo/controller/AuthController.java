@@ -33,6 +33,8 @@ import com.example.demo.repository.RoleRepository;
 
 @Controller
 public class AuthController {
+    private static final String PASSWORD_RESET_EMAIL_SESSION_KEY = "PASSWORD_RESET_EMAIL";
+
     private final AuthService authService;
     private final CustomUserDetailsService customUserDetailsService;
     private final CurrentUserService currentUserService;
@@ -101,6 +103,7 @@ public class AuthController {
                                 @RequestParam(required = false) String error,
                                 @RequestParam(required = false) String captcha,
                                 @RequestParam(required = false) String locked,
+                                @RequestParam(required = false) String reset,
                                 Model model) {
         captureReferer(request);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -123,7 +126,79 @@ public class AuthController {
         if (locked != null) {
             model.addAttribute("locked", true);
         }
+        if (reset != null) {
+            model.addAttribute("message", "Mật khẩu đã được cập nhật. Bạn có thể đăng nhập.");
+        }
         return "auth/login-password";
+    }
+
+    @GetMapping("/forgot-password")
+    public String forgotPasswordForm(Model model) {
+        model.addAttribute("stage", "email");
+        return "auth/forgot-password";
+    }
+
+    @PostMapping("/forgot-password/request")
+    public String requestPasswordReset(@RequestParam String email, Model model) {
+        try {
+            AuthService.OtpDelivery delivery = authService.requestPasswordReset(email);
+            model.addAttribute("stage", "otp");
+            model.addAttribute("email", delivery.identifier());
+            model.addAttribute("maskedDestination", delivery.maskedDestination());
+            model.addAttribute("message", "Mã OTP đã được gửi đến email của bạn.");
+            return "auth/forgot-password";
+        } catch (BusinessException ex) {
+            model.addAttribute("stage", "email");
+            model.addAttribute("email", email);
+            model.addAttribute("error", ex.getMessage());
+            return "auth/forgot-password";
+        }
+    }
+
+    @PostMapping("/forgot-password/verify")
+    public String verifyPasswordResetOtp(@RequestParam String email,
+                                         @RequestParam String otp,
+                                         Model model,
+                                         HttpServletRequest request) {
+        try {
+            AuthService.OtpDelivery delivery = authService.verifyPasswordResetOtp(email, otp);
+            request.getSession(true).setAttribute(PASSWORD_RESET_EMAIL_SESSION_KEY, delivery.identifier());
+            model.addAttribute("stage", "reset");
+            model.addAttribute("email", delivery.identifier());
+            model.addAttribute("maskedDestination", delivery.maskedDestination());
+            model.addAttribute("message", "OTP hợp lệ. Vui lòng tạo mật khẩu mới.");
+            return "auth/forgot-password";
+        } catch (BusinessException ex) {
+            model.addAttribute("stage", "otp");
+            model.addAttribute("email", email);
+            model.addAttribute("maskedDestination", email);
+            model.addAttribute("error", ex.getMessage());
+            return "auth/forgot-password";
+        }
+    }
+
+    @PostMapping("/forgot-password/reset")
+    public String resetForgottenPassword(@RequestParam String password,
+                                         @RequestParam String confirmPassword,
+                                         Model model,
+                                         HttpServletRequest request) {
+        Object email = request.getSession(true).getAttribute(PASSWORD_RESET_EMAIL_SESSION_KEY);
+        if (!(email instanceof String resetEmail) || resetEmail.isBlank()) {
+            model.addAttribute("stage", "email");
+            model.addAttribute("error", "Vui lòng xác thực OTP trước khi đặt lại mật khẩu.");
+            return "auth/forgot-password";
+        }
+
+        try {
+            authService.resetForgottenPassword(resetEmail, password, confirmPassword);
+            request.getSession().removeAttribute(PASSWORD_RESET_EMAIL_SESSION_KEY);
+            return "redirect:/login/password?reset";
+        } catch (BusinessException ex) {
+            model.addAttribute("stage", "reset");
+            model.addAttribute("email", resetEmail);
+            model.addAttribute("error", ex.getMessage());
+            return "auth/forgot-password";
+        }
     }
 
     @GetMapping("/login/oauth-mock")

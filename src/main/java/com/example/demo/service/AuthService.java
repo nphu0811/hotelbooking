@@ -31,6 +31,7 @@ public class AuthService {
     private static final Pattern STRONG_PASSWORD = Pattern.compile("^(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$");
     private static final Duration VERIFICATION_RESEND_COOLDOWN = Duration.ofMinutes(10);
     private static final Duration LOGIN_OTP_RESEND_COOLDOWN = Duration.ofMinutes(2);
+    private static final Duration PASSWORD_RESET_OTP_RESEND_COOLDOWN = Duration.ofMinutes(2);
     private static final int OTP_EXPIRES_MINUTES = 15;
 
     private final UserRepository userRepository;
@@ -175,6 +176,60 @@ public class AuthService {
     }
 
     @Transactional
+    public OtpDelivery requestPasswordReset(String email) {
+        String normalizedEmail = normalizeEmail(email);
+        validateEmail(normalizedEmail);
+        User user = userRepository.findByEmailIgnoreCase(normalizedEmail)
+                .orElseThrow(() -> new BusinessException("Không tìm thấy tài khoản với email này."));
+
+        Instant now = Instant.now(clock);
+        ensureCooldownElapsed(user.getPasswordResetLastSentAt(), now, PASSWORD_RESET_OTP_RESEND_COOLDOWN,
+                "Vui lòng đợi 2 phút trước khi yêu cầu mã OTP mới.");
+        String rawToken = setPasswordResetToken(user, now);
+        userRepository.save(user);
+        enqueuePasswordResetEmail(user, rawToken);
+        return new OtpDelivery(user.getEmail(), "email", maskEmail(user.getEmail()));
+    }
+
+    @Transactional
+    public OtpDelivery verifyPasswordResetOtp(String email, String otp) {
+        User user = findPasswordResetUser(email);
+        if (user.getPasswordResetTokenHash() == null || !user.getPasswordResetTokenHash().equals(hashToken(otp))) {
+            throw new BusinessException("Mã OTP không chính xác, vui lòng kiểm tra lại.");
+        }
+        ensureNotExpired(user.getPasswordResetExpiresAt(), "Mã OTP đã hết hạn, vui lòng gửi lại mã mới.");
+        return new OtpDelivery(user.getEmail(), "email", maskEmail(user.getEmail()));
+    }
+
+    @Transactional
+    public void resetForgottenPassword(String email, String password, String confirmPassword) {
+        User user = findPasswordResetUser(email);
+        if (user.getPasswordResetTokenHash() == null) {
+            throw new BusinessException("Phiên đặt lại mật khẩu không hợp lệ. Vui lòng gửi lại mã OTP.");
+        }
+        ensureNotExpired(user.getPasswordResetExpiresAt(), "Mã OTP đã hết hạn, vui lòng gửi lại mã mới.");
+        validatePassword(password);
+        if (!password.equals(confirmPassword)) {
+            throw new BusinessException("Xác nhận mật khẩu không khớp.");
+        }
+
+        boolean temporaryLoginLock = user.getLockedUntil() != null
+                || "Too many failed login attempts".equals(user.getLockReason());
+        user.setPasswordHash(passwordEncoder.encode(password));
+        user.setFailedLoginCount(0);
+        user.setLastFailedLoginAt(null);
+        if (temporaryLoginLock) {
+            user.setLockedUntil(null);
+            user.setLockReason(null);
+        }
+        if (user.getStatus() == UserStatus.LOCKED && temporaryLoginLock) {
+            user.setStatus(UserStatus.ACTIVE);
+        }
+        clearPasswordReset(user);
+        userRepository.save(user);
+    }
+
+    @Transactional
     public User requestEmailVerification(User currentUser) {
         User user = reload(currentUser);
         if (user.isEmailVerified()) {
@@ -283,6 +338,14 @@ public class AuthService {
         return rawToken;
     }
 
+    private String setPasswordResetToken(User user, Instant now) {
+        String rawToken = generateVerificationToken();
+        user.setPasswordResetTokenHash(hashToken(rawToken));
+        user.setPasswordResetExpiresAt(now.plus(OTP_EXPIRES_MINUTES, ChronoUnit.MINUTES));
+        user.setPasswordResetLastSentAt(now);
+        return rawToken;
+    }
+
     private void clearEmailVerification(User user) {
         user.setEmailVerificationTokenHash(null);
         user.setEmailVerificationExpiresAt(null);
@@ -299,6 +362,12 @@ public class AuthService {
         user.setLoginOtpTokenHash(null);
         user.setLoginOtpExpiresAt(null);
         user.setLoginOtpLastSentAt(null);
+    }
+
+    private void clearPasswordReset(User user) {
+        user.setPasswordResetTokenHash(null);
+        user.setPasswordResetExpiresAt(null);
+        user.setPasswordResetLastSentAt(null);
     }
 
     private void enqueueVerificationEmail(User user, String rawToken) {
@@ -318,6 +387,21 @@ public class AuthService {
                 + "Mã này có hiệu lực trong " + OTP_EXPIRES_MINUTES + " phút. Không chia sẻ mã này cho bất kỳ ai.";
         emailService.enqueue(user, null, EmailEventType.LOGIN_OTP,
                 user.getEmail(), "Mã OTP đăng nhập HotelBooking: " + rawToken, "login-otp", body);
+    }
+
+    private void enqueuePasswordResetEmail(User user, String rawToken) {
+        String body = "Mã OTP đặt lại mật khẩu HotelBooking của bạn là: " + rawToken + "\n\n"
+                + "Mã này có hiệu lực trong " + OTP_EXPIRES_MINUTES + " phút. Không chia sẻ mã này cho bất kỳ ai.\n\n"
+                + "Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.";
+        emailService.enqueue(user, null, EmailEventType.PASSWORD_RESET,
+                user.getEmail(), "Mã OTP đặt lại mật khẩu HotelBooking: " + rawToken, "password-reset", body);
+    }
+
+    private User findPasswordResetUser(String email) {
+        String normalizedEmail = normalizeEmail(email);
+        validateEmail(normalizedEmail);
+        return userRepository.findByEmailIgnoreCase(normalizedEmail)
+                .orElseThrow(() -> new BusinessException("Phiên đặt lại mật khẩu không hợp lệ."));
     }
 
     private User findUserByIdentifier(String normalizedIdentifier, boolean emailIdentifier) {

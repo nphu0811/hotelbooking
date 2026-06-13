@@ -53,6 +53,10 @@ ERROR_LOG.md
 TASKS.md
 HELP.md
 hotel_booking_ai_build_prompt.md
+outputs/
+_report_work/
+BAOCAO_CNPM_HOTEL_BOOKING_NHOM9.docx
+~$*.docx
 
 ### Local data/import scratch files ###
 data/

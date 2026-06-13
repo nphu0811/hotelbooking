@@ -372,6 +372,19 @@
     align-self: center !important;
 }
 
+.auth-forgot-row {
+    display: flex !important;
+    justify-content: flex-end !important;
+    width: 100% !important;
+    margin-top: -2px !important;
+    margin-bottom: 4px !important;
+}
+
+.auth-forgot-row .forgot-link {
+    align-self: auto !important;
+    font-size: 13px !important;
+}
+
 /* Captcha area */
 .captcha-hook {
     border: 1px dashed rgba(116, 120, 120, 0.4) !important;

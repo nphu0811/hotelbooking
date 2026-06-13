@@ -179,6 +179,13 @@ public class BrevoEmailProvider implements EmailProvider {
                     "Sign in",
                     appUrl + "/login"
             );
+
+            case PASSWORD_RESET -> new EmailContent(
+                    "Reset your password",
+                    "Please use the latest OTP email to reset your HotelBooking password. If you did not request this, you can safely ignore this message.",
+                    "Reset password",
+                    appUrl + "/forgot-password"
+            );
         };
 
         String html = buildHtmlTemplate(
