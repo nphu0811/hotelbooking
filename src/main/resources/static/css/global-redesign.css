@@ -372,6 +372,13 @@
     align-self: center !important;
 }
 
+.auth-alert-link {
+    color: inherit !important;
+    font-weight: 700 !important;
+    text-decoration: underline !important;
+    text-underline-offset: 3px !important;
+}
+
 .auth-forgot-row {
     display: flex !important;
     justify-content: flex-end !important;

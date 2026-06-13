@@ -407,7 +407,7 @@ public class AuthService {
     private User findUserByIdentifier(String normalizedIdentifier, boolean emailIdentifier) {
         if (emailIdentifier) {
             return userRepository.findByEmailIgnoreCase(normalizedIdentifier)
-                    .orElseThrow(() -> new BusinessException("Không tìm thấy tài khoản phù hợp để gửi OTP."));
+                    .orElseThrow(() -> new AccountNotLinkedException("Không tìm thấy tài khoản được liên kết, vui lòng đăng kí"));
         }
         List<User> matches = userRepository.findByPhone(normalizedIdentifier);
         if (matches.isEmpty() && normalizedIdentifier.startsWith("0")) {

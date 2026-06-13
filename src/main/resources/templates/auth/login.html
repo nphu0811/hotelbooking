@@ -18,7 +18,11 @@
                 <h1>Đăng nhập bằng OTP</h1>
                 <p class="muted auth-copy">Nhập email hoặc số điện thoại để nhận mã OTP xác thực.</p>
 
-                <p class="alert" th:if="${otpError}" th:text="${otpError}"></p>
+                <p class="alert" th:if="${accountNotLinked}">
+                    Không tìm thấy tài khoản được liên kết, vui lòng
+                    <a class="auth-alert-link" th:href="@{/register}">đăng kí</a>
+                </p>
+                <p class="alert" th:if="${otpError != null and accountNotLinked != true}" th:text="${otpError}"></p>
                 <p class="alert" th:if="${locked}">Tài khoản tạm thời bị khóa do đăng nhập sai nhiều lần. Vui lòng thử lại sau 15 phút.</p>
                 <p class="success" th:if="${message}" th:text="${message}"></p>
 

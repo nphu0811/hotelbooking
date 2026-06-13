@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.UserStatus;
+import com.example.demo.service.AccountNotLinkedException;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.BusinessException;
 import com.example.demo.service.CustomUserDetailsService;
@@ -241,6 +242,11 @@ public class AuthController {
             model.addAttribute("maskedDestination", delivery.maskedDestination());
             model.addAttribute("message", "Mã OTP đã được gửi.");
             return "auth/login-otp";
+        } catch (AccountNotLinkedException ex) {
+            model.addAttribute("accountNotLinked", true);
+            model.addAttribute("otpError", ex.getMessage());
+            model.addAttribute("identifier", identifier);
+            return "auth/login";
         } catch (BusinessException ex) {
             model.addAttribute("otpError", ex.getMessage());
             model.addAttribute("identifier", identifier);
@@ -266,6 +272,11 @@ public class AuthController {
                 return "redirect:" + continueUrl;
             }
             return "redirect:/";
+        } catch (AccountNotLinkedException ex) {
+            model.addAttribute("accountNotLinked", true);
+            model.addAttribute("otpError", ex.getMessage());
+            model.addAttribute("identifier", identifier);
+            return "auth/login";
         } catch (BusinessException ex) {
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("identifier", identifier);
